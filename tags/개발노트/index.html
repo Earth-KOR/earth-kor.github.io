@@ -244,6 +244,70 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/03/20/HTTP%20&%20HTTPS%20copy/"
+                            aria-label=": Embeddable &amp;  @Embedded"
+                        >
+                            Embeddable &amp;  @Embedded
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-20T07:08:31-07:00">
+	
+		    Mar 20, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Embeddable-Embedded"><a href="#Embeddable-Embedded" class="headerlink" title="@Embeddable @Embedded"></a>@Embeddable @Embedded</h1><p>하나로 표현하고자 하는 개념에 해당하는 클래스를 생성한 뒤에 필드를 생성하고 그 후<br>클래스에 @Embeddable을 달아줍니다! (이 과정은 생략해도 무방합니다)</p>
+<p>마지막으로 Entity 클래스에서 앞서 생성한 객체 필드를 생성하고, 필드 바로위에<br>@Embedded을 선언해 줍니다!</p>
+<h2 id="AttributeOverride"><a href="#AttributeOverride" class="headerlink" title="@AttributeOverride"></a>@AttributeOverride</h2><p>@Embedded를 이용해 객체로 엔티티의 컬럼을 표현하면면 컬럼 이름이 중복되는 상황이 일어납니다.<br>이럴 경우에 @AttributeOverride 어노테이션을 사용합니다.</p>
+<p>@AttributeOverride (name =  “기존 컬럼”, column = @column ( name = “ 특정 컬럼 이름 “ ) )<br>으로 선언하여 사용이 가능합니다!</p>
+<h2 id="Embedded-타입-사용시"><a href="#Embedded-타입-사용시" class="headerlink" title="Embedded 타입 사용시"></a>Embedded 타입 사용시</h2><p>FrontEnd에서 이와같은 임베디드 타입 사용시 임베디드 타입 자체를 메모리에 올려줘야 사용이 가능하다</p>
+<p>ex)<br>this.state.fuseRquest.manualImage = {}</p>
+<p>백엔드에서 임베디드 타입에 접근 할 때, 이미 인베디드 타입 자체가 NULL이면 그 내영자체가 들어가기 전에 NPE에러를 발생하기 때문에 임베디드 타입 자체를 따로 null Check를 해줘야 한다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/20/HTTP%20&%20HTTPS%20copy/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/03/06/GPS%20%EC%9D%B4%EB%A0%A5%20%EC%8B%9C%20%ED%98%B8%EC%B6%9C%20%EC%98%A4%EB%A5%98/"
                             aria-label=": GPS 이력 시 호출 오류"
                         >

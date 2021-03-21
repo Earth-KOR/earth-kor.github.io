@@ -557,6 +557,70 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/03/20/HTTP%20&%20HTTPS%20copy/"
+                            aria-label=": Embeddable &amp;  @Embedded"
+                        >
+                            Embeddable &amp;  @Embedded
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-20T07:08:31-07:00">
+	
+		    Mar 20, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Embeddable-Embedded"><a href="#Embeddable-Embedded" class="headerlink" title="@Embeddable @Embedded"></a>@Embeddable @Embedded</h1><p>하나로 표현하고자 하는 개념에 해당하는 클래스를 생성한 뒤에 필드를 생성하고 그 후<br>클래스에 @Embeddable을 달아줍니다! (이 과정은 생략해도 무방합니다)</p>
+<p>마지막으로 Entity 클래스에서 앞서 생성한 객체 필드를 생성하고, 필드 바로위에<br>@Embedded을 선언해 줍니다!</p>
+<h2 id="AttributeOverride"><a href="#AttributeOverride" class="headerlink" title="@AttributeOverride"></a>@AttributeOverride</h2><p>@Embedded를 이용해 객체로 엔티티의 컬럼을 표현하면면 컬럼 이름이 중복되는 상황이 일어납니다.<br>이럴 경우에 @AttributeOverride 어노테이션을 사용합니다.</p>
+<p>@AttributeOverride (name =  “기존 컬럼”, column = @column ( name = “ 특정 컬럼 이름 “ ) )<br>으로 선언하여 사용이 가능합니다!</p>
+<h2 id="Embedded-타입-사용시"><a href="#Embedded-타입-사용시" class="headerlink" title="Embedded 타입 사용시"></a>Embedded 타입 사용시</h2><p>FrontEnd에서 이와같은 임베디드 타입 사용시 임베디드 타입 자체를 메모리에 올려줘야 사용이 가능하다</p>
+<p>ex)<br>this.state.fuseRquest.manualImage = {}</p>
+<p>백엔드에서 임베디드 타입에 접근 할 때, 이미 인베디드 타입 자체가 NULL이면 그 내영자체가 들어가기 전에 NPE에러를 발생하기 때문에 임베디드 타입 자체를 따로 null Check를 해줘야 한다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/20/HTTP%20&%20HTTPS%20copy/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/03/06/bulier-pattern/"
                             aria-label=": bulier-pattern"
                         >
@@ -901,108 +965,6 @@
                         <p>
                             <a
                                 href="/2021/03/06/Optional/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2021/03/06/lsof/"
-                            aria-label=": lsof"
-                        >
-                            lsof
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2021-03-06T10:25:34-08:00">
-	
-		    Mar 06, 2021
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EA%B8%B0%EB%B3%B8/">기본</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="lsof-명령어-정리"><a href="#lsof-명령어-정리" class="headerlink" title="lsof 명령어 정리"></a>lsof 명령어 정리</h1><p>lsof -u {name}</p>
-<ul>
-<li>u 옵션으로 사용자를 지정 할 수 있다.</li>
-</ul>
-<p>lsof /var/log/httpd/access_log</p>
-<ul>
-<li>특정 디렉터리내 열린 파일 보기</li>
-</ul>
-<p>lsof -i {PortName}</p>
-<ul>
-<li>특정 포트를 사용하는 프로세스 정보 보기</li>
-</ul>
-<p>lsof -i {PortName} ~ {PortName}</p>
-<ul>
-<li>특정 포트 범위 까지 보기</li>
-</ul>
-<p>lsof -i {PortName} -P | grep java | grep LISTEN</p>
-<ul>
-<li>grep 기능을 사용 할 수 있다</li>
-</ul>
-<p>lsof -i 4 or 6</p>
-<ul>
-<li>-i 옵션 뒤에 4(IPv4), 또는 6(IPV6) 를 지정하여 특정 IP 의 버전만 확인할 수 있다.ㅡ<br>ㅡㅡ<br>ㅡ<br>ㅡㅡㅡ<br>ㅡㅡ<br>ㅡ<br>ㅡㅡㅡㅡ</li>
-<li>프로세스 중지</li>
-</ul>
-<p>lsof -i</p>
-<ul>
-<li>모든 네트워크 포트를 표시한다.</li>
-</ul>
-<p>lsof -u^lesstif -u^root</p>
-<ul>
-<li>사용자 지정 옵션인 -u 에 ^를 추가하면 특정 사용자는 제외할 수 있다. 다음은 lesstif 와 root 사용자가 열은 파일은 제외하고 정보를 출력한다</li>
-</ul>
-<p>lsof -p {PortName}</p>
-<ul>
-<li>특정 프로세스가 오픈한 파일만 표시한다. 옵션뒤에 PID를 주면 된다</li>
-</ul>
-<p>lsof -t -u lesstif</p>
-<ul>
-<li>lesstif 사용자의 모든 프로세스를 중지하게 된다.</li>
-</ul>
-<p>kill -KILL ‘’</p>
-<ul>
-<li>프로세스 중지</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2021/03/06/lsof/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

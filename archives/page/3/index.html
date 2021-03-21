@@ -244,6 +244,86 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/01/16/%EC%9B%90%EB%A6%AC/"
+                            aria-label=": 자바스크립트 동작 원리"
+                        >
+                            자바스크립트 동작 원리
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:32:52-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="자바스크립트-동작-원리"><a href="#자바스크립트-동작-원리" class="headerlink" title="자바스크립트 동작 원리"></a>자바스크립트 동작 원리</h1><p>‘’’<br>// ex)<br>console.log(‘Start!’)</p>
+<p>setTimeout(() =&gt; {<br>Console.log(’Timeout!’)<br>}, 0)</p>
+<p>Promise.resolve(‘Promise!’)<br>.then(res =&gt; console.log(res))</p>
+<p>console.log(‘End!’)<br>‘’’</p>
+<p>맨 처음 라인에서 엔진은 console.log()를 마주친다 이는 “Start!”라고 값이 콘솔에 찍히고 나서 call stack에 추가된다. 해당 메소드는 call stack에서 빠져나가고 엔진은 계속해서 실행된다.</p>
+<p>그 다음 엔진은 call stack으로 들어간 setTimeout메소드를 맞닥뜨린다.setTimeout 메소드는 브라우저의 native 메소드이다.<br />타이머가 끝날때까지 그것의 콜백 함수인 ()=&gt;console.log(‘In timeout’)은되 Web API에 추가된다.<br>비록 우리는 타이머에 0이라는 값을 넣었지만, 콜백은 먼저 Web API에 들어갈 것이고, 그 다음엔 (macro)task queue에 추가될 것이다. (setTimeout은 <b>macro task</b>이다!)</p>
+<p>그 다음 엔진은 Promise.resolve() 메소드와 마주침<br>Promise.resolve() 메소드는 call stack에 추가되고, 그다음엔 “Promise!” 라는 값으로 resolve된다<br>해당 메소드의 then 콜백 함수가 micro task queue에 추가된것이다</p>
+<p>엔진은 callstack이 비어있는 것을 발견한다<br>Call stack이 비어있기 때문에 엔진은 micro task queue에 작업들이 있는지 체크한다<br>그리고 거기거 promise then의 콜백이 작신의 차례를 기다리고 있는 것을 찾아낸다!<br>그것은 call stack으로 들어가고 promise의 resolve된 값들을 로그로 찍는다.</p>
+<p>이제 엔진은 call stack이 비어진 것을 보고 micro task queue를 다시 한번 체크 할 것이다.<br>하지만 이제 microtask queue에는 아무것도 남아 있지 않다</p>
+<p>이제 macrotask queue를 체크 할 차례이다!<br>앞서 과정을 반복한다!</p>
+<p>출처 : <a target="_blank" rel="noopener" href="https://kkangdda.tistory.com/77">https://kkangdda.tistory.com/77</a></p>
+<h1 id="태스크-큐-vs-마이크로태스크-큐"><a href="#태스크-큐-vs-마이크로태스크-큐" class="headerlink" title="태스크 큐 vs 마이크로태스크 큐"></a>태스크 큐 vs 마이크로태스크 큐</h1><p>2개의 큐 모두 콜백함수가 들어간다는 점에서 동일하지만 어떤 함수를 실행하느냐에 따라 어디로 들어가는지가 달라진다. 또한 명칭은 큐 (Queue) 이지만 실제 우리가 아는 자료구조의 큐와는 다르다. 엄밀히 말하자면 우선순위 큐 (Priority Queue) 라고 할 수 있는데, 이벤트 루프가 2개의 큐에서 태스크를 꺼내는 조건이 “제일 오래된 태스크” 이기 때문이다. (동작방식을 확인하고 싶다면 HTML 스펙 을 보자)<br>그럼 이제 어떤 함수들이 어떤 큐에 들어가는지 살펴보자.</p>
+<ul>
+<li>콜백함수를 태스크 큐에 넣는 함수들<ul>
+<li>setTimeout, setInterval, setImmediate, requestAnimationFrame, I/O, UI 렌더링</li>
+</ul>
+</li>
+<li>콜백함수를 마이크로태스크 큐에 넣는 함수들<ul>
+<li>process.nextTick, Promise, Object.observe, MutationObserver<br>익숙한 함수인 Web API의 setTimeout() 의 콜백함수가 태스크 큐에 들어가고 Promise 의 콜백함수가 마이크로태스크 큐에 들어간다는 것을 알 수 있다. 이벤트 루프는 각 콜백함수를 태스크/마이크로태스크 큐에서 꺼내쓰는 것인데, 그렇다면 어떤게 먼저일까?</li>
+</ul>
+</li>
+</ul>
+<p>누가 먼저인가?<br>결론부터 말하자면, 마이크로태스크가 먼저이다.<br>이벤트 루프는 마이크로태스크 큐의 모든 태스크들을 처리한 다음, 태스크 큐의 태스크들을 처리한다. 따라서, Promise 의 콜백함수가 setTimeout() 의 콜백함수보다 먼저 처리된다. 예시를 보자.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/%EC%9B%90%EB%A6%AC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/01/16/%EB%B0%A9%EB%B2%95/"
                             aria-label=": setState 동기화 시키는 방법"
                         >
@@ -1227,132 +1307,6 @@ PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort) : 위의 
                         <p>
                             <a
                                 href="/2021/01/09/%EB%B9%84%EB%8F%99%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2021/01/09/%EA%B8%B0%EC%B4%88/"
-                            aria-label=": 리액트 기초"
-                        >
-                            리액트 기초
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2021-01-09T12:42:00-08:00">
-	
-		    Jan 09, 2021
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="리액트"><a href="#리액트" class="headerlink" title="리액트"></a>리액트</h1><p>리액트는 Component를 외부에서 사용자가 정의하고 그 Component들을 불러옴 으로써 웹을 구성한다.</p>
-<p>이러한 사용방식으로 얻는 방법에서 크게 3가지의 장점이 존재한다.</p>
-<ol>
-<li>코드의 가독성을 늘려준다.</li>
-<li>코드의 재사용성을 늘려준다.</li>
-<li>유지보수 시 큰 이득이 있다.</li>
-</ol>
-<p>리액트를 사용하면서 자신이 Component를 만들 수 있고, 남이 작성해 놓은 Component를 사용 할 수도 있다!</p>
-<p>리액트를 작업할 때 webpack 이나 parcel 같은 번들러를 이용해서 작업을 합니다. 모든 모듈이나 여러가지 라이브러리를 동시에 합쳐서 하나의 .js 파일로 내보내는거죠. 또한 리액트 파일은 JSX 문법으로 작성되거나 최신 JS 문법으로 작성되기 때문에, babel 을 사용해서 브라우저 호환성을 생각해야 합니다.</p>
-<h1 id="리액트-특징"><a href="#리액트-특징" class="headerlink" title="리액트 특징"></a>리액트 특징</h1><ol>
-<li>JSX 문법</li>
-</ol>
-<p>자바스크립트 안에서 HTML 문법을 사용해서 View를 구성 할 수 있게 도와주는 자바스크립트 문법</p>
-<ol start="2">
-<li>Component 기반</li>
-</ol>
-<p>웹 페이지를 작성 할 때 여러부분을 분할해서 코드의 재사용성과 유지보수성을 증가</p>
-<ol start="3">
-<li>Virtual DOM</li>
-</ol>
-<p>가성 DOM을 만들어서 수정 된 사항이 있을 때 전체 코들르 검토하는 것이 아닌 수정된 일부만 수정하게 되어 효율적으로 코딩을 할 수 있게 도와주며 완성된 DOM은 실제 DOM으로 옮겨 유저에게 보여주는 프론트를 제공한다.</p>
-<h1 id="리액트-폴더"><a href="#리액트-폴더" class="headerlink" title="리액트 폴더"></a>리액트 폴더</h1><ol>
-<li>public</li>
-</ol>
-<p>가상 DOM이 들어갈 빈 껍데기 html이 존재하는 폴더</p>
-<ol start="2">
-<li>Src</li>
-</ol>
-<ol>
-<li><p>index.js<br>app.js 에서 생성된 리액트 코드를 index.js에서 불러온 후, public에 있는 index.html의 id가 Root인 곳에다가 넣어줌</p>
-</li>
-<li><p>App.js<br>리액트, 리액트 컴포넌트를 부른 후에 App이라는 클래스를 생성한 후, 리액트 컴포넌트를 상속받습니다. 그렇게되면 리액트 컴포넌트 메소드를 사용 할 수 있습니다.</p>
-</li>
-</ol>
-<p>render() 메소드는 리액트 컴포넌트인데, 화면서 html뷰를 생성해주는 역할을 합니다. reture으로 받는 값들은 나중에 html코드로 바뀌게됩니다.</p>
-<p>그리고 export 문법을 이용해서 내보냅니다.</p>
-<p><strong>html 코드를 여러 개의 리액트 파일로 분할해서 작업을 할 수가 있다는 것 입니다. 또한 그렇게 되면 여러 사람이 협업을 하는 것도 쉬워지고, 코드의 수정도 특정 부분만 하면 되기 때문에 이점이 많아지게 됩니다.</strong></p>
-<h1 id="props와-state"><a href="#props와-state" class="headerlink" title="props와 state"></a>props와 state</h1><ol>
-<li>State는 현재 컴포넌트 내에서 변경이 가능하다.</li>
-<li>Props는 현재 컴포넌트 내에서 변경이 불가능하다.<br>(예전 리액트 버전에서는 가능했으나 현재 버전에서는 사용하지 않는 것을 추천)</li>
-<li>Props와 State 모두 하위 컴포넌트에 상속이 가능하다.</li>
-</ol>
-<p>props와 state는 데이터를 다룰 때 사용하는 개념입니다.</p>
-<p>state는 하나의 컴포넌트가 가질 수 있는 변경 가능한 데이터이다.</p>
-<ul>
-<li>컴포넌트를 렌더링 할 때 새로운 데이터를 생성해야 한다던지, 아니면 기존의 데이터를 참고해서 새로운 데이터를 만들어야 할 때 사용할 수 있습니다<br>즉, 현재 컴포넌트 안에서 새로운 데이터를 만들어 낼 때 사용합니다.</li>
-</ul>
-<p>props는 변경이 불가능한 데이터이지만, 상속을 통해 바꿔 줄 수는 있다.</p>
-<h1 id="리액트-생명주기"><a href="#리액트-생명주기" class="headerlink" title="리액트 생명주기"></a>리액트 생명주기</h1><p>Mounting: 리액트 코드 첫 렌더링의 시작</p>
-<ol>
-<li><p>constructor : 생성자가 먼저 동작함.</p>
-</li>
-<li><p>render : 렌더링을 위해 작성해둔 JSX를 return 해주는 메소드가 작동</p>
-</li>
-<li><p>componentDidMount : 리액트 코드가 HTML로 변환되어 화면에 나타남. (첫 렌더링 직후에만 한번 일어남!)</p>
-</li>
-</ol>
-<p>Updateing : 리액트 state나 props가 업데이트 되었을 때</p>
-<p>(: setState 메소드 : state를 업데이트 하려면 반드시 setState를 수행해야 합니다.)</p>
-<p>(: props : 부모 컴포넌트에서 setState를 수행하여 현재 컴포넌트가 가지고 있는 props가 업데이트 되었을 때)</p>
-<ol>
-<li><p>render : state나 props 같잉 보여주어야 하는 데이터가 업데이트 되었으면 다시 render를 수행</p>
-</li>
-<li><p>componentDidUpdate: 컴포넌트가 업데이트 되었을 때 수행되는 메소드로 인자를 받는다. prevProps , prevState를 받는다!</p>
-</li>
-</ol>
-<p>Unmounting : 컴포넌트가 사라질 때</p>
-<p>컴포넌트에 setInterval과 같은 작업을 진행했을 때에 이 부분은 컴포넌트가 단순히 사라진다고 해서 없어지지 않습니다. 메모리에 좀비처럼 상주할 가능성이 있는 변수들을 여기서 null 을 할당함으로 사용되지 않을 작업들을 해제해줄 수 있습니다</p>
-<p>componentWillUnMount : 컴포넌트가 사라질 떄에만 수행됩니다. 이 때 setInterval과 같은 작ㅇ버을 했을 경우에 여기서 해제시켜 주면된다!</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2021/01/09/%EA%B8%B0%EC%B4%88/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

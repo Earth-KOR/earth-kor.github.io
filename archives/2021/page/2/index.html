@@ -244,6 +244,108 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/03/06/lsof/"
+                            aria-label=": lsof"
+                        >
+                            lsof
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-06T10:25:34-08:00">
+	
+		    Mar 06, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EA%B8%B0%EB%B3%B8/">기본</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="lsof-명령어-정리"><a href="#lsof-명령어-정리" class="headerlink" title="lsof 명령어 정리"></a>lsof 명령어 정리</h1><p>lsof -u {name}</p>
+<ul>
+<li>u 옵션으로 사용자를 지정 할 수 있다.</li>
+</ul>
+<p>lsof /var/log/httpd/access_log</p>
+<ul>
+<li>특정 디렉터리내 열린 파일 보기</li>
+</ul>
+<p>lsof -i {PortName}</p>
+<ul>
+<li>특정 포트를 사용하는 프로세스 정보 보기</li>
+</ul>
+<p>lsof -i {PortName} ~ {PortName}</p>
+<ul>
+<li>특정 포트 범위 까지 보기</li>
+</ul>
+<p>lsof -i {PortName} -P | grep java | grep LISTEN</p>
+<ul>
+<li>grep 기능을 사용 할 수 있다</li>
+</ul>
+<p>lsof -i 4 or 6</p>
+<ul>
+<li>-i 옵션 뒤에 4(IPv4), 또는 6(IPV6) 를 지정하여 특정 IP 의 버전만 확인할 수 있다.ㅡ<br>ㅡㅡ<br>ㅡ<br>ㅡㅡㅡ<br>ㅡㅡ<br>ㅡ<br>ㅡㅡㅡㅡ</li>
+<li>프로세스 중지</li>
+</ul>
+<p>lsof -i</p>
+<ul>
+<li>모든 네트워크 포트를 표시한다.</li>
+</ul>
+<p>lsof -u^lesstif -u^root</p>
+<ul>
+<li>사용자 지정 옵션인 -u 에 ^를 추가하면 특정 사용자는 제외할 수 있다. 다음은 lesstif 와 root 사용자가 열은 파일은 제외하고 정보를 출력한다</li>
+</ul>
+<p>lsof -p {PortName}</p>
+<ul>
+<li>특정 프로세스가 오픈한 파일만 표시한다. 옵션뒤에 PID를 주면 된다</li>
+</ul>
+<p>lsof -t -u lesstif</p>
+<ul>
+<li>lesstif 사용자의 모든 프로세스를 중지하게 된다.</li>
+</ul>
+<p>kill -KILL ‘’</p>
+<ul>
+<li>프로세스 중지</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/06/lsof/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/03/06/Docker/"
                             aria-label=": 도커 &amp; 쿠버네티스"
                         >
@@ -1079,86 +1181,6 @@ public static void main(String[] args) &#123;
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2021/01/16/%EC%9B%90%EB%A6%AC/"
-                            aria-label=": 자바스크립트 동작 원리"
-                        >
-                            자바스크립트 동작 원리
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2021-01-16T08:32:52-08:00">
-	
-		    Jan 16, 2021
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="자바스크립트-동작-원리"><a href="#자바스크립트-동작-원리" class="headerlink" title="자바스크립트 동작 원리"></a>자바스크립트 동작 원리</h1><p>‘’’<br>// ex)<br>console.log(‘Start!’)</p>
-<p>setTimeout(() =&gt; {<br>Console.log(’Timeout!’)<br>}, 0)</p>
-<p>Promise.resolve(‘Promise!’)<br>.then(res =&gt; console.log(res))</p>
-<p>console.log(‘End!’)<br>‘’’</p>
-<p>맨 처음 라인에서 엔진은 console.log()를 마주친다 이는 “Start!”라고 값이 콘솔에 찍히고 나서 call stack에 추가된다. 해당 메소드는 call stack에서 빠져나가고 엔진은 계속해서 실행된다.</p>
-<p>그 다음 엔진은 call stack으로 들어간 setTimeout메소드를 맞닥뜨린다.setTimeout 메소드는 브라우저의 native 메소드이다.<br />타이머가 끝날때까지 그것의 콜백 함수인 ()=&gt;console.log(‘In timeout’)은되 Web API에 추가된다.<br>비록 우리는 타이머에 0이라는 값을 넣었지만, 콜백은 먼저 Web API에 들어갈 것이고, 그 다음엔 (macro)task queue에 추가될 것이다. (setTimeout은 <b>macro task</b>이다!)</p>
-<p>그 다음 엔진은 Promise.resolve() 메소드와 마주침<br>Promise.resolve() 메소드는 call stack에 추가되고, 그다음엔 “Promise!” 라는 값으로 resolve된다<br>해당 메소드의 then 콜백 함수가 micro task queue에 추가된것이다</p>
-<p>엔진은 callstack이 비어있는 것을 발견한다<br>Call stack이 비어있기 때문에 엔진은 micro task queue에 작업들이 있는지 체크한다<br>그리고 거기거 promise then의 콜백이 작신의 차례를 기다리고 있는 것을 찾아낸다!<br>그것은 call stack으로 들어가고 promise의 resolve된 값들을 로그로 찍는다.</p>
-<p>이제 엔진은 call stack이 비어진 것을 보고 micro task queue를 다시 한번 체크 할 것이다.<br>하지만 이제 microtask queue에는 아무것도 남아 있지 않다</p>
-<p>이제 macrotask queue를 체크 할 차례이다!<br>앞서 과정을 반복한다!</p>
-<p>출처 : <a target="_blank" rel="noopener" href="https://kkangdda.tistory.com/77">https://kkangdda.tistory.com/77</a></p>
-<h1 id="태스크-큐-vs-마이크로태스크-큐"><a href="#태스크-큐-vs-마이크로태스크-큐" class="headerlink" title="태스크 큐 vs 마이크로태스크 큐"></a>태스크 큐 vs 마이크로태스크 큐</h1><p>2개의 큐 모두 콜백함수가 들어간다는 점에서 동일하지만 어떤 함수를 실행하느냐에 따라 어디로 들어가는지가 달라진다. 또한 명칭은 큐 (Queue) 이지만 실제 우리가 아는 자료구조의 큐와는 다르다. 엄밀히 말하자면 우선순위 큐 (Priority Queue) 라고 할 수 있는데, 이벤트 루프가 2개의 큐에서 태스크를 꺼내는 조건이 “제일 오래된 태스크” 이기 때문이다. (동작방식을 확인하고 싶다면 HTML 스펙 을 보자)<br>그럼 이제 어떤 함수들이 어떤 큐에 들어가는지 살펴보자.</p>
-<ul>
-<li>콜백함수를 태스크 큐에 넣는 함수들<ul>
-<li>setTimeout, setInterval, setImmediate, requestAnimationFrame, I/O, UI 렌더링</li>
-</ul>
-</li>
-<li>콜백함수를 마이크로태스크 큐에 넣는 함수들<ul>
-<li>process.nextTick, Promise, Object.observe, MutationObserver<br>익숙한 함수인 Web API의 setTimeout() 의 콜백함수가 태스크 큐에 들어가고 Promise 의 콜백함수가 마이크로태스크 큐에 들어간다는 것을 알 수 있다. 이벤트 루프는 각 콜백함수를 태스크/마이크로태스크 큐에서 꺼내쓰는 것인데, 그렇다면 어떤게 먼저일까?</li>
-</ul>
-</li>
-</ul>
-<p>누가 먼저인가?<br>결론부터 말하자면, 마이크로태스크가 먼저이다.<br>이벤트 루프는 마이크로태스크 큐의 모든 태스크들을 처리한 다음, 태스크 큐의 태스크들을 처리한다. 따라서, Promise 의 콜백함수가 setTimeout() 의 콜백함수보다 먼저 처리된다. 예시를 보자.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2021/01/16/%EC%9B%90%EB%A6%AC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1185,7 +1207,7 @@ public static void main(String[] args) &#123;
             </a>
           </li>
         
-        <li class="pagination-number">page 2 of 3</li>
+        <li class="pagination-number">page 2 of 4</li>
     </ul>
 </div>
 

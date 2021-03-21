@@ -243,6 +243,132 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/01/09/%EA%B8%B0%EC%B4%88/"
+                            aria-label=": 리액트 기초"
+                        >
+                            리액트 기초
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-09T12:42:00-08:00">
+	
+		    Jan 09, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="리액트"><a href="#리액트" class="headerlink" title="리액트"></a>리액트</h1><p>리액트는 Component를 외부에서 사용자가 정의하고 그 Component들을 불러옴 으로써 웹을 구성한다.</p>
+<p>이러한 사용방식으로 얻는 방법에서 크게 3가지의 장점이 존재한다.</p>
+<ol>
+<li>코드의 가독성을 늘려준다.</li>
+<li>코드의 재사용성을 늘려준다.</li>
+<li>유지보수 시 큰 이득이 있다.</li>
+</ol>
+<p>리액트를 사용하면서 자신이 Component를 만들 수 있고, 남이 작성해 놓은 Component를 사용 할 수도 있다!</p>
+<p>리액트를 작업할 때 webpack 이나 parcel 같은 번들러를 이용해서 작업을 합니다. 모든 모듈이나 여러가지 라이브러리를 동시에 합쳐서 하나의 .js 파일로 내보내는거죠. 또한 리액트 파일은 JSX 문법으로 작성되거나 최신 JS 문법으로 작성되기 때문에, babel 을 사용해서 브라우저 호환성을 생각해야 합니다.</p>
+<h1 id="리액트-특징"><a href="#리액트-특징" class="headerlink" title="리액트 특징"></a>리액트 특징</h1><ol>
+<li>JSX 문법</li>
+</ol>
+<p>자바스크립트 안에서 HTML 문법을 사용해서 View를 구성 할 수 있게 도와주는 자바스크립트 문법</p>
+<ol start="2">
+<li>Component 기반</li>
+</ol>
+<p>웹 페이지를 작성 할 때 여러부분을 분할해서 코드의 재사용성과 유지보수성을 증가</p>
+<ol start="3">
+<li>Virtual DOM</li>
+</ol>
+<p>가성 DOM을 만들어서 수정 된 사항이 있을 때 전체 코들르 검토하는 것이 아닌 수정된 일부만 수정하게 되어 효율적으로 코딩을 할 수 있게 도와주며 완성된 DOM은 실제 DOM으로 옮겨 유저에게 보여주는 프론트를 제공한다.</p>
+<h1 id="리액트-폴더"><a href="#리액트-폴더" class="headerlink" title="리액트 폴더"></a>리액트 폴더</h1><ol>
+<li>public</li>
+</ol>
+<p>가상 DOM이 들어갈 빈 껍데기 html이 존재하는 폴더</p>
+<ol start="2">
+<li>Src</li>
+</ol>
+<ol>
+<li><p>index.js<br>app.js 에서 생성된 리액트 코드를 index.js에서 불러온 후, public에 있는 index.html의 id가 Root인 곳에다가 넣어줌</p>
+</li>
+<li><p>App.js<br>리액트, 리액트 컴포넌트를 부른 후에 App이라는 클래스를 생성한 후, 리액트 컴포넌트를 상속받습니다. 그렇게되면 리액트 컴포넌트 메소드를 사용 할 수 있습니다.</p>
+</li>
+</ol>
+<p>render() 메소드는 리액트 컴포넌트인데, 화면서 html뷰를 생성해주는 역할을 합니다. reture으로 받는 값들은 나중에 html코드로 바뀌게됩니다.</p>
+<p>그리고 export 문법을 이용해서 내보냅니다.</p>
+<p><strong>html 코드를 여러 개의 리액트 파일로 분할해서 작업을 할 수가 있다는 것 입니다. 또한 그렇게 되면 여러 사람이 협업을 하는 것도 쉬워지고, 코드의 수정도 특정 부분만 하면 되기 때문에 이점이 많아지게 됩니다.</strong></p>
+<h1 id="props와-state"><a href="#props와-state" class="headerlink" title="props와 state"></a>props와 state</h1><ol>
+<li>State는 현재 컴포넌트 내에서 변경이 가능하다.</li>
+<li>Props는 현재 컴포넌트 내에서 변경이 불가능하다.<br>(예전 리액트 버전에서는 가능했으나 현재 버전에서는 사용하지 않는 것을 추천)</li>
+<li>Props와 State 모두 하위 컴포넌트에 상속이 가능하다.</li>
+</ol>
+<p>props와 state는 데이터를 다룰 때 사용하는 개념입니다.</p>
+<p>state는 하나의 컴포넌트가 가질 수 있는 변경 가능한 데이터이다.</p>
+<ul>
+<li>컴포넌트를 렌더링 할 때 새로운 데이터를 생성해야 한다던지, 아니면 기존의 데이터를 참고해서 새로운 데이터를 만들어야 할 때 사용할 수 있습니다<br>즉, 현재 컴포넌트 안에서 새로운 데이터를 만들어 낼 때 사용합니다.</li>
+</ul>
+<p>props는 변경이 불가능한 데이터이지만, 상속을 통해 바꿔 줄 수는 있다.</p>
+<h1 id="리액트-생명주기"><a href="#리액트-생명주기" class="headerlink" title="리액트 생명주기"></a>리액트 생명주기</h1><p>Mounting: 리액트 코드 첫 렌더링의 시작</p>
+<ol>
+<li><p>constructor : 생성자가 먼저 동작함.</p>
+</li>
+<li><p>render : 렌더링을 위해 작성해둔 JSX를 return 해주는 메소드가 작동</p>
+</li>
+<li><p>componentDidMount : 리액트 코드가 HTML로 변환되어 화면에 나타남. (첫 렌더링 직후에만 한번 일어남!)</p>
+</li>
+</ol>
+<p>Updateing : 리액트 state나 props가 업데이트 되었을 때</p>
+<p>(: setState 메소드 : state를 업데이트 하려면 반드시 setState를 수행해야 합니다.)</p>
+<p>(: props : 부모 컴포넌트에서 setState를 수행하여 현재 컴포넌트가 가지고 있는 props가 업데이트 되었을 때)</p>
+<ol>
+<li><p>render : state나 props 같잉 보여주어야 하는 데이터가 업데이트 되었으면 다시 render를 수행</p>
+</li>
+<li><p>componentDidUpdate: 컴포넌트가 업데이트 되었을 때 수행되는 메소드로 인자를 받는다. prevProps , prevState를 받는다!</p>
+</li>
+</ol>
+<p>Unmounting : 컴포넌트가 사라질 때</p>
+<p>컴포넌트에 setInterval과 같은 작업을 진행했을 때에 이 부분은 컴포넌트가 단순히 사라진다고 해서 없어지지 않습니다. 메모리에 좀비처럼 상주할 가능성이 있는 변수들을 여기서 null 을 할당함으로 사용되지 않을 작업들을 해제해줄 수 있습니다</p>
+<p>componentWillUnMount : 컴포넌트가 사라질 떄에만 수행됩니다. 이 때 setInterval과 같은 작ㅇ버을 했을 경우에 여기서 해제시켜 주면된다!</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/09/%EA%B8%B0%EC%B4%88/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2020/11/03/%EB%AC%B8%EC%A0%9C/"
                             aria-label=": Linked list (2)"
                         >
