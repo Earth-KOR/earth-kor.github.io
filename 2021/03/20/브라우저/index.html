@@ -6,24 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="이상권의 개발노트">
-    <title>bulier-pattern - 이상권의 개발노트</title>
+    <title>브라우저의 주요 기능 - 이상권의 개발노트</title>
     <meta name="author" content="이상권">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"\n점층적 생성자 패턴 : 생성자로 필드를 세팅, ex) new UserInfo(userId, password);\n자바빈 패턴 : Setter 메서드로 필드를 세팅, ex) userInfo.set(userId);\n빌더 패턴\n\n점층적 생성자 패턴은 모든 인스턴스의 위치를 알아야하고 모르는 값을 전부 null로 처리해야 하기 때문에 코드의 가독성이 너무 떨어지고 인스턴스만 봤을떄는 이게 어떤 건지 잘 모를 수가 있다!\n자바빈 패턴으로 set으로 설정하면 함수 호출 1회로 객체 생성을 끌낼 수 없음으로 객체 일관성이 일시적으로 깨질 수 있다.\n빌더 패턴점층적 생성자 패턴과 자바 빈 패턴의 장점을 결합한 것이 바로 빌더 패턴이다.클라이언트 코드에서 필요한 객체를 직접 생성하는 대신 그 전에 필수 인자들을 전달하여 빌더 객체를 만든 뒤, 빌더 객체에 정의된 설정 메서드들을 호출하여 인스턴스를 생성하는 것이다!\n장점\n\n인스턴스를 생성하는데 있어서 필수적인 인자와 선택적인 인자를 구별 할 수 있다\n선택적인 인자인 경우 보다 가독성이 좋은 코드로 인자를 넘길 수 있다.\n\n‘’’\nCarTrip latestCarTripHasLocationCloseToFirstValidLocation = CarTrip.builder()                                                                   .carId(131L).tripId(“20122815274”)                                                                   .ignitionOnLocation(new Location(“[0,0]”))                                                                   .ignitionOffLocation(new Location(“[37.52817,127.08676]”))                                                                   .ignitionOffDateTime(LocalDateTime.parse(“2020-12-28 15:28:24”, DateTimeFormatter.ofPattern(“yyyy-MM-dd HH:mm:ss”)))                                                                   .ignitionOnDateTime(LocalDateTime.parse(“2020-12-28 15:27:45”, DateTimeFormatter.ofPattern(“yyyy-MM-dd HH:mm:ss”)))                                                                   .build();\n‘’’\n","dateCreated":"2021-03-06T10:33:11-08:00","dateModified":"2021-03-07T03:33:47-08:00","datePublished":"2021-03-06T10:33:11-08:00","description":"","headline":"bulier-pattern","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/06/bulier-pattern/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/06/bulier-pattern/","keywords":"이론노트, bulier"}</script>
-    <meta name="description" content="점층적 생성자 패턴 : 생성자로 필드를 세팅, ex) new UserInfo(userId, password); 자바빈 패턴 : Setter 메서드로 필드를 세팅, ex) userInfo.set(userId); 빌더 패턴  점층적 생성자 패턴은 모든 인스턴스의 위치를 알아야하고 모르는 값을 전부 null로 처리해야 하기 때문에 코드의 가독성이 너무 떨어지고">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"브라우저의 주요 기능브라우저의 주요 기능은 사용자가 선택한 자원을 서버에 요청하고 브라우저에 표시하는 것이다. 자원의 주소는 URI에 의해 정해진다. 브라우저는 웹 표준화 기구인 W3C(World Wide Web Consortium)에서 정한 명세에 따라 파일을 해석해서 표시한다.\n브라우저의 구성요소\n유저 인터페이스 : 이전, 다음, 새로고침, 북마크 같이 요청한 페이지는 보여주는 부분 외에 유저에게 동일하게 보이는 부분이다.\n\n브라우저 엔진 : 유저 인터페이스와 렌더링 엔진 사이에 쿼리를 전달할 수 있게 조작을 담당합니다.\n\n렌더링 엔진 :  사용가자가 요청한 페이지는 화면에 표시하기 위해 HTML과 CSS를 파싱/해석합니다.\n\n\n(속도와 관련해서 가장 궁금했던 부분!! 크롬의 경우 각 탭마다 별도의 렌더링 엔진 인스턴스를 유지하여 독립된 프로세스로 처리된다고 합니다.)\n\n네트워킹 : http 요청을 할 수 있고, 네트워크 호출에 사용됩니다.\n\n자바스크립트 해석기 : Javascript코드를 해석 및 실행합니다.\n\nUI 벡엔드 : 기본적인 UI들 예로 input, select 같은 위젯을 그리는 인터페이스입니다.\n\n자료 저장소 : 쿠키같은 지원들을 저장하는 영역이다.\n\n\n렌더링 엔진사용자가 요청한 내용을 서버로부터 받아 브라우저 화면에 표시하는 역할을 함(1) 표시할 수 있는 것 : HTML 및 XML 문서 그리고 이미지를 표시할 수 있음(2) 확장 : 플러그인이나 브라우저마다 확장 기능을 이용해 PDF와 같은 유형도 표시할 수 있음(3) 종류 : 사파리, 크롬은 웹킷(Webkit)엔진(크롬은 28버젼부터 Blink) / 파이어폭스는 모질라에서 만든 게코(Gecko)엔진(4) 동작원리기본적인 동작 과정HTML 문서를 파싱 &gt; 브라우저 화면에 랜더링하기위해 다루기 쉬운 구조로 바꿈 &gt; css파일 파싱 &gt; 렌더트리 구축 &gt; 렌더트리 배치 &gt; 렌더트리 그리기\n스타일 정보와 HTML 표시 규칙은 렌더 트리라고 부르는 또 다른 트리를 생성함.화면에 표시하기위한 위치, 크기, 그리기 순서 저장을 위한 별도의 트리 구조(렌더트리)가 필요함.렌더링 엔진은 좀 더 나은 사용자 경험을 위해 가능하면 빠르게 내용을 표시하는데 모든 HTML을 파싱할 때까지 기다리지 않고 배치와 그리기 과정을 시작한다. 네트워크로부터 나머지 내용이 전송되기를 기다리는 동시에 받은 내용의 일부를 먼저 화면에 표시하는 것이다.\n","dateCreated":"2021-03-20T07:08:31-07:00","dateModified":"2021-03-20T20:47:16-07:00","datePublished":"2021-03-20T07:08:31-07:00","description":"","headline":"브라우저의 주요 기능","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/20/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/20/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80/","keywords":"이론노트, 인터넷"}</script>
+    <meta name="description" content="브라우저의 주요 기능브라우저의 주요 기능은 사용자가 선택한 자원을 서버에 요청하고 브라우저에 표시하는 것이다. 자원의 주소는 URI에 의해 정해진다. 브라우저는 웹 표준화 기구인 W3C(World Wide Web Consortium)에서 정한 명세에 따라 파일을 해석해서 표시한다. 브라우저의 구성요소 유저 인터페이스 : 이전, 다음, 새로고침, 북마크 같이">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="bulier-pattern">
-<meta property="og:url" content="https://earth-kor.github.io/2021/03/06/bulier-pattern/index.html">
+<meta property="og:title" content="브라우저의 주요 기능">
+<meta property="og:url" content="https://earth-kor.github.io/2021/03/20/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80/index.html">
 <meta property="og:site_name" content="이상권의 개발노트">
-<meta property="og:description" content="점층적 생성자 패턴 : 생성자로 필드를 세팅, ex) new UserInfo(userId, password); 자바빈 패턴 : Setter 메서드로 필드를 세팅, ex) userInfo.set(userId); 빌더 패턴  점층적 생성자 패턴은 모든 인스턴스의 위치를 알아야하고 모르는 값을 전부 null로 처리해야 하기 때문에 코드의 가독성이 너무 떨어지고">
+<meta property="og:description" content="브라우저의 주요 기능브라우저의 주요 기능은 사용자가 선택한 자원을 서버에 요청하고 브라우저에 표시하는 것이다. 자원의 주소는 URI에 의해 정해진다. 브라우저는 웹 표준화 기구인 W3C(World Wide Web Consortium)에서 정한 명세에 따라 파일을 해석해서 표시한다. 브라우저의 구성요소 유저 인터페이스 : 이전, 다음, 새로고침, 북마크 같이">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-03-06T18:33:11.000Z">
-<meta property="article:modified_time" content="2021-03-07T11:33:47.936Z">
+<meta property="article:published_time" content="2021-03-20T14:08:31.000Z">
+<meta property="article:modified_time" content="2021-03-21T03:47:16.697Z">
 <meta property="article:author" content="이상권">
 <meta property="article:tag" content="이론노트">
-<meta property="article:tag" content="bulier">
+<meta property="article:tag" content="인터넷">
 <meta name="twitter:card" content="summary">
     
     
@@ -247,20 +247,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            bulier-pattern
+            브라우저의 주요 기능
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2021-03-06T10:33:11-08:00">
+    <time datetime="2021-03-20T07:08:31-07:00">
 	
-		    Mar 06, 2021
+		    Mar 20, 2021
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Java/">Java</a>
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EC%9D%B8%ED%84%B0%EB%84%B7/">인터넷</a>
 
 
     
@@ -272,22 +272,28 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <ul>
-<li>점층적 생성자 패턴 : 생성자로 필드를 세팅, ex) new UserInfo(userId, password);</li>
-<li>자바빈 패턴 : Setter 메서드로 필드를 세팅, ex) userInfo.set(userId);</li>
-<li>빌더 패턴</li>
-</ul>
-<p>점층적 생성자 패턴은 모든 인스턴스의 위치를 알아야하고 모르는 값을 전부 null로 처리해야 하기 때문에 코드의 가독성이 너무 떨어지고 인스턴스만 봤을떄는 이게 어떤 건지 잘 모를 수가 있다!</p>
-<p>자바빈 패턴으로 set으로 설정하면 함수 호출 1회로 객체 생성을 끌낼 수 없음으로 객체 일관성이 일시적으로 깨질 수 있다.</p>
-<h1 id="빌더-패턴"><a href="#빌더-패턴" class="headerlink" title="빌더 패턴"></a>빌더 패턴</h1><p>점층적 생성자 패턴과 자바 빈 패턴의 장점을 결합한 것이 바로 빌더 패턴이다.<br>클라이언트 코드에서 필요한 객체를 직접 생성하는 대신 그 전에 필수 인자들을 전달하여 빌더 객체를 만든 뒤, 빌더 객체에 정의된 설정 메서드들을 호출하여 인스턴스를 생성하는 것이다!</p>
-<p>장점</p>
-<ul>
-<li>인스턴스를 생성하는데 있어서 필수적인 인자와 선택적인 인자를 구별 할 수 있다</li>
-<li>선택적인 인자인 경우 보다 가독성이 좋은 코드로 인자를 넘길 수 있다.</li>
-</ul>
-<p>‘’’</p>
-<p>CarTrip latestCarTripHasLocationCloseToFirstValidLocation = CarTrip.builder()<br>                                                                   .carId(131L).tripId(“20122815274”)<br>                                                                   .ignitionOnLocation(new Location(“[0,0]”))<br>                                                                   .ignitionOffLocation(new Location(“[37.52817,127.08676]”))<br>                                                                   .ignitionOffDateTime(LocalDateTime.parse(“2020-12-28 15:28:24”, DateTimeFormatter.ofPattern(“yyyy-MM-dd HH:mm:ss”)))<br>                                                                   .ignitionOnDateTime(LocalDateTime.parse(“2020-12-28 15:27:45”, DateTimeFormatter.ofPattern(“yyyy-MM-dd HH:mm:ss”)))<br>                                                                   .build();</p>
-<p>‘’’</p>
+            <h1 id="브라우저의-주요-기능"><a href="#브라우저의-주요-기능" class="headerlink" title="브라우저의 주요 기능"></a>브라우저의 주요 기능</h1><p>브라우저의 주요 기능은 사용자가 선택한 자원을 서버에 요청하고 브라우저에 표시하는 것이다.<br> 자원의 주소는 URI에 의해 정해진다. 브라우저는 웹 표준화 기구인 W3C(World Wide Web Consortium)에서 정한 명세에 따라 파일을 해석해서 표시한다.</p>
+<h2 id="브라우저의-구성요소"><a href="#브라우저의-구성요소" class="headerlink" title="브라우저의 구성요소"></a>브라우저의 구성요소</h2><ol>
+<li><p>유저 인터페이스 : 이전, 다음, 새로고침, 북마크 같이 요청한 페이지는 보여주는 부분 외에 유저에게 동일하게 보이는 부분이다.</p>
+</li>
+<li><p>브라우저 엔진 : 유저 인터페이스와 렌더링 엔진 사이에 쿼리를 전달할 수 있게 조작을 담당합니다.</p>
+</li>
+<li><p>렌더링 엔진 :  사용가자가 요청한 페이지는 화면에 표시하기 위해 HTML과 CSS를 파싱/해석합니다.</p>
+</li>
+</ol>
+<p>(속도와 관련해서 가장 궁금했던 부분!! 크롬의 경우 각 탭마다 별도의 렌더링 엔진 인스턴스를 유지하여 독립된 프로세스로 처리된다고 합니다.)</p>
+<ol start="4">
+<li><p>네트워킹 : http 요청을 할 수 있고, 네트워크 호출에 사용됩니다.</p>
+</li>
+<li><p>자바스크립트 해석기 : Javascript코드를 해석 및 실행합니다.</p>
+</li>
+<li><p>UI 벡엔드 : 기본적인 UI들 예로 input, select 같은 위젯을 그리는 인터페이스입니다.</p>
+</li>
+<li><p>자료 저장소 : 쿠키같은 지원들을 저장하는 영역이다.</p>
+</li>
+</ol>
+<h2 id="렌더링-엔진"><a href="#렌더링-엔진" class="headerlink" title="렌더링 엔진"></a>렌더링 엔진</h2><p>사용자가 요청한 내용을 서버로부터 받아 브라우저 화면에 표시하는 역할을 함<br>(1) 표시할 수 있는 것 : HTML 및 XML 문서 그리고 이미지를 표시할 수 있음<br>(2) 확장 : 플러그인이나 브라우저마다 확장 기능을 이용해 PDF와 같은 유형도 표시할 수 있음<br>(3) 종류 : 사파리, 크롬은 웹킷(Webkit)엔진(크롬은 28버젼부터 Blink) / 파이어폭스는 모질라에서 만든 게코(Gecko)엔진<br>(4) 동작원리<br>기본적인 동작 과정<br>HTML 문서를 파싱 &gt; 브라우저 화면에 랜더링하기위해 다루기 쉬운 구조로 바꿈 &gt; css파일 파싱 &gt; 렌더트리 구축 &gt; 렌더트리 배치 &gt; 렌더트리 그리기</p>
+<p>스타일 정보와 HTML 표시 규칙은 렌더 트리라고 부르는 또 다른 트리를 생성함.<br>화면에 표시하기위한 위치, 크기, 그리기 순서 저장을 위한 별도의 트리 구조(렌더트리)가 필요함.<br>렌더링 엔진은 좀 더 나은 사용자 경험을 위해 가능하면 빠르게 내용을 표시하는데 모든 HTML을 파싱할 때까지 기다리지 않고 배치와 그리기 과정을 시작한다. 네트워크로부터 나머지 내용이 전송되기를 기다리는 동시에 받은 내용의 일부를 먼저 화면에 표시하는 것이다.</p>
 
             
 
@@ -299,7 +305,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/bulier/" rel="tag">bulier</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B8%ED%84%B0%EB%84%B7/" rel="tag">인터넷</a>
 
             </div>
         
@@ -312,9 +318,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/%EC%9D%B8%ED%84%B0%EB%84%B7%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EA%B0%80/"
-                    data-tooltip="인터넷은 어떻게 동작하는가?"
-                    aria-label="PREVIOUS: 인터넷은 어떻게 동작하는가?"
+                    href="/2021/03/20/hosting%20&%20DNS/"
+                    data-tooltip="hosting &amp; DNS"
+                    aria-label="PREVIOUS: hosting &amp; DNS"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -326,9 +332,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/06/Spring-Anotation/"
-                    data-tooltip="Spring-Anotation"
-                    aria-label="NEXT: Spring-Anotation"
+                    href="/2021/03/20/%EC%9D%B8%ED%84%B0%EB%84%B7%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EA%B0%80/"
+                    data-tooltip="인터넷은 어떻게 동작하는가?"
+                    aria-label="NEXT: 인터넷은 어떻게 동작하는가?"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -388,9 +394,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/%EC%9D%B8%ED%84%B0%EB%84%B7%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EA%B0%80/"
-                    data-tooltip="인터넷은 어떻게 동작하는가?"
-                    aria-label="PREVIOUS: 인터넷은 어떻게 동작하는가?"
+                    href="/2021/03/20/hosting%20&%20DNS/"
+                    data-tooltip="hosting &amp; DNS"
+                    aria-label="PREVIOUS: hosting &amp; DNS"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -402,9 +408,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/06/Spring-Anotation/"
-                    data-tooltip="Spring-Anotation"
-                    aria-label="NEXT: Spring-Anotation"
+                    href="/2021/03/20/%EC%9D%B8%ED%84%B0%EB%84%B7%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EA%B0%80/"
+                    data-tooltip="인터넷은 어떻게 동작하는가?"
+                    aria-label="NEXT: 인터넷은 어떻게 동작하는가?"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

@@ -244,6 +244,433 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/01/16/%EB%B0%A9%EB%B2%95/"
+                            aria-label=": setState 동기화 시키는 방법"
+                        >
+                            setState 동기화 시키는 방법
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:31:34-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="setState-비동기를-동기화-시키는-방법"><a href="#setState-비동기를-동기화-시키는-방법" class="headerlink" title="setState 비동기를 동기화 시키는 방법"></a>setState 비동기를 동기화 시키는 방법</h1><h3 id="비동기"><a href="#비동기" class="headerlink" title="비동기"></a>비동기</h3><p>‘’’</p>
+<p>state = { count: 0 }<br>this.setState( { count: this.state.count + 1 } );<br>this.setState( { count: this.state.count + 1 } );<br>this.setState( { count: this.state.count + 1 } );</p>
+<p>import produce from ‘immer’;</p>
+<p>‘’’</p>
+<h3 id="동기"><a href="#동기" class="headerlink" title="동기"></a>동기</h3><p>‘’’</p>
+<p>state = { count: 0 }</p>
+<p>this.setState( state =&gt; (<br>  produce( state, draft =&gt; { draft.count = state.count + 1 } )<br>) );<br>this.setState( state =&gt; (<br>  produce( state, draft =&gt; { draft.count = state.count + 1 } )<br>) );<br>this.setState( state =&gt; (<br>  produce( state, draft =&gt; { draft.count = state.count + 1 } )<br>) );</p>
+<p>‘’’</p>
+<h1 id="setState-는-await와-사용이-가능할까"><a href="#setState-는-await와-사용이-가능할까" class="headerlink" title="setState() 는 await와 사용이 가능할까?"></a>setState() 는 await와 사용이 가능할까?</h1><p>결과를 먼저 이야기하자면 setState에는 await를 사용할 수 없다.<br>async / await 의 기반은 promise 다. async 함수는 promise를 반환하고 promise가 함수로부터 반환할 값을 resolve 한다.<br>setState는 promise를 리턴하지 않기에 await와 함께 사용할 수 없다.</p>
+<p>그렇다면 setState는 어떤식으로 작동할까?<br>setState는 항상 즉시 컴포넌트를 업데이트 하지 않는다. 비동기적으로 작동하기 때문에 setState() 를 호출하고 바로 다음에 this.state를 읽으려하면 원하는 결과가 나오지 않는다.<br>componentDidUpdate 나 setState 콜백을 사용해야 원하는 결과를 얻을 수 있다.</p>
+<p>‘’’</p>
+<p>// 원하는 결과가 안나옴<br>This.setState({ myCabinet: ‘beer’ });<br>console.log(this.state.myCabinet);</p>
+<p>// 원하는 결과가 나옴<br>this.setState({ myCabinet: ‘beer’ }, () =&gt; console.log(this.state.myCabinet));</p>
+<p>‘’’</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/%EB%B0%A9%EB%B2%95/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/16/%EC%A0%9C%EC%96%B4%ED%95%98%EA%B8%B0/"
+                            aria-label=": enum으로 오류 제어하기"
+                        >
+                            enum으로 오류 제어하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:29:44-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="오류를-제어에-필요한-enum-만들기"><a href="#오류를-제어에-필요한-enum-만들기" class="headerlink" title="오류를 제어에 필요한 enum 만들기"></a>오류를 제어에 필요한 enum 만들기</h1><h2 id="Backend"><a href="#Backend" class="headerlink" title="Backend"></a>Backend</h2><h3 id="backend-Exception-code-declear"><a href="#backend-Exception-code-declear" class="headerlink" title="backend Exception code declear"></a>backend Exception code declear</h3><p>‘’’<br>package com.imaslab.fms.enums.exception;</p>
+<p>import lombok.AllArgsConstructor;<br>import lombok.Getter;</p>
+<p>@AllArgsConstructor<br>@Getter<br>public enum ExceptionCode<br>{<br>    // @formatter:off<br>    // DEVICE - CAR_CONTROL<br>    IGNITION_CONTROL_NOT_SUPPORTED(40201),<br>    IGNITION_CONTROL_ALREADY_REQUESTED(40202),<br>    IGNITION_CONTROL_REQUEST_FAILED(40203),<br>    IGNITION_CONTROL_NOT_REQUESTED(40204),</p>
+<pre><code>UPDATE_DEVICE_REQUEST_FAILED(40301),
+ALREADY_INSTALLED_DEVICE(40302),
+NOT_YET_INSTALLED_DEVICE(40303),
+
+NOT_YET_FOTA_PACKET_RECEIVED(40304),
+NOT_YET_ACTIVATION_OR_RT_PACKET_RECEIVED(40305)
+;
+// @formatter:on
+
+Integer value;
+
+private ExceptionCode(int value)
+&#123;
+    this.value = value;
+&#125;
+
+public int getValue()
+&#123;
+    return value;
+&#125;</code></pre>
+<p>}<br>‘’’</p>
+<h3 id="backend-Exception-Error-Code-Using"><a href="#backend-Exception-Error-Code-Using" class="headerlink" title="backend Exception Error Code Using"></a>backend Exception Error Code Using</h3><p>‘’’<br>throw new InvalidParameterException();</p>
+<p>public class InvalidParameterException extends AbstractException<br>{</p>
+<pre><code> public InvalidParameterException()
+&#123;
+    super(&quot;Invalid Parameter&quot;, &quot;&quot;, ExceptionCode.INVALID_PARAMETER, null);
+&#125;
+
+public InvalidParameterException(String parameterName)x
+&#123;
+    super(&quot;Invalid Parameter&quot;, parameterName, ExceptionCode.INVALID_PARAMETER);
+&#125;
+
+public InvalidParameterException(String parameterName, ExceptionCode exceptionCode)
+&#123;
+    super(&quot;Invalid Parameter&quot;, parameterName, exceptionCode);
+&#125;</code></pre>
+<p>}</p>
+<p>‘’’</p>
+<h3 id="backend-Exception-extends-AbstractException"><a href="#backend-Exception-extends-AbstractException" class="headerlink" title="backend Exception extends AbstractException"></a>backend Exception extends AbstractException</h3><p>‘’’<br> @Data<br> @EqualsAndHashCode(callSuper = true)<br> public abstract class AbstractException extends RuntimeException<br> {</p>
+<pre><code>String description;
+ExceptionCode code;
+Throwable t;
+
+public AbstractException(String message, String description, ExceptionCode code, Throwable t)
+&#123;
+    super(message);
+    this.description = description;
+    this.code = code;
+    this.t = t;
+&#125;</code></pre>
+<p>}</p>
+<p>‘’’</p>
+<h2 id="FrontEnd"><a href="#FrontEnd" class="headerlink" title="FrontEnd"></a>FrontEnd</h2><h3 id="FrontEnd-Exception-code-declear"><a href="#FrontEnd-Exception-code-declear" class="headerlink" title="FrontEnd Exception code declear"></a>FrontEnd Exception code declear</h3><p>‘’’<br>export enum constants {</p>
+<pre><code>INTERNAL_SERVER_ERROR = &#39;서버에 오류가 발생하였습니다.&#39;,
+REQUEST_TIMEOUT = &#39;요청 시간을 초과하였습니다.&#39;,
+
+REQUIRE_AUTHENTICATION = &#39;인증이 필요합니다.&#39;,
+INVALID_JWT_TOKEN = &#39;유효하지 않은 토큰입니다.&#39;,
+EXPIRED_TOKEN = &#39;만료된 토큰입니다.&#39;,
+EXPIRED_REFRESH_TOKEN = &#39;장기 미접속 상태로 로그인이 필요합니다.&#39;,
+
+MISMATCH_EMAIL = &#39;아이디가 존재하지 않습니다.&#39;,
+MISMATCH_PASSWORD = &#39;비밀번호가 일치하지 않습니다.&#39;,
+BLOCKING_ACCOUNT = &#39;서비스가 정지된 이용자입니다.&#39;,
+
+THINGPLUG_RPC_FAILED = &#39;ThingPlug RPC 요청을 실패하였습니다.&#39;,
+
+CAR_DB_INSTALLATION_FAILURE_CASE = &#39;차량 DB 적용 실패&#39;,
+CAR_DB_FORMAT_ERROR = &#39;차량 DB 형식 오류&#39;,
+
+ALREADY_CONNECTED_CAR = &#39;이미 현장서비스에 등록된 예약 입니다. 차량번호를 다시 확인해주세요&#39;</code></pre>
+<p>  }<br>‘’’</p>
+<h3 id="frontend-Exception-Error-Code-Using"><a href="#frontend-Exception-Error-Code-Using" class="headerlink" title="frontend Exception Error Code Using"></a>frontend Exception Error Code Using</h3><p>‘’’</p>
+<p>import { constants } from ‘../../../enum/ExceptionCode’;</p>
+<p>Api.saveOnsiteService(appCtx.getAuthToken(),onsiteServiceforPost).then(<br>                        resp=&gt; {<br>                            if (resp.ok) {<br>                                IMASWindow.alert(‘현장서비스 등록이 완료되었습니다!’)<br>                                window.history.back()<br>                            } else {<br>                                if(resp.code = 30109) {<br>                                    IMASWindow.alert( constants.ALREADY_CONNECTED_CAR )<br>                                    return;<br>                                }<br>                                IMASWindow.alert(‘현장서비스 등록을 실패하였습니다.(‘ + resp.code + ‘)’)<br>                            }<br>                        }<br>                    ).catch(e =&gt; {IMASWindow.alert(‘현장서비스 등록을 실패하였습니다.(‘ + e + ‘)’)}</p>
+<p>‘’’</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/%EC%A0%9C%EC%96%B4%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/16/JPQL/"
+                            aria-label=": JPQL"
+                        >
+                            JPQL
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:28:32-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/JPA/">JPA</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="JPQL-Java-Persistence-Query-Language"><a href="#JPQL-Java-Persistence-Query-Language" class="headerlink" title="JPQL ( Java Persistence Query Language )"></a>JPQL ( Java Persistence Query Language )</h1><p>JPQL은 SQL과 비슷한 문법을 가진 객체 지향 쿼리입니다.</p>
+<p>JPQL의 탄생 배경은 JPA에서 제공하는 메서드 호출만으로 섬세한 쿼리 작성이 어렵다는 것에 있습니다.<br>이전 글 CURD에서는 SELECT 쿼리를 위해 JPQL을 사용했지만, EntityManager 객체의 find() 메서드를 호출하여 SELECT 쿼리를 수행 할 수도 있습니다.<br>Book book = em.find(Book.class, 1);<br>find() 메서드는 식별자를 통해서만 데이터 조회를 하며, 조건문도 없고 모든 칼럼을 조회하는 메서드입니다.<br>이것만 가지고는 조금이라도 복잡한 검색을 수행할 수가 없습니다.<br>따라서 여러 조건을 통해 검색을 하는 방법이 필요했고, 그래서 JPQL이 개발되었습니다.</p>
+<p>JPQL 특징</p>
+<ol>
+<li>테이블이 아닌 객체를 검색하는 객체지향 쿼리</li>
+<li>SQL을 추상화 했기 때문에 특정 벤더에 종속적이지 않음</li>
+<li>JPA는 JPQL을 분석하여 SQL을 생성한 후 DB에서 조회</li>
+</ol>
+<p>기본 문법<br>String jpql = “select c from Category c “;<br>JPQL은 SQL과 문법이 매우 유사하지만 몇 가지 다른 점이 있습니다.</p>
+<ol>
+<li><p>대소문자 구분<br>엔티티와 속성은 대소문자를 구분합니다.<br>예를 들어 엔티티 이름인 User, User 엔티티의 속성인 email은 대소문자를 구분합니다.<br>반면에 SELECT , FROM , AS 같은 JPQL 키워드는 대소문자를 구분하지 않습니다.</p>
+</li>
+<li><p>엔티티 이름<br>위의 예제에서 select c from 뒤에 나오는 Category는 엔티티 이름입니다.<br>Category가 클래스 이름이라고 착각할 수 있는데, 그것이 아니라 @Entity( name=”Category” )로 설정한 엔티티 이름입니다.<br>참고로 name 속성을 생략하면 기본 값으로 클래스 이름을 사용합니다.</p>
+</li>
+<li><p>별칭<br>select c from Category c 에서 c라는 별칭을 주었습니다.<br>JPQL에서 엔티티의 별칭은 필수적으로 명시해야 합니다.<br>별칭을 명시하는 AS 키워드는 생략할 수 있습니다.</p>
+</li>
+</ol>
+<p>JPQL은 복잡한 검색을 위해 사용되기 때문에 INSERT , UPDATE , DELETE 쿼리는 엔티티 매니저가 직접 호출하도록 하는 것이 좋습니다.<br>그래서 이 글에서도 SELECT 쿼리에 초점을 맞춰 JPQL을 알아보도록 하겠습니다.</p>
+<p>TypedQuery</p>
+<p>‘’’<br>public static void typedQuery(EntityManager em) {<br>    String jpql = “SELECT b FROM Book b “;<br>    TypedQuery<Book> query = em.createQuery(jpql, Book.class);</p>
+<pre><code>List&lt;Book&gt; bookList = query.getResultList();
+for( Book book : bookList) &#123;
+    System.out.println(book.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’<br>모든 책 리스트를 조회하는 쿼리입니다.</p>
+<p>EntityManager 객체에서 createQuery() 메서드를 호출하면 쿼리가 생성됩니다.<br>TypedQuery는 반환되는 엔티티가 정해져 있을 때 사용하는 타입이며,<br>em.createQuery 메서드를 호출할 때 두 번째 인자로 엔티티 클래스를 넘겨줍니다.</p>
+<p>TypedQuery 객체의 getResultList() 메서드를 호출하면 작성한 JPQL에 의해 데이터를 검색하며, List 타입으로 반환합니다.</p>
+<p>Query</p>
+<p>‘’’<br>public static void Query(EntityManager em) {<br>    String jpql = “SELECT b.no, b.title FROM Book b”;<br>    Query query = em.createQuery(jpql);</p>
+<pre><code>List&lt;Object&gt; list = query.getResultList();
+for( Object object : list ) &#123;
+      Object[] results = (Object[]) object;
+
+      for( Object result : results ) &#123;
+          System.out.print ( result );
+     &#125;
+     System.out.println();
+  &#125;</code></pre>
+<p>}<br>‘’’</p>
+<p>TypedQuery와 달리 Query 타입은 데이터 검색 결과의 타입을 명시하지 않습니다.<br>그래서 List의 제네릭 타입으로 Object를 작성했습니다.</p>
+<p>그리고 변수 jpql에서 SELECT 하는 칼럼을 선택적으로 명시한 점을 주목해주세요.<br>Query 타입을 사용하면 이런 식으로 여러 개의 칼럼을 선택적으로 명시할 수 있습니다.</p>
+<p>‘’’<br>public static void Query(EntityManager em) {<br>    String jpql = “SELECT b.no, b.title FROM Book b”;<br>    TypedQuery<Book> query = em.createQuery(jpql, Book.class);</p>
+<pre><code>List&lt;Book&gt; bookList = query.getResultList();
+for( Book book : bookList ) &#123;
+    System.out.println(book.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’<br>위와 같이 여러 개의 칼럼을 선택적으로 명시한 후, TypedQuery를 선언하면 에러가 발생합니다.</p>
+<p>setParameter (1) - 이름 기준 파라미터 바인딩<br>‘’’<br>public static void namedParameter(EntityManager em, String param1) {<br>    String jpql = “SELECT b FROM Book b WHERE title = :foo”;<br>    TypedQuery<Book> query = em.createQuery(jpql, Book.class);<br>    query.setParameter(“foo”, param1);</p>
+<pre><code>List&lt;Book&gt; bookList = query.getResultList();
+for( Book book : bookList) &#123;
+    System.out.println(book.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’<br>SELECT 쿼리를 수행할 때 항상 고정된 데이터를 조회하지 않을 수 있습니다.<br>예를들어 게시판에서 글 제목을 검색할 때 사용자가 검색하는 키워드는 유동적입니다.<br>따라서 동적으로 데이터가 바인딩 되기 위한 방법이 필요합니다.</p>
+<p>위의 예제에서 사용한 방법은 이름을 기준으로 파라미터를 바인딩 하는 방법입니다.<br>콜론( : )을 사용하여 데이터가 추가될 곳을 지정해주고,<br>query.setParameter() 메서드를 호출하여 데이터를 동적으로 바인딩 합니다.</p>
+<p>이제 DTO를 사용하는 방법에 대해 알아보겠습니다.</p>
+<p>‘’’<br>// DTO 사용 ( new 명령어 )<br>public static void useDTO (EntityManager em) {<br>    String jpql = “SELECT new com.victolee.example.dto.BookDTO(b.no, b.title) FROM Book b”;<br>    TypedQuery<BookDTO> query = em.createQuery(jpql, BookDTO.class);</p>
+<pre><code>List&lt;BookDTO&gt; list = query.getResultList();
+for( BookDTO dto : list) &#123;
+    System.out.println(dto.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’</p>
+<p>JPQL이 조금 지저분합니다.<br>SELECT와 FROM 사이에 new라는 키워드로 BookDTO를 생성하는 것처럼 보입니다.<br>( new 키워드 뒤에 DTO의 패키지명까지 작성해야 한다는 것에 주의하세요. )<br>이 때 new는 객체를 생성하라는 의미가 아니라 JPQL에서 지원하는 new 키워드입니다.</p>
+<p>BookDTO에서 생성자를 오버로딩한 이유는 위와 같이 JPQL을 작성하기 위함입니다.<br>즉 BookDTO 객체 필드 값으로 쿼리의 결과 값을 할당합니다.</p>
+<p>조인</p>
+<p>‘’’<br>// 방법1<br>String jpql = “SELECT b.title, c.name FROM Book b, Category c WHERE b.no = b.category.no”;<br>// 방법2<br>String jpql = “SELECT b, c FROM Book b JOIN b.category c”;</p>
+<p>Query query = em.createQuery(jpql);</p>
+<p>List&lt;Object[]&gt; list = query.getResultList();<br>for( Object[] row : list ) {<br>     Book book = (Book)row[0];<br>     Category category = (Category)row[1];<br>}<br>‘’’</p>
+<p>Book과 Category 엔티티가 관계를 맺고 있을 때, 조인을 하는 방법입니다.<br>아직 두 엔티티를 매핑하는 연관 관계 매핑에 대해 다루지 않았지만 JPQL을 다룰 때 한꺼번에 정리를 하려고 합니다.</p>
+<p>서로 다른 두 엔티티를 조회 했으므로 TypedQuery 타입으로 반환할 수 없습니다.</p>
+<p>방법2에서 주의할 것은 join 할 때 FROM Book b JOIN Category c 와 같이 SQL처럼 작성하면 안됩니다.</p>
+<p>그런데 join 조회 결과를 캐스팅하여 사용하는 것이 번거로우므로 DTO를 사용하는 것이 훨씬 깔끔할 것 같습니다.<br>어쨋든 조인은 이런 식으로 사용할 수 있습니다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/JPQL/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/16/%EB%AC%B8%EC%A0%9C%ED%95%B4%EA%B2%B0/"
+                            aria-label=": JPA에서의 Sort 문제해결"
+                        >
+                            JPA에서의 Sort 문제해결
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:27:09-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/JPA/">JPA</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="JPA-안의-sort-사용-시-자동으로-테이블을-지정-할-때-다른-테이블로-바꾸는-방법"><a href="#JPA-안의-sort-사용-시-자동으로-테이블을-지정-할-때-다른-테이블로-바꾸는-방법" class="headerlink" title="JPA 안의 sort 사용 시 자동으로 테이블을 지정 할 때, 다른 테이블로 바꾸는 방법"></a>JPA 안의 sort 사용 시 자동으로 테이블을 지정 할 때, 다른 테이블로 바꾸는 방법</h1><p> Sort sort = Sort.by(Collections.emptyList());</p>
+<pre><code>    for (Sort.Order order : pageable.getSort())
+    &#123;
+        switch (order.getProperty())
+        &#123;
+            case &quot;requestedCompanyName&quot;:
+                sort = sort.and(JpaSort.unsafe(order.getDirection(), &quot;FU.company.name&quot;));
+                break;
+            case &quot;requestedBranchName&quot;:
+                sort = sort.and(JpaSort.unsafe(order.getDirection(), &quot;FU.branch.name&quot;));
+                break;
+            case &quot;requestedUserName&quot;:
+                sort = sort.and(JpaSort.unsafe(order.getDirection(), &quot;FU.name&quot;));
+                break;
+            default:
+                sort = sort.and(Sort.by(order.getDirection(), order.getProperty()));
+                break;
+        &#125;
+    &#125;
+
+    return userReportRepository.fetchAllByParameters
+        (
+            type, step, reportedUserId, reportedCompanyId, reportedBranchId, processedUserId, searchKeyword,
+            reportedDateTimeFrom, reportedDateTimeTo, processedDateTimeFrom, processedDateTimeTo,
+            PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort)
+        );
+
+
+
+JpaSort.unsafe : 자동으로 테이블으 지정하는 것으 막아준다
+JpaSort.unsafe (a,b) : a는 desc, asc 같은것들 , b는 테이블 지정
+order.getDirection() : 원래의 a를 가져온다
+order.getProperty() : 원래의 b를 가져온다
+PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort) : 위의 조건을 사용 할 시 넘겨주는 파라미터 형태</code></pre>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/%EB%AC%B8%EC%A0%9C%ED%95%B4%EA%B2%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/01/16/JPA/"
                             aria-label=": JPA"
                         >
