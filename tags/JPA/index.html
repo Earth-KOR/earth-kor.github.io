@@ -244,6 +244,155 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/03/27/Dirty%20checking/"
+                            aria-label=": Dirty checking"
+                        >
+                            Dirty checking
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-27T11:44:09-07:00">
+	
+		    Mar 27, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Dirty-checking"><a href="#Dirty-checking" class="headerlink" title="Dirty checking"></a>Dirty checking</h1><p>Dirty란 상태의 변화가 생긴 정도<br>Dirty Checking이란 상태 변경 검사</p>
+<p>JPA에서는 트랜잭션이 끝나는 시점에 변화가 있는 모든 엔티티 객체를 데이터 베이스에 자동으로 반영해준 다.</p>
+<p>이떄 변화가 있다의 기준은 최초 조회 상태입니다.</p>
+<p>당연히 이런 상태 변경 검사의 대상은 영속성 컨텍스트가 관리하는 엔티티에만적용 됩니다.</p>
+<ul>
+<li>detach된 엔티티 (준영속)</li>
+<li>DB에 반영되기 전 처음 생성된 엔티티 (비영속)<br>등 준영속/비영속 상태의 엔티티는 Dirty Checking 대상에 포함되지 않습니다.즉, 값을 변경해도 데이터베이스에 반영되지 않는다는 것이죠.</li>
+</ul>
+<h2 id="변경-부분만-update하고-싶을-땐"><a href="#변경-부분만-update하고-싶을-땐" class="headerlink" title="변경 부분만 update하고 싶을 땐?"></a>변경 부분만 update하고 싶을 땐?</h2><p>JPA에서는 전체 필드를 업데이트하는 방식을 기본값으로 사용합니다.전체 필드를 업데이트하는 방식의 장점은 다음과 같습니다.</p>
+<ul>
+<li>생성되는 쿼리가 같아 부트 실행시점에 미리 만들어서 재사용가능합니다.</li>
+<li>데이터베이스 입장에서 쿼리 재사용이 가능하다<ul>
+<li>동일한 쿼리를 받으면 이전에 파싱된 쿼리를 재사용한다.</li>
+</ul>
+</li>
+</ul>
+<p>그래서 이런 경우엔 @DynamicUpdate로 변경 필드만 반영되도록 할 수 있습니다.<br>엔티티 최상단에 아래와 같이 @DynamicUpdate 를 선언해주시면 됩니다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/27/Dirty%20checking/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/03/27/Lazy%20vs%20Eager/"
+                            aria-label=": Lazy vs Eager"
+                        >
+                            Lazy vs Eager
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-27T11:44:09-07:00">
+	
+		    Mar 27, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="LAZY-EAGER"><a href="#LAZY-EAGER" class="headerlink" title="LAZY , EAGER"></a>LAZY , EAGER</h1><p>@ManyToOne  or  @OneToMany 형태로 설계되어 있다면 다음과 같은 형태로 데이터를 가져올 수 있다.</p>
+<ol>
+<li>지연로딩 (LAZY)</li>
+</ol>
+<ul>
+<li>로딩되는 시점에 Lazy 로딩 설정이 되어있는 Team 엔티티는 프록시 객체로 가져온다</li>
+<li>후에 실제 객체를 사용하는 시점에 초기화가 된다. 이때 DB에 쿼리가 나간다</li>
+<li>이런 경우 SELECT 쿼리가 따로따로 2번 나간다.</li>
+<li>만약, 바로 두 테이블의 데이터가 필요하다면 EAGER를 사용하면 된다.</li>
+</ul>
+<ol start="2">
+<li>즉시로딩 (EAGER)</li>
+</ol>
+<ul>
+<li>대부분의 JPA 구현체는 가능하면 조인을 사용하서 SQL 한번에 조회하려고 한다.</li>
+<li>이렇게 하면 실제 조회 할 떄 한방 쿼리로 다 조회 해온다.</li>
+<li>이때는 프록시 객체가 아니라 실제 객체를 가져온다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/27/Lazy%20vs%20Eager/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/01/16/JPA/"
                             aria-label=": JPA"
                         >

@@ -6,24 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="이상권의 개발노트">
-    <title>HTTP &amp; HTTPS - 이상권의 개발노트</title>
+    <title>영속성 컨텍스트 - 이상권의 개발노트</title>
     <meta name="author" content="이상권">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자\nHTTP vs SSL\n인터넷의 계층 구조는 TCP/IP -&gt; SSL/TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다!\nSSL vs TLS\nSSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 , 즉 같은것이다!\nSSL 인증서\n클라이언트가 서버에 접속하면 서버가 클라이언트에게 SSL 인증서를 보여준다.클라이언트는 이 인증서를 검증/절차 과정을 거치며 이 과정을 거치면 해당 사이트를 진행 시킨다\n역할\n\n공격자에게 노출되는 것을 막는다\n\n1.. 대칭키 보완\n암호화 복호화를 진행 할 때 하나의 인증키를 사용한다. 보통 개인의 것을 보관 할 떄 많이 사용하며 해당 파일을 다른 파일로 보낼 때 대칭키를 보내야 함으로 해킹의 위험도가 높다\n2.. 공개키 보완하나의 파일을 암호화 할 때 2개의 쌍 키를 만든다. 공개키로 암호화를 진행하고 개인키로 복호화를 진행한다.\n\n신뢰성 있는 사이트인지 판단한다.\n악의적인 변경을 하지 못하게 한다.\nSSL 통신에 필요한 공개키를 클라이언트에게 제공한다.\n\n이러한 SSL 인증서는 CA라고하는 기업이 책임지고 인증서를 발급 해준다. 이같은 인증서는 신뢰가 있는 사이트인지 판별 할 수 있도록 도와준다\n내가 개인적으로 사이트를 운영 하고 있다면 이러한 CA기관에 자료를 주고 내가 안전한 사람이라고 판별되면 인증서가 나오는데 그것을 구매하고 사용하면 된다!\nSSL 인증서에 포함되어 있는것\n\n서비스의 정보 ( CA의 정보, 어떤 서비스를 하는지 )\n서버의 공개키 ( 공개키 ,암호화 방법 )\n\n브라우저는 모든 CA의 정보를 알고 있기 때문에 이 같은 SSL 인증서를 받으면 CA의 리스트에 있는지 판단하고 맞으면 해당 개인키로 복호화를 진행하고 이를 성공하면 신뢰성 있는 사이트라고 판단한다.\n복원하는 방법\n접속 -&gt; 서버가 인증서 전달 -&gt; 브라우저가 CA확인 -&gt; CA의 개인키로 복호화 -&gt; 해당 CA인거를  인증서로 인증\n","dateCreated":"2021-03-20T07:08:31-07:00","dateModified":"2021-03-20T20:54:52-07:00","datePublished":"2021-03-20T07:08:31-07:00","description":"","headline":"HTTP & HTTPS","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/","keywords":"이론노트, 인터넷"}</script>
-    <meta name="description" content="HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자 HTTP vs SSL 인터넷의 계층 구조는 TCP&#x2F;IP -&gt; SSL&#x2F;TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다! SSL vs TLS SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 ,">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"영속성 컨텍스트엔티티 매니저를 통해 엔티티를 저장하거나 조회하면 엔티티 매니저는 영속성 컨텍스트에 엔티티를 보관하고 관리한다. \nentityManager.persist ( [entityName] )\n\n엔티티 매니저를 사용해 회원 엔티티를 영속성 컨텍스트에 저장 한다는 의미\n\n영속성 컨텍스트의 특징\n엔티티 매니저를 생성 할 때 하나 만들어진다.\n엔티티 매니저를 통해서 영속성 컨텍스트에 접근하고 관리 할 수 있다.\n\n엔티티의 생명주기\n비영속 : 영속성 컨텍스트와 전혀 관계가 없는 상태\n영속. : 영속성 컨텍스트에 저장된 상태\n준영속 : 영속성 컨텍스트에 저장되었다고 분리된 상태\n삭제 : 삭제된 상태\n\n영속성 컨텍스트의 특징\n영속성 컨텍스트의 식별자 값\n\n\n영속성 컨텍스트는 엔티티를 식별자 값으로 구분한다. 따라서 영속 상태는 식별자 값이 반드시 있어야 한다.\n\n\n영속성 컨텍스트와 데이터베이스 저장\n\n\nJPA는 보통 트랜잭션을 커밋하는 순간 영속성 컨텍스트에 새로 저장된 엔티티를 데이터 베이스에 반영하는데 이를 flush 라고 한다.\n\n영속성 컨텍스트가 엔티티를 관리하는 다음과 같은 장점이 있다.\n1차 캐시\n\n\n영속성 컨텍스트  내부에는 캐시가 있는데 이를 1차 캐시라고 한다. 영속 상태의 엔티티를 이곳에 저장한다. 1차 캐시의 키는 식별자 값이고 값은 엔티티 인스터스이다.\n\n\n동일성 보장\n\n\n영속성 컨텍스트는 엔티티의 동일성을 보장한다.\n\nMember a = em.find(Member.class, “member1”);Member b = em.find(Member.class, “member1”);System.out.print(a==b) // true\n실제 인스턴스는 다를 수 있지만 인스턴스가 가지고 있는 값은 같다.\n\n트랙잭션을 지원하는 쓰기 지연\n\n엔티티 매니저는 트랜잭션을 커밋하기 직전까지 내부 쿼리 저장소에 INSERT SQL을 모아둔다. 그리고 트랜잭션을 커밋할 때 모아둔 쿼리를 DB에 보낸다. 이것을 트랜잭션을 지원하는 쓰기 지연이라 한다.\n변경감지\n트랙잭션을 커밋하면 엔티티 매니저 내부에서 먼저 플러시가 호출된다.\n\n엔티티와 스냅샷을 비교하여 변경된 엔티티를 찾는다.\n\n변경된 엔티티가 있으면 수정 쿼리를 생성해서 쓰기 지연 SQL 저장소에 저장한다.\n\n쓰기 지연 저장소의 SQL을 플러시한다.\n\n데이터베이스 트랜잭션을 커밋한다.\n\n\n플러시플러시는 영속성 컨텍스트의 변경 내용을 데이터베이스에 반영한다. 영속성 컨텍스트의 엔티티를 지우는게 아니라 변경 내용을 데이터베이스에 동기화하는 것이다.\n플러시의 흐름\n\n변경 감지가 동작해서 스냅샷과 비교해서 수정된 엔티티를 찾는다.\n수정된 엔티티에 대해서 수정 쿼리를 만들거 SQL 저장소에 등록한다.\n쓰기 지연 SQL 저장소의 쿼리를 데이터베이스에 전송한다.\n\n플러시하는 방법1. em.flush()2. 트랙잭션 커밋시 자동 호출3. JPQL 쿼리 실행시 자동 호출\n","dateCreated":"2021-03-27T11:44:09-07:00","dateModified":"2021-03-28T03:52:47-07:00","datePublished":"2021-03-27T11:44:09-07:00","description":"","headline":"영속성 컨텍스트","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/27/%EC%98%81%EC%86%8D%EC%84%B1%20%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/27/%EC%98%81%EC%86%8D%EC%84%B1%20%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/","keywords":"Spring, 개발노트"}</script>
+    <meta name="description" content="영속성 컨텍스트엔티티 매니저를 통해 엔티티를 저장하거나 조회하면 엔티티 매니저는 영속성 컨텍스트에 엔티티를 보관하고 관리한다.  entityManager.persist ( [entityName] )  엔티티 매니저를 사용해 회원 엔티티를 영속성 컨텍스트에 저장 한다는 의미  영속성 컨텍스트의 특징 엔티티 매니저를 생성 할 때 하나 만들어진다. 엔티티 매니저">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="HTTP &amp; HTTPS">
-<meta property="og:url" content="https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/index.html">
+<meta property="og:title" content="영속성 컨텍스트">
+<meta property="og:url" content="https://earth-kor.github.io/2021/03/27/%EC%98%81%EC%86%8D%EC%84%B1%20%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/index.html">
 <meta property="og:site_name" content="이상권의 개발노트">
-<meta property="og:description" content="HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자 HTTP vs SSL 인터넷의 계층 구조는 TCP&#x2F;IP -&gt; SSL&#x2F;TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다! SSL vs TLS SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 ,">
+<meta property="og:description" content="영속성 컨텍스트엔티티 매니저를 통해 엔티티를 저장하거나 조회하면 엔티티 매니저는 영속성 컨텍스트에 엔티티를 보관하고 관리한다.  entityManager.persist ( [entityName] )  엔티티 매니저를 사용해 회원 엔티티를 영속성 컨텍스트에 저장 한다는 의미  영속성 컨텍스트의 특징 엔티티 매니저를 생성 할 때 하나 만들어진다. 엔티티 매니저">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-03-20T14:08:31.000Z">
-<meta property="article:modified_time" content="2021-03-21T03:54:52.362Z">
+<meta property="article:published_time" content="2021-03-27T18:44:09.000Z">
+<meta property="article:modified_time" content="2021-03-28T10:52:47.306Z">
 <meta property="article:author" content="이상권">
-<meta property="article:tag" content="이론노트">
-<meta property="article:tag" content="인터넷">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="개발노트">
 <meta name="twitter:card" content="summary">
     
     
@@ -247,20 +247,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            HTTP &amp; HTTPS
+            영속성 컨텍스트
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2021-03-20T07:08:31-07:00">
+    <time datetime="2021-03-27T11:44:09-07:00">
 	
-		    Mar 20, 2021
+		    Mar 27, 2021
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EC%9D%B8%ED%84%B0%EB%84%B7/">인터넷</a>
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
 
 
     
@@ -272,35 +272,71 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="HTTP-vs-HTTPS"><a href="#HTTP-vs-HTTPS" class="headerlink" title="HTTP vs HTTPS"></a>HTTP vs HTTPS</h1><p> -&gt; html을 전송하기 위한 규약<br> -&gt; S는 Security의 약자</p>
-<p>HTTP vs SSL</p>
-<p>인터넷의 계층 구조는 TCP/IP -&gt; SSL/TLS -&gt; HTTP 순이다<br>즉 HTTP가 SSL을 쓰는게 HTTPS이다!</p>
-<p>SSL vs TLS</p>
-<p>SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 , 즉 같은것이다!</p>
-<p>SSL 인증서</p>
-<p>클라이언트가 서버에 접속하면 서버가 클라이언트에게 SSL 인증서를 보여준다.<br>클라이언트는 이 인증서를 검증/절차 과정을 거치며 이 과정을 거치면 해당 사이트를 진행 시킨다</p>
-<p>역할</p>
-<ol>
-<li>공격자에게 노출되는 것을 막는다</li>
+            <h1 id="영속성-컨텍스트"><a href="#영속성-컨텍스트" class="headerlink" title="영속성 컨텍스트"></a>영속성 컨텍스트</h1><p>엔티티 매니저를 통해 엔티티를 저장하거나 조회하면 엔티티 매니저는 영속성 컨텍스트에 엔티티를 보관하고 관리한다. </p>
+<p>entityManager.persist ( [entityName] )</p>
+<ul>
+<li>엔티티 매니저를 사용해 회원 엔티티를 영속성 컨텍스트에 저장 한다는 의미</li>
+</ul>
+<h2 id="영속성-컨텍스트의-특징"><a href="#영속성-컨텍스트의-특징" class="headerlink" title="영속성 컨텍스트의 특징"></a>영속성 컨텍스트의 특징</h2><ol>
+<li>엔티티 매니저를 생성 할 때 하나 만들어진다.</li>
+<li>엔티티 매니저를 통해서 영속성 컨텍스트에 접근하고 관리 할 수 있다.</li>
 </ol>
-<p>1.. 대칭키 보완</p>
-<p>암호화 복호화를 진행 할 때 하나의 인증키를 사용한다. 보통 개인의 것을 보관 할 떄 많이 사용하며 해당 파일을 다른 파일로 보낼 때 대칭키를 보내야 함으로 해킹의 위험도가 높다</p>
-<p>2.. 공개키 보완하나의 파일을 암호화 할 때 2개의 쌍 키를 만든다. 공개키로 암호화를 진행하고 개인키로 복호화를 진행한다.</p>
+<h2 id="엔티티의-생명주기"><a href="#엔티티의-생명주기" class="headerlink" title="엔티티의 생명주기"></a>엔티티의 생명주기</h2><ol>
+<li>비영속 : 영속성 컨텍스트와 전혀 관계가 없는 상태</li>
+<li>영속. : 영속성 컨텍스트에 저장된 상태</li>
+<li>준영속 : 영속성 컨텍스트에 저장되었다고 분리된 상태</li>
+<li>삭제 : 삭제된 상태</li>
+</ol>
+<h2 id="영속성-컨텍스트의-특징-1"><a href="#영속성-컨텍스트의-특징-1" class="headerlink" title="영속성 컨텍스트의 특징"></a>영속성 컨텍스트의 특징</h2><ol>
+<li>영속성 컨텍스트의 식별자 값</li>
+</ol>
+<ul>
+<li>영속성 컨텍스트는 엔티티를 식별자 값으로 구분한다. 따라서 영속 상태는 식별자 값이 반드시 있어야 한다.</li>
+</ul>
 <ol start="2">
-<li>신뢰성 있는 사이트인지 판단한다.</li>
-<li>악의적인 변경을 하지 못하게 한다.</li>
-<li>SSL 통신에 필요한 공개키를 클라이언트에게 제공한다.</li>
+<li>영속성 컨텍스트와 데이터베이스 저장</li>
 </ol>
-<p>이러한 SSL 인증서는 CA라고하는 기업이 책임지고 인증서를 발급 해준다. 이같은 인증서는 신뢰가 있는 사이트인지 판별 할 수 있도록 도와준다</p>
-<p>내가 개인적으로 사이트를 운영 하고 있다면 이러한 CA기관에 자료를 주고 내가 안전한 사람이라고 판별되면 인증서가 나오는데 그것을 구매하고 사용하면 된다!</p>
-<p>SSL 인증서에 포함되어 있는것</p>
+<ul>
+<li>JPA는 보통 트랜잭션을 커밋하는 순간 영속성 컨텍스트에 새로 저장된 엔티티를 데이터 베이스에 반영하는데 이를 flush 라고 한다.</li>
+</ul>
+<h2 id="영속성-컨텍스트가-엔티티를-관리하는-다음과-같은-장점이-있다"><a href="#영속성-컨텍스트가-엔티티를-관리하는-다음과-같은-장점이-있다" class="headerlink" title="영속성 컨텍스트가 엔티티를 관리하는 다음과 같은 장점이 있다."></a>영속성 컨텍스트가 엔티티를 관리하는 다음과 같은 장점이 있다.</h2><ol>
+<li>1차 캐시</li>
+</ol>
+<ul>
+<li>영속성 컨텍스트  내부에는 캐시가 있는데 이를 1차 캐시라고 한다. 영속 상태의 엔티티를 이곳에 저장한다. 1차 캐시의 키는 식별자 값이고 값은 엔티티 인스터스이다.</li>
+</ul>
+<ol start="2">
+<li>동일성 보장</li>
+</ol>
+<ul>
+<li>영속성 컨텍스트는 엔티티의 동일성을 보장한다.</li>
+</ul>
+<p>Member a = em.find(Member.class, “member1”);<br>Member b = em.find(Member.class, “member1”);<br>System.out.print(a==b) // true</p>
+<p>실제 인스턴스는 다를 수 있지만 인스턴스가 가지고 있는 값은 같다.</p>
+<ol start="3">
+<li>트랙잭션을 지원하는 쓰기 지연</li>
+</ol>
+<p>엔티티 매니저는 트랜잭션을 커밋하기 직전까지 내부 쿼리 저장소에 INSERT SQL을 모아둔다. 그리고 트랜잭션을 커밋할 때 모아둔 쿼리를 DB에 보낸다. 이것을 트랜잭션을 지원하는 쓰기 지연이라 한다.</p>
+<h2 id="변경감지"><a href="#변경감지" class="headerlink" title="변경감지"></a>변경감지</h2><ol>
+<li><p>트랙잭션을 커밋하면 엔티티 매니저 내부에서 먼저 플러시가 호출된다.</p>
+</li>
+<li><p>엔티티와 스냅샷을 비교하여 변경된 엔티티를 찾는다.</p>
+</li>
+<li><p>변경된 엔티티가 있으면 수정 쿼리를 생성해서 쓰기 지연 SQL 저장소에 저장한다.</p>
+</li>
+<li><p>쓰기 지연 저장소의 SQL을 플러시한다.</p>
+</li>
+<li><p>데이터베이스 트랜잭션을 커밋한다.</p>
+</li>
+</ol>
+<h2 id="플러시"><a href="#플러시" class="headerlink" title="플러시"></a>플러시</h2><p>플러시는 영속성 컨텍스트의 변경 내용을 데이터베이스에 반영한다. 영속성 컨텍스트의 엔티티를 지우는게 아니라 변경 내용을 데이터베이스에 동기화하는 것이다.</p>
+<p>플러시의 흐름</p>
 <ol>
-<li>서비스의 정보 ( CA의 정보, 어떤 서비스를 하는지 )</li>
-<li>서버의 공개키 ( 공개키 ,암호화 방법 )</li>
+<li>변경 감지가 동작해서 스냅샷과 비교해서 수정된 엔티티를 찾는다.</li>
+<li>수정된 엔티티에 대해서 수정 쿼리를 만들거 SQL 저장소에 등록한다.</li>
+<li>쓰기 지연 SQL 저장소의 쿼리를 데이터베이스에 전송한다.</li>
 </ol>
-<p>브라우저는 모든 CA의 정보를 알고 있기 때문에 이 같은 SSL 인증서를 받으면 CA의 리스트에 있는지 판단하고 맞으면 해당 개인키로 복호화를 진행하고 이를 성공하면 신뢰성 있는 사이트라고 판단한다.</p>
-<p>복원하는 방법</p>
-<p>접속 -&gt; 서버가 인증서 전달 -&gt; 브라우저가 CA확인 -&gt; CA의 개인키로 복호화 -&gt; 해당 CA인거를  인증서로 인증</p>
+<p>플러시하는 방법<br>1. em.flush()2. 트랙잭션 커밋시 자동 호출3. JPQL 쿼리 실행시 자동 호출</p>
 
             
 
@@ -312,7 +348,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B8%ED%84%B0%EB%84%B7/" rel="tag">인터넷</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/Spring/" rel="tag">Spring</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/" rel="tag">개발노트</a>
 
             </div>
         
@@ -325,9 +361,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
-                    data-tooltip="예외처리"
-                    aria-label="PREVIOUS: 예외처리"
+                    href="/2021/03/27/Lazy%20vs%20Eager/"
+                    data-tooltip="Lazy vs Eager"
+                    aria-label="PREVIOUS: Lazy vs Eager"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -339,9 +375,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/hosting%20&%20DNS/"
-                    data-tooltip="hosting &amp; DNS"
-                    aria-label="NEXT: hosting &amp; DNS"
+                    href="/2021/03/27/%EC%88%9C%ED%99%98%EC%B0%B8%EC%A1%B0/"
+                    data-tooltip="순환참조"
+                    aria-label="NEXT: 순환참조"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -401,9 +437,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
-                    data-tooltip="예외처리"
-                    aria-label="PREVIOUS: 예외처리"
+                    href="/2021/03/27/Lazy%20vs%20Eager/"
+                    data-tooltip="Lazy vs Eager"
+                    aria-label="PREVIOUS: Lazy vs Eager"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -415,9 +451,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/hosting%20&%20DNS/"
-                    data-tooltip="hosting &amp; DNS"
-                    aria-label="NEXT: hosting &amp; DNS"
+                    href="/2021/03/27/%EC%88%9C%ED%99%98%EC%B0%B8%EC%A1%B0/"
+                    data-tooltip="순환참조"
+                    aria-label="NEXT: 순환참조"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

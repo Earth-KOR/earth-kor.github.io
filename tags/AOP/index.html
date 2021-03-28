@@ -244,6 +244,67 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/03/27/Fetch%20Join/"
+                            aria-label=": Fetch Join"
+                        >
+                            Fetch Join
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-27T11:44:09-07:00">
+	
+		    Mar 27, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/JPA/">JPA</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Fetch-Join"><a href="#Fetch-Join" class="headerlink" title="Fetch Join"></a>Fetch Join</h1><p>두개의 엔티티는 회원과 팀을 나타내고 있으면서 N : 1 양방향 매핑으로 동작하고 있다. 연관관계의 주인은 N쪽인 회원 엔티티로 선정하였고 FetchType.Lazy를 통해 조회과정에서 지연로딩 전략을 선택하였다고 하자.</p>
+<p>// JPQL<br>select m from Memeber m join fetch m.team</p>
+<p>// 실제 데이터베이스에 전송되는 SQL<br>SELECT M.<em>, T.</em> FROM MEMBER M INNER JOIN TEAM T ON M.TEAM_ID = T.ID</p>
+<p>JPQL에서 join fetch 를 사용하면 실제 SQL에서는 두 테이블을 조인한 테이블을 조회할 수 있다. 데이터베이스로 전송되는 실제 SQL을 자세히 보면 FetchType.EAGER를 사용한 즉시로딩 전략으로 조회한 것 SQL이 같다는 것을 알 수 있다.<br>(엔티티에서 지연로딩 전략으로 세팅을 해도 JPQL에서 페치조인으로 날리는 것이 우선순위)<br> <br>즉시로딩 전략은 묵시적인 방식이라서 원하지 않는 타이밍에도 항상 연관필드를 조인을 하고 결과를 반환한다. 물론 조인을 하고나서 데이터를 처리하는 것이 훨씬 효율적인 구성이 있을텐데 그때 바로 JPQL 페치조인을 사용하는 것이다. JPQL 페치조인은 명시적으로 동적인 타이밍에 원하는 객체그래프를 탐색할 수 있어 유용하다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/27/Fetch%20Join/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/01/16/JPQL/"
                             aria-label=": JPQL"
                         >

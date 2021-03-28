@@ -6,24 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="이상권의 개발노트">
-    <title>HTTP &amp; HTTPS - 이상권의 개발노트</title>
+    <title>예외처리 - 이상권의 개발노트</title>
     <meta name="author" content="이상권">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자\nHTTP vs SSL\n인터넷의 계층 구조는 TCP/IP -&gt; SSL/TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다!\nSSL vs TLS\nSSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 , 즉 같은것이다!\nSSL 인증서\n클라이언트가 서버에 접속하면 서버가 클라이언트에게 SSL 인증서를 보여준다.클라이언트는 이 인증서를 검증/절차 과정을 거치며 이 과정을 거치면 해당 사이트를 진행 시킨다\n역할\n\n공격자에게 노출되는 것을 막는다\n\n1.. 대칭키 보완\n암호화 복호화를 진행 할 때 하나의 인증키를 사용한다. 보통 개인의 것을 보관 할 떄 많이 사용하며 해당 파일을 다른 파일로 보낼 때 대칭키를 보내야 함으로 해킹의 위험도가 높다\n2.. 공개키 보완하나의 파일을 암호화 할 때 2개의 쌍 키를 만든다. 공개키로 암호화를 진행하고 개인키로 복호화를 진행한다.\n\n신뢰성 있는 사이트인지 판단한다.\n악의적인 변경을 하지 못하게 한다.\nSSL 통신에 필요한 공개키를 클라이언트에게 제공한다.\n\n이러한 SSL 인증서는 CA라고하는 기업이 책임지고 인증서를 발급 해준다. 이같은 인증서는 신뢰가 있는 사이트인지 판별 할 수 있도록 도와준다\n내가 개인적으로 사이트를 운영 하고 있다면 이러한 CA기관에 자료를 주고 내가 안전한 사람이라고 판별되면 인증서가 나오는데 그것을 구매하고 사용하면 된다!\nSSL 인증서에 포함되어 있는것\n\n서비스의 정보 ( CA의 정보, 어떤 서비스를 하는지 )\n서버의 공개키 ( 공개키 ,암호화 방법 )\n\n브라우저는 모든 CA의 정보를 알고 있기 때문에 이 같은 SSL 인증서를 받으면 CA의 리스트에 있는지 판단하고 맞으면 해당 개인키로 복호화를 진행하고 이를 성공하면 신뢰성 있는 사이트라고 판단한다.\n복원하는 방법\n접속 -&gt; 서버가 인증서 전달 -&gt; 브라우저가 CA확인 -&gt; CA의 개인키로 복호화 -&gt; 해당 CA인거를  인증서로 인증\n","dateCreated":"2021-03-20T07:08:31-07:00","dateModified":"2021-03-20T20:54:52-07:00","datePublished":"2021-03-20T07:08:31-07:00","description":"","headline":"HTTP & HTTPS","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/","keywords":"이론노트, 인터넷"}</script>
-    <meta name="description" content="HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자 HTTP vs SSL 인터넷의 계층 구조는 TCP&#x2F;IP -&gt; SSL&#x2F;TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다! SSL vs TLS SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 ,">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"예외처리\n예외란?\n\n오류란 개발자가 미리 예측하여 처리 할 수 없다 이와 같은 문제는 심각한 문제가 될 수 있는 문제지만 이것은 에러는 개발자가 신경을 쓰지 않아도 되는 부분이다. ( 즉 시스템에 변화를 주어 문제를 처리해야 하는 경우가 일반적이다 )\n 하지만 예외는 개발자가 처리 할 수 있기 때문에 예외를 구분하고 그에 따른 처리 방법을 명확히 알고 적용하는 것이 중요하다.\nException은 수 많은 자식 클래스를 가지고 있다. 그 중 RuntimeException을 주목해야 한다. \nRuntimeExceptionRuntimeException은 CheckedException과 UncheckedException을 구분하는 기준이다. Exception의 자식 클래스 중 RuntimeException을 제외한 모든 클래스는 CheckedException이며 RuntimeException과 그의 자식 클래스 들을 Unchecked Exception이라 부른다. \nCheckedException컴파일 단계에서 명확하게 Exception 체크가 가능한 것을 Checked Exception이라 하며, 실행 과정 중 어떠한 특정 논리에 의해 발견되는 Exception을 Uncheck Exception이라 한다. \n에러의 roll-back 여부또한 트랜잭션의 roll-back 여부이다. 기본적응로 Checked Exception은 예외가 발생하면 트랜잭션을 roll-back하지 않고 예외를 던져준다. 하지만 Unchecked Exception은 예외 발생 시 트랜잭션을 roll-back 한다는 점에서 차이가 있다. 트랜잰션의 전파방식 즉 어떻게 묶어 놓느냐에 따라서 Check, Uncheck 영향도가 크디ㅏ. Roll-back이 되는 범위가 달라지기 때문에 개발자가 이를 인지하지 못하면 실행결과가 맞지 않거나 예상치 못한 예외가 발생 할 수 있다. 그러므로 이를 인지하고 트랜잭션을 적용 시킬 때 전파방식과 롤백규칙을 적절하게 사용해야한다..\n예외 처리 방법\n다른 작업 흐름으로 유도하는 예외 복구\n처리하지 않고 호출한 쪽으로 throw 던져주는 예외 회피\n명확한 의미의 예외로 전환 후 throw 던져주는 예외 전환\n\nThrows vs throwThrows는 현재 메서드에서 자신을 호출한 상위 메서드로 Exception을 발생시킴throw는 억지로 에러를 발생시키고자 할 때 사용한다 ( 현재 메서드, 혹은 상위 메서드로 )\n즉, throws는 예외를 메인까지 전달해주는 매개체이고 , throw는 내가 인위적으로 특정 예외를 발생 할 때 new로 만들어서 쓰인다!\n","dateCreated":"2021-03-27T11:44:09-07:00","dateModified":"2021-03-28T03:52:09-07:00","datePublished":"2021-03-27T11:44:09-07:00","description":"","headline":"예외처리","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/","keywords":"Java, 이론노트"}</script>
+    <meta name="description" content="예외처리 예외란?  오류란 개발자가 미리 예측하여 처리 할 수 없다 이와 같은 문제는 심각한 문제가 될 수 있는 문제지만 이것은 에러는 개발자가 신경을 쓰지 않아도 되는 부분이다. ( 즉 시스템에 변화를 주어 문제를 처리해야 하는 경우가 일반적이다 )  하지만 예외는 개발자가 처리 할 수 있기 때문에 예외를 구분하고 그에 따른 처리 방법을 명확히 알고 적용">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="HTTP &amp; HTTPS">
-<meta property="og:url" content="https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/index.html">
+<meta property="og:title" content="예외처리">
+<meta property="og:url" content="https://earth-kor.github.io/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/index.html">
 <meta property="og:site_name" content="이상권의 개발노트">
-<meta property="og:description" content="HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자 HTTP vs SSL 인터넷의 계층 구조는 TCP&#x2F;IP -&gt; SSL&#x2F;TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다! SSL vs TLS SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 ,">
+<meta property="og:description" content="예외처리 예외란?  오류란 개발자가 미리 예측하여 처리 할 수 없다 이와 같은 문제는 심각한 문제가 될 수 있는 문제지만 이것은 에러는 개발자가 신경을 쓰지 않아도 되는 부분이다. ( 즉 시스템에 변화를 주어 문제를 처리해야 하는 경우가 일반적이다 )  하지만 예외는 개발자가 처리 할 수 있기 때문에 예외를 구분하고 그에 따른 처리 방법을 명확히 알고 적용">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-03-20T14:08:31.000Z">
-<meta property="article:modified_time" content="2021-03-21T03:54:52.362Z">
+<meta property="article:published_time" content="2021-03-27T18:44:09.000Z">
+<meta property="article:modified_time" content="2021-03-28T10:52:09.869Z">
 <meta property="article:author" content="이상권">
+<meta property="article:tag" content="Java">
 <meta property="article:tag" content="이론노트">
-<meta property="article:tag" content="인터넷">
 <meta name="twitter:card" content="summary">
     
     
@@ -247,20 +247,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            HTTP &amp; HTTPS
+            예외처리
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2021-03-20T07:08:31-07:00">
+    <time datetime="2021-03-27T11:44:09-07:00">
 	
-		    Mar 20, 2021
+		    Mar 27, 2021
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EC%9D%B8%ED%84%B0%EB%84%B7/">인터넷</a>
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Java/">Java</a>
 
 
     
@@ -272,35 +272,22 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="HTTP-vs-HTTPS"><a href="#HTTP-vs-HTTPS" class="headerlink" title="HTTP vs HTTPS"></a>HTTP vs HTTPS</h1><p> -&gt; html을 전송하기 위한 규약<br> -&gt; S는 Security의 약자</p>
-<p>HTTP vs SSL</p>
-<p>인터넷의 계층 구조는 TCP/IP -&gt; SSL/TLS -&gt; HTTP 순이다<br>즉 HTTP가 SSL을 쓰는게 HTTPS이다!</p>
-<p>SSL vs TLS</p>
-<p>SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 , 즉 같은것이다!</p>
-<p>SSL 인증서</p>
-<p>클라이언트가 서버에 접속하면 서버가 클라이언트에게 SSL 인증서를 보여준다.<br>클라이언트는 이 인증서를 검증/절차 과정을 거치며 이 과정을 거치면 해당 사이트를 진행 시킨다</p>
-<p>역할</p>
-<ol>
-<li>공격자에게 노출되는 것을 막는다</li>
+            <h1 id="예외처리"><a href="#예외처리" class="headerlink" title="예외처리"></a>예외처리</h1><ol>
+<li>예외란?</li>
 </ol>
-<p>1.. 대칭키 보완</p>
-<p>암호화 복호화를 진행 할 때 하나의 인증키를 사용한다. 보통 개인의 것을 보관 할 떄 많이 사용하며 해당 파일을 다른 파일로 보낼 때 대칭키를 보내야 함으로 해킹의 위험도가 높다</p>
-<p>2.. 공개키 보완하나의 파일을 암호화 할 때 2개의 쌍 키를 만든다. 공개키로 암호화를 진행하고 개인키로 복호화를 진행한다.</p>
-<ol start="2">
-<li>신뢰성 있는 사이트인지 판단한다.</li>
-<li>악의적인 변경을 하지 못하게 한다.</li>
-<li>SSL 통신에 필요한 공개키를 클라이언트에게 제공한다.</li>
+<p>오류란 개발자가 미리 예측하여 처리 할 수 없다 이와 같은 문제는 심각한 문제가 될 수 있는 문제지만 이것은 에러는 개발자가 신경을 쓰지 않아도 되는 부분이다. ( 즉 시스템에 변화를 주어 문제를 처리해야 하는 경우가 일반적이다 )</p>
+<p> 하지만 예외는 개발자가 처리 할 수 있기 때문에 예외를 구분하고 그에 따른 처리 방법을 명확히 알고 적용하는 것이 중요하다.</p>
+<p>Exception은 수 많은 자식 클래스를 가지고 있다. 그 중 RuntimeException을 주목해야 한다. </p>
+<h2 id="RuntimeException"><a href="#RuntimeException" class="headerlink" title="RuntimeException"></a>RuntimeException</h2><p>RuntimeException은 CheckedException과 UncheckedException을 구분하는 기준이다. Exception의 자식 클래스 중 RuntimeException을 제외한 모든 클래스는 CheckedException이며 RuntimeException과 그의 자식 클래스 들을 Unchecked Exception이라 부른다. </p>
+<h2 id="CheckedException"><a href="#CheckedException" class="headerlink" title="CheckedException"></a>CheckedException</h2><p>컴파일 단계에서 명확하게 Exception 체크가 가능한 것을 Checked Exception이라 하며, 실행 과정 중 어떠한 특정 논리에 의해 발견되는 Exception을 Uncheck Exception이라 한다. </p>
+<h2 id="에러의-roll-back-여부"><a href="#에러의-roll-back-여부" class="headerlink" title="에러의 roll-back 여부"></a>에러의 roll-back 여부</h2><p>또한 트랜잭션의 roll-back 여부이다. 기본적응로 Checked Exception은 예외가 발생하면 트랜잭션을 roll-back하지 않고 예외를 던져준다. 하지만 Unchecked Exception은 예외 발생 시 트랜잭션을 roll-back 한다는 점에서 차이가 있다. 트랜잰션의 전파방식 즉 어떻게 묶어 놓느냐에 따라서 Check, Uncheck 영향도가 크디ㅏ. Roll-back이 되는 범위가 달라지기 때문에 개발자가 이를 인지하지 못하면 실행결과가 맞지 않거나 예상치 못한 예외가 발생 할 수 있다. 그러므로 이를 인지하고 트랜잭션을 적용 시킬 때 전파방식과 롤백규칙을 적절하게 사용해야한다..</p>
+<h2 id="예외-처리-방법"><a href="#예외-처리-방법" class="headerlink" title="예외 처리 방법"></a>예외 처리 방법</h2><ol>
+<li>다른 작업 흐름으로 유도하는 예외 복구</li>
+<li>처리하지 않고 호출한 쪽으로 throw 던져주는 예외 회피</li>
+<li>명확한 의미의 예외로 전환 후 throw 던져주는 예외 전환</li>
 </ol>
-<p>이러한 SSL 인증서는 CA라고하는 기업이 책임지고 인증서를 발급 해준다. 이같은 인증서는 신뢰가 있는 사이트인지 판별 할 수 있도록 도와준다</p>
-<p>내가 개인적으로 사이트를 운영 하고 있다면 이러한 CA기관에 자료를 주고 내가 안전한 사람이라고 판별되면 인증서가 나오는데 그것을 구매하고 사용하면 된다!</p>
-<p>SSL 인증서에 포함되어 있는것</p>
-<ol>
-<li>서비스의 정보 ( CA의 정보, 어떤 서비스를 하는지 )</li>
-<li>서버의 공개키 ( 공개키 ,암호화 방법 )</li>
-</ol>
-<p>브라우저는 모든 CA의 정보를 알고 있기 때문에 이 같은 SSL 인증서를 받으면 CA의 리스트에 있는지 판단하고 맞으면 해당 개인키로 복호화를 진행하고 이를 성공하면 신뢰성 있는 사이트라고 판단한다.</p>
-<p>복원하는 방법</p>
-<p>접속 -&gt; 서버가 인증서 전달 -&gt; 브라우저가 CA확인 -&gt; CA의 개인키로 복호화 -&gt; 해당 CA인거를  인증서로 인증</p>
+<h2 id="Throws-vs-throw"><a href="#Throws-vs-throw" class="headerlink" title="Throws vs throw"></a>Throws vs throw</h2><p>Throws는 현재 메서드에서 자신을 호출한 상위 메서드로 Exception을 발생시킴<br>throw는 억지로 에러를 발생시키고자 할 때 사용한다 ( 현재 메서드, 혹은 상위 메서드로 )</p>
+<p>즉, throws는 예외를 메인까지 전달해주는 매개체이고 , throw는 내가 인위적으로 특정 예외를 발생 할 때 new로 만들어서 쓰인다!</p>
 
             
 
@@ -312,7 +299,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B8%ED%84%B0%EB%84%B7/" rel="tag">인터넷</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/Java/" rel="tag">Java</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a>
 
             </div>
         
@@ -325,9 +312,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
-                    data-tooltip="예외처리"
-                    aria-label="PREVIOUS: 예외처리"
+                    href="/2021/03/27/%EC%88%9C%ED%99%98%EC%B0%B8%EC%A1%B0/"
+                    data-tooltip="순환참조"
+                    aria-label="PREVIOUS: 순환참조"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -339,9 +326,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/hosting%20&%20DNS/"
-                    data-tooltip="hosting &amp; DNS"
-                    aria-label="NEXT: hosting &amp; DNS"
+                    href="/2021/03/20/HTTP%20&%20HTTPS/"
+                    data-tooltip="HTTP &amp; HTTPS"
+                    aria-label="NEXT: HTTP &amp; HTTPS"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -401,9 +388,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
-                    data-tooltip="예외처리"
-                    aria-label="PREVIOUS: 예외처리"
+                    href="/2021/03/27/%EC%88%9C%ED%99%98%EC%B0%B8%EC%A1%B0/"
+                    data-tooltip="순환참조"
+                    aria-label="PREVIOUS: 순환참조"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -415,9 +402,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/hosting%20&%20DNS/"
-                    data-tooltip="hosting &amp; DNS"
-                    aria-label="NEXT: hosting &amp; DNS"
+                    href="/2021/03/20/HTTP%20&%20HTTPS/"
+                    data-tooltip="HTTP &amp; HTTPS"
+                    aria-label="NEXT: HTTP &amp; HTTPS"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

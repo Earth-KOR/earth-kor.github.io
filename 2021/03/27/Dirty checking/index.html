@@ -6,24 +6,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="이상권의 개발노트">
-    <title>HTTP &amp; HTTPS - 이상권의 개발노트</title>
+    <title>Dirty checking - 이상권의 개발노트</title>
     <meta name="author" content="이상권">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자\nHTTP vs SSL\n인터넷의 계층 구조는 TCP/IP -&gt; SSL/TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다!\nSSL vs TLS\nSSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 , 즉 같은것이다!\nSSL 인증서\n클라이언트가 서버에 접속하면 서버가 클라이언트에게 SSL 인증서를 보여준다.클라이언트는 이 인증서를 검증/절차 과정을 거치며 이 과정을 거치면 해당 사이트를 진행 시킨다\n역할\n\n공격자에게 노출되는 것을 막는다\n\n1.. 대칭키 보완\n암호화 복호화를 진행 할 때 하나의 인증키를 사용한다. 보통 개인의 것을 보관 할 떄 많이 사용하며 해당 파일을 다른 파일로 보낼 때 대칭키를 보내야 함으로 해킹의 위험도가 높다\n2.. 공개키 보완하나의 파일을 암호화 할 때 2개의 쌍 키를 만든다. 공개키로 암호화를 진행하고 개인키로 복호화를 진행한다.\n\n신뢰성 있는 사이트인지 판단한다.\n악의적인 변경을 하지 못하게 한다.\nSSL 통신에 필요한 공개키를 클라이언트에게 제공한다.\n\n이러한 SSL 인증서는 CA라고하는 기업이 책임지고 인증서를 발급 해준다. 이같은 인증서는 신뢰가 있는 사이트인지 판별 할 수 있도록 도와준다\n내가 개인적으로 사이트를 운영 하고 있다면 이러한 CA기관에 자료를 주고 내가 안전한 사람이라고 판별되면 인증서가 나오는데 그것을 구매하고 사용하면 된다!\nSSL 인증서에 포함되어 있는것\n\n서비스의 정보 ( CA의 정보, 어떤 서비스를 하는지 )\n서버의 공개키 ( 공개키 ,암호화 방법 )\n\n브라우저는 모든 CA의 정보를 알고 있기 때문에 이 같은 SSL 인증서를 받으면 CA의 리스트에 있는지 판단하고 맞으면 해당 개인키로 복호화를 진행하고 이를 성공하면 신뢰성 있는 사이트라고 판단한다.\n복원하는 방법\n접속 -&gt; 서버가 인증서 전달 -&gt; 브라우저가 CA확인 -&gt; CA의 개인키로 복호화 -&gt; 해당 CA인거를  인증서로 인증\n","dateCreated":"2021-03-20T07:08:31-07:00","dateModified":"2021-03-20T20:54:52-07:00","datePublished":"2021-03-20T07:08:31-07:00","description":"","headline":"HTTP & HTTPS","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/","keywords":"이론노트, 인터넷"}</script>
-    <meta name="description" content="HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자 HTTP vs SSL 인터넷의 계층 구조는 TCP&#x2F;IP -&gt; SSL&#x2F;TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다! SSL vs TLS SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 ,">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"Dirty checkingDirty란 상태의 변화가 생긴 정도Dirty Checking이란 상태 변경 검사\nJPA에서는 트랜잭션이 끝나는 시점에 변화가 있는 모든 엔티티 객체를 데이터 베이스에 자동으로 반영해준 다.\n이떄 변화가 있다의 기준은 최초 조회 상태입니다.\n당연히 이런 상태 변경 검사의 대상은 영속성 컨텍스트가 관리하는 엔티티에만적용 됩니다.\n\ndetach된 엔티티 (준영속)\nDB에 반영되기 전 처음 생성된 엔티티 (비영속)등 준영속/비영속 상태의 엔티티는 Dirty Checking 대상에 포함되지 않습니다.즉, 값을 변경해도 데이터베이스에 반영되지 않는다는 것이죠.\n\n변경 부분만 update하고 싶을 땐?JPA에서는 전체 필드를 업데이트하는 방식을 기본값으로 사용합니다.전체 필드를 업데이트하는 방식의 장점은 다음과 같습니다.\n\n생성되는 쿼리가 같아 부트 실행시점에 미리 만들어서 재사용가능합니다.\n데이터베이스 입장에서 쿼리 재사용이 가능하다\n동일한 쿼리를 받으면 이전에 파싱된 쿼리를 재사용한다.\n\n\n\n그래서 이런 경우엔 @DynamicUpdate로 변경 필드만 반영되도록 할 수 있습니다.엔티티 최상단에 아래와 같이 @DynamicUpdate 를 선언해주시면 됩니다.\n","dateCreated":"2021-03-27T11:44:09-07:00","dateModified":"2021-03-28T03:45:50-07:00","datePublished":"2021-03-27T11:44:09-07:00","description":"","headline":"Dirty checking","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/27/Dirty%20checking/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/27/Dirty%20checking/","keywords":"Spring, 이론노트, JPA"}</script>
+    <meta name="description" content="Dirty checkingDirty란 상태의 변화가 생긴 정도Dirty Checking이란 상태 변경 검사 JPA에서는 트랜잭션이 끝나는 시점에 변화가 있는 모든 엔티티 객체를 데이터 베이스에 자동으로 반영해준 다. 이떄 변화가 있다의 기준은 최초 조회 상태입니다. 당연히 이런 상태 변경 검사의 대상은 영속성 컨텍스트가 관리하는 엔티티에만적용 됩니다.  d">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="HTTP &amp; HTTPS">
-<meta property="og:url" content="https://earth-kor.github.io/2021/03/20/HTTP%20&%20HTTPS/index.html">
+<meta property="og:title" content="Dirty checking">
+<meta property="og:url" content="https://earth-kor.github.io/2021/03/27/Dirty%20checking/index.html">
 <meta property="og:site_name" content="이상권의 개발노트">
-<meta property="og:description" content="HTTP vs HTTPS -&gt; html을 전송하기 위한 규약 -&gt; S는 Security의 약자 HTTP vs SSL 인터넷의 계층 구조는 TCP&#x2F;IP -&gt; SSL&#x2F;TLS -&gt; HTTP 순이다즉 HTTP가 SSL을 쓰는게 HTTPS이다! SSL vs TLS SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 ,">
+<meta property="og:description" content="Dirty checkingDirty란 상태의 변화가 생긴 정도Dirty Checking이란 상태 변경 검사 JPA에서는 트랜잭션이 끝나는 시점에 변화가 있는 모든 엔티티 객체를 데이터 베이스에 자동으로 반영해준 다. 이떄 변화가 있다의 기준은 최초 조회 상태입니다. 당연히 이런 상태 변경 검사의 대상은 영속성 컨텍스트가 관리하는 엔티티에만적용 됩니다.  d">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-03-20T14:08:31.000Z">
-<meta property="article:modified_time" content="2021-03-21T03:54:52.362Z">
+<meta property="article:published_time" content="2021-03-27T18:44:09.000Z">
+<meta property="article:modified_time" content="2021-03-28T10:45:50.804Z">
 <meta property="article:author" content="이상권">
+<meta property="article:tag" content="Spring">
 <meta property="article:tag" content="이론노트">
-<meta property="article:tag" content="인터넷">
+<meta property="article:tag" content="JPA">
 <meta name="twitter:card" content="summary">
     
     
@@ -247,20 +248,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            HTTP &amp; HTTPS
+            Dirty checking
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2021-03-20T07:08:31-07:00">
+    <time datetime="2021-03-27T11:44:09-07:00">
 	
-		    Mar 20, 2021
+		    Mar 27, 2021
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EC%9D%B8%ED%84%B0%EB%84%B7/">인터넷</a>
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
 
 
     
@@ -272,35 +273,23 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="HTTP-vs-HTTPS"><a href="#HTTP-vs-HTTPS" class="headerlink" title="HTTP vs HTTPS"></a>HTTP vs HTTPS</h1><p> -&gt; html을 전송하기 위한 규약<br> -&gt; S는 Security의 약자</p>
-<p>HTTP vs SSL</p>
-<p>인터넷의 계층 구조는 TCP/IP -&gt; SSL/TLS -&gt; HTTP 순이다<br>즉 HTTP가 SSL을 쓰는게 HTTPS이다!</p>
-<p>SSL vs TLS</p>
-<p>SSL이 상용화 되면서 이것을 인터넷 기준으로 표준화 한것을 TLS라고 한다 , 즉 같은것이다!</p>
-<p>SSL 인증서</p>
-<p>클라이언트가 서버에 접속하면 서버가 클라이언트에게 SSL 인증서를 보여준다.<br>클라이언트는 이 인증서를 검증/절차 과정을 거치며 이 과정을 거치면 해당 사이트를 진행 시킨다</p>
-<p>역할</p>
-<ol>
-<li>공격자에게 노출되는 것을 막는다</li>
-</ol>
-<p>1.. 대칭키 보완</p>
-<p>암호화 복호화를 진행 할 때 하나의 인증키를 사용한다. 보통 개인의 것을 보관 할 떄 많이 사용하며 해당 파일을 다른 파일로 보낼 때 대칭키를 보내야 함으로 해킹의 위험도가 높다</p>
-<p>2.. 공개키 보완하나의 파일을 암호화 할 때 2개의 쌍 키를 만든다. 공개키로 암호화를 진행하고 개인키로 복호화를 진행한다.</p>
-<ol start="2">
-<li>신뢰성 있는 사이트인지 판단한다.</li>
-<li>악의적인 변경을 하지 못하게 한다.</li>
-<li>SSL 통신에 필요한 공개키를 클라이언트에게 제공한다.</li>
-</ol>
-<p>이러한 SSL 인증서는 CA라고하는 기업이 책임지고 인증서를 발급 해준다. 이같은 인증서는 신뢰가 있는 사이트인지 판별 할 수 있도록 도와준다</p>
-<p>내가 개인적으로 사이트를 운영 하고 있다면 이러한 CA기관에 자료를 주고 내가 안전한 사람이라고 판별되면 인증서가 나오는데 그것을 구매하고 사용하면 된다!</p>
-<p>SSL 인증서에 포함되어 있는것</p>
-<ol>
-<li>서비스의 정보 ( CA의 정보, 어떤 서비스를 하는지 )</li>
-<li>서버의 공개키 ( 공개키 ,암호화 방법 )</li>
-</ol>
-<p>브라우저는 모든 CA의 정보를 알고 있기 때문에 이 같은 SSL 인증서를 받으면 CA의 리스트에 있는지 판단하고 맞으면 해당 개인키로 복호화를 진행하고 이를 성공하면 신뢰성 있는 사이트라고 판단한다.</p>
-<p>복원하는 방법</p>
-<p>접속 -&gt; 서버가 인증서 전달 -&gt; 브라우저가 CA확인 -&gt; CA의 개인키로 복호화 -&gt; 해당 CA인거를  인증서로 인증</p>
+            <h1 id="Dirty-checking"><a href="#Dirty-checking" class="headerlink" title="Dirty checking"></a>Dirty checking</h1><p>Dirty란 상태의 변화가 생긴 정도<br>Dirty Checking이란 상태 변경 검사</p>
+<p>JPA에서는 트랜잭션이 끝나는 시점에 변화가 있는 모든 엔티티 객체를 데이터 베이스에 자동으로 반영해준 다.</p>
+<p>이떄 변화가 있다의 기준은 최초 조회 상태입니다.</p>
+<p>당연히 이런 상태 변경 검사의 대상은 영속성 컨텍스트가 관리하는 엔티티에만적용 됩니다.</p>
+<ul>
+<li>detach된 엔티티 (준영속)</li>
+<li>DB에 반영되기 전 처음 생성된 엔티티 (비영속)<br>등 준영속/비영속 상태의 엔티티는 Dirty Checking 대상에 포함되지 않습니다.즉, 값을 변경해도 데이터베이스에 반영되지 않는다는 것이죠.</li>
+</ul>
+<h2 id="변경-부분만-update하고-싶을-땐"><a href="#변경-부분만-update하고-싶을-땐" class="headerlink" title="변경 부분만 update하고 싶을 땐?"></a>변경 부분만 update하고 싶을 땐?</h2><p>JPA에서는 전체 필드를 업데이트하는 방식을 기본값으로 사용합니다.전체 필드를 업데이트하는 방식의 장점은 다음과 같습니다.</p>
+<ul>
+<li>생성되는 쿼리가 같아 부트 실행시점에 미리 만들어서 재사용가능합니다.</li>
+<li>데이터베이스 입장에서 쿼리 재사용이 가능하다<ul>
+<li>동일한 쿼리를 받으면 이전에 파싱된 쿼리를 재사용한다.</li>
+</ul>
+</li>
+</ul>
+<p>그래서 이런 경우엔 @DynamicUpdate로 변경 필드만 반영되도록 할 수 있습니다.<br>엔티티 최상단에 아래와 같이 @DynamicUpdate 를 선언해주시면 됩니다.</p>
 
             
 
@@ -312,7 +301,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B8%ED%84%B0%EB%84%B7/" rel="tag">인터넷</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/JPA/" rel="tag">JPA</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/Spring/" rel="tag">Spring</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a>
 
             </div>
         
@@ -325,9 +314,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
-                    data-tooltip="예외처리"
-                    aria-label="PREVIOUS: 예외처리"
+                    href="/2021/03/27/Data%20formatting/"
+                    data-tooltip="Data formatting"
+                    aria-label="PREVIOUS: Data formatting"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -339,9 +328,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/hosting%20&%20DNS/"
-                    data-tooltip="hosting &amp; DNS"
-                    aria-label="NEXT: hosting &amp; DNS"
+                    href="/2021/03/27/Fetch%20Join/"
+                    data-tooltip="Fetch Join"
+                    aria-label="NEXT: Fetch Join"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -401,9 +390,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
-                    data-tooltip="예외처리"
-                    aria-label="PREVIOUS: 예외처리"
+                    href="/2021/03/27/Data%20formatting/"
+                    data-tooltip="Data formatting"
+                    aria-label="PREVIOUS: Data formatting"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -415,9 +404,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/20/hosting%20&%20DNS/"
-                    data-tooltip="hosting &amp; DNS"
-                    aria-label="NEXT: hosting &amp; DNS"
+                    href="/2021/03/27/Fetch%20Join/"
+                    data-tooltip="Fetch Join"
+                    aria-label="NEXT: Fetch Join"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

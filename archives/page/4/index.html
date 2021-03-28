@@ -244,6 +244,803 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/01/16/JPQL/"
+                            aria-label=": JPQL"
+                        >
+                            JPQL
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:28:32-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/JPA/">JPA</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="JPQL-Java-Persistence-Query-Language"><a href="#JPQL-Java-Persistence-Query-Language" class="headerlink" title="JPQL ( Java Persistence Query Language )"></a>JPQL ( Java Persistence Query Language )</h1><p>JPQL은 SQL과 비슷한 문법을 가진 객체 지향 쿼리입니다.</p>
+<p>JPQL의 탄생 배경은 JPA에서 제공하는 메서드 호출만으로 섬세한 쿼리 작성이 어렵다는 것에 있습니다.<br>이전 글 CURD에서는 SELECT 쿼리를 위해 JPQL을 사용했지만, EntityManager 객체의 find() 메서드를 호출하여 SELECT 쿼리를 수행 할 수도 있습니다.<br>Book book = em.find(Book.class, 1);<br>find() 메서드는 식별자를 통해서만 데이터 조회를 하며, 조건문도 없고 모든 칼럼을 조회하는 메서드입니다.<br>이것만 가지고는 조금이라도 복잡한 검색을 수행할 수가 없습니다.<br>따라서 여러 조건을 통해 검색을 하는 방법이 필요했고, 그래서 JPQL이 개발되었습니다.</p>
+<p>JPQL 특징</p>
+<ol>
+<li>테이블이 아닌 객체를 검색하는 객체지향 쿼리</li>
+<li>SQL을 추상화 했기 때문에 특정 벤더에 종속적이지 않음</li>
+<li>JPA는 JPQL을 분석하여 SQL을 생성한 후 DB에서 조회</li>
+</ol>
+<p>기본 문법<br>String jpql = “select c from Category c “;<br>JPQL은 SQL과 문법이 매우 유사하지만 몇 가지 다른 점이 있습니다.</p>
+<ol>
+<li><p>대소문자 구분<br>엔티티와 속성은 대소문자를 구분합니다.<br>예를 들어 엔티티 이름인 User, User 엔티티의 속성인 email은 대소문자를 구분합니다.<br>반면에 SELECT , FROM , AS 같은 JPQL 키워드는 대소문자를 구분하지 않습니다.</p>
+</li>
+<li><p>엔티티 이름<br>위의 예제에서 select c from 뒤에 나오는 Category는 엔티티 이름입니다.<br>Category가 클래스 이름이라고 착각할 수 있는데, 그것이 아니라 @Entity( name=”Category” )로 설정한 엔티티 이름입니다.<br>참고로 name 속성을 생략하면 기본 값으로 클래스 이름을 사용합니다.</p>
+</li>
+<li><p>별칭<br>select c from Category c 에서 c라는 별칭을 주었습니다.<br>JPQL에서 엔티티의 별칭은 필수적으로 명시해야 합니다.<br>별칭을 명시하는 AS 키워드는 생략할 수 있습니다.</p>
+</li>
+</ol>
+<p>JPQL은 복잡한 검색을 위해 사용되기 때문에 INSERT , UPDATE , DELETE 쿼리는 엔티티 매니저가 직접 호출하도록 하는 것이 좋습니다.<br>그래서 이 글에서도 SELECT 쿼리에 초점을 맞춰 JPQL을 알아보도록 하겠습니다.</p>
+<p>TypedQuery</p>
+<p>‘’’<br>public static void typedQuery(EntityManager em) {<br>    String jpql = “SELECT b FROM Book b “;<br>    TypedQuery<Book> query = em.createQuery(jpql, Book.class);</p>
+<pre><code>List&lt;Book&gt; bookList = query.getResultList();
+for( Book book : bookList) &#123;
+    System.out.println(book.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’<br>모든 책 리스트를 조회하는 쿼리입니다.</p>
+<p>EntityManager 객체에서 createQuery() 메서드를 호출하면 쿼리가 생성됩니다.<br>TypedQuery는 반환되는 엔티티가 정해져 있을 때 사용하는 타입이며,<br>em.createQuery 메서드를 호출할 때 두 번째 인자로 엔티티 클래스를 넘겨줍니다.</p>
+<p>TypedQuery 객체의 getResultList() 메서드를 호출하면 작성한 JPQL에 의해 데이터를 검색하며, List 타입으로 반환합니다.</p>
+<p>Query</p>
+<p>‘’’<br>public static void Query(EntityManager em) {<br>    String jpql = “SELECT b.no, b.title FROM Book b”;<br>    Query query = em.createQuery(jpql);</p>
+<pre><code>List&lt;Object&gt; list = query.getResultList();
+for( Object object : list ) &#123;
+      Object[] results = (Object[]) object;
+
+      for( Object result : results ) &#123;
+          System.out.print ( result );
+     &#125;
+     System.out.println();
+  &#125;</code></pre>
+<p>}<br>‘’’</p>
+<p>TypedQuery와 달리 Query 타입은 데이터 검색 결과의 타입을 명시하지 않습니다.<br>그래서 List의 제네릭 타입으로 Object를 작성했습니다.</p>
+<p>그리고 변수 jpql에서 SELECT 하는 칼럼을 선택적으로 명시한 점을 주목해주세요.<br>Query 타입을 사용하면 이런 식으로 여러 개의 칼럼을 선택적으로 명시할 수 있습니다.</p>
+<p>‘’’<br>public static void Query(EntityManager em) {<br>    String jpql = “SELECT b.no, b.title FROM Book b”;<br>    TypedQuery<Book> query = em.createQuery(jpql, Book.class);</p>
+<pre><code>List&lt;Book&gt; bookList = query.getResultList();
+for( Book book : bookList ) &#123;
+    System.out.println(book.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’<br>위와 같이 여러 개의 칼럼을 선택적으로 명시한 후, TypedQuery를 선언하면 에러가 발생합니다.</p>
+<p>setParameter (1) - 이름 기준 파라미터 바인딩<br>‘’’<br>public static void namedParameter(EntityManager em, String param1) {<br>    String jpql = “SELECT b FROM Book b WHERE title = :foo”;<br>    TypedQuery<Book> query = em.createQuery(jpql, Book.class);<br>    query.setParameter(“foo”, param1);</p>
+<pre><code>List&lt;Book&gt; bookList = query.getResultList();
+for( Book book : bookList) &#123;
+    System.out.println(book.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’<br>SELECT 쿼리를 수행할 때 항상 고정된 데이터를 조회하지 않을 수 있습니다.<br>예를들어 게시판에서 글 제목을 검색할 때 사용자가 검색하는 키워드는 유동적입니다.<br>따라서 동적으로 데이터가 바인딩 되기 위한 방법이 필요합니다.</p>
+<p>위의 예제에서 사용한 방법은 이름을 기준으로 파라미터를 바인딩 하는 방법입니다.<br>콜론( : )을 사용하여 데이터가 추가될 곳을 지정해주고,<br>query.setParameter() 메서드를 호출하여 데이터를 동적으로 바인딩 합니다.</p>
+<p>이제 DTO를 사용하는 방법에 대해 알아보겠습니다.</p>
+<p>‘’’<br>// DTO 사용 ( new 명령어 )<br>public static void useDTO (EntityManager em) {<br>    String jpql = “SELECT new com.victolee.example.dto.BookDTO(b.no, b.title) FROM Book b”;<br>    TypedQuery<BookDTO> query = em.createQuery(jpql, BookDTO.class);</p>
+<pre><code>List&lt;BookDTO&gt; list = query.getResultList();
+for( BookDTO dto : list) &#123;
+    System.out.println(dto.getTitle());
+&#125;</code></pre>
+<p>}<br>‘’’</p>
+<p>JPQL이 조금 지저분합니다.<br>SELECT와 FROM 사이에 new라는 키워드로 BookDTO를 생성하는 것처럼 보입니다.<br>( new 키워드 뒤에 DTO의 패키지명까지 작성해야 한다는 것에 주의하세요. )<br>이 때 new는 객체를 생성하라는 의미가 아니라 JPQL에서 지원하는 new 키워드입니다.</p>
+<p>BookDTO에서 생성자를 오버로딩한 이유는 위와 같이 JPQL을 작성하기 위함입니다.<br>즉 BookDTO 객체 필드 값으로 쿼리의 결과 값을 할당합니다.</p>
+<p>조인</p>
+<p>‘’’<br>// 방법1<br>String jpql = “SELECT b.title, c.name FROM Book b, Category c WHERE b.no = b.category.no”;<br>// 방법2<br>String jpql = “SELECT b, c FROM Book b JOIN b.category c”;</p>
+<p>Query query = em.createQuery(jpql);</p>
+<p>List&lt;Object[]&gt; list = query.getResultList();<br>for( Object[] row : list ) {<br>     Book book = (Book)row[0];<br>     Category category = (Category)row[1];<br>}<br>‘’’</p>
+<p>Book과 Category 엔티티가 관계를 맺고 있을 때, 조인을 하는 방법입니다.<br>아직 두 엔티티를 매핑하는 연관 관계 매핑에 대해 다루지 않았지만 JPQL을 다룰 때 한꺼번에 정리를 하려고 합니다.</p>
+<p>서로 다른 두 엔티티를 조회 했으므로 TypedQuery 타입으로 반환할 수 없습니다.</p>
+<p>방법2에서 주의할 것은 join 할 때 FROM Book b JOIN Category c 와 같이 SQL처럼 작성하면 안됩니다.</p>
+<p>그런데 join 조회 결과를 캐스팅하여 사용하는 것이 번거로우므로 DTO를 사용하는 것이 훨씬 깔끔할 것 같습니다.<br>어쨋든 조인은 이런 식으로 사용할 수 있습니다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/JPQL/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/16/%EB%AC%B8%EC%A0%9C%ED%95%B4%EA%B2%B0/"
+                            aria-label=": JPA에서의 Sort 문제해결"
+                        >
+                            JPA에서의 Sort 문제해결
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:27:09-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/JPA/">JPA</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="JPA-안의-sort-사용-시-자동으로-테이블을-지정-할-때-다른-테이블로-바꾸는-방법"><a href="#JPA-안의-sort-사용-시-자동으로-테이블을-지정-할-때-다른-테이블로-바꾸는-방법" class="headerlink" title="JPA 안의 sort 사용 시 자동으로 테이블을 지정 할 때, 다른 테이블로 바꾸는 방법"></a>JPA 안의 sort 사용 시 자동으로 테이블을 지정 할 때, 다른 테이블로 바꾸는 방법</h1><p> Sort sort = Sort.by(Collections.emptyList());</p>
+<pre><code>    for (Sort.Order order : pageable.getSort())
+    &#123;
+        switch (order.getProperty())
+        &#123;
+            case &quot;requestedCompanyName&quot;:
+                sort = sort.and(JpaSort.unsafe(order.getDirection(), &quot;FU.company.name&quot;));
+                break;
+            case &quot;requestedBranchName&quot;:
+                sort = sort.and(JpaSort.unsafe(order.getDirection(), &quot;FU.branch.name&quot;));
+                break;
+            case &quot;requestedUserName&quot;:
+                sort = sort.and(JpaSort.unsafe(order.getDirection(), &quot;FU.name&quot;));
+                break;
+            default:
+                sort = sort.and(Sort.by(order.getDirection(), order.getProperty()));
+                break;
+        &#125;
+    &#125;
+
+    return userReportRepository.fetchAllByParameters
+        (
+            type, step, reportedUserId, reportedCompanyId, reportedBranchId, processedUserId, searchKeyword,
+            reportedDateTimeFrom, reportedDateTimeTo, processedDateTimeFrom, processedDateTimeTo,
+            PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort)
+        );
+
+
+
+JpaSort.unsafe : 자동으로 테이블으 지정하는 것으 막아준다
+JpaSort.unsafe (a,b) : a는 desc, asc 같은것들 , b는 테이블 지정
+order.getDirection() : 원래의 a를 가져온다
+order.getProperty() : 원래의 b를 가져온다
+PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort) : 위의 조건을 사용 할 시 넘겨주는 파라미터 형태</code></pre>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/%EB%AC%B8%EC%A0%9C%ED%95%B4%EA%B2%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/16/JPA/"
+                            aria-label=": JPA"
+                        >
+                            JPA
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-16T08:25:11-08:00">
+	
+		    Jan 16, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/JPA/">JPA</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Jpa"><a href="#Jpa" class="headerlink" title="Jpa"></a>Jpa</h1><ol>
+<li>JPA(Java Persistence API)?</li>
+</ol>
+<p>RDBMS 와 OOP 객체 사이의 불일치에서 오는 패러다임을 해결하기 위해<br>자바는 ORM(Object-Relational Mapping) 기술을 만들어 냈다.<br>문자 그대로 ORM 은 객체와 RDBMS 를 매핑하는 역할을 한다.<br>￼<br>ORM 기술을 구현하기 위해 만들어져 사용되어 온 프레임워크가 Hibernate 이고,<br>시간이 지나면서 Hibernate 이외에도 ORM 기술을 구현하는 프레임워크(TopLink, CoCobase) 가 등장하였다.<br>그리고 이런 ORM 기술을 구현한 프레임워크에 대한 표준화가 이루어 졌는데,<br>그 결과로 만들어진 것이 JPA 인 것이다.<br> <br>JDBC API 가 어플리케이션과 DMBS 사이에서 인터페이스 역할을 해 주기 때문에,<br>개발자는 사용할 DB 의 드라이버만 변경해 주면 되는 것처럼,<br>(DB 드라이버는 JDBC 표준에 맞추어 DB 관련 처리가 구현되어 있고, DB 드라이버는 각 DB 회사가 알아서 만들어 놓았다)<br>개발자는 ORM 을 기술을 사용할 때, JPA 인터페이스에 맞추어 구현되어 있는 <br>Hibernate, TopLink, CoCoBase 프레임워크 중 골라서 사용하면 된다.<br>만약, JPA 같은 표준 인터페이스가 없다면, <br>ORM 기술을 사용하기 위한 Hibernate, TopLink, CoCoBase 의 필드와 메소드가 다를 것이다.<br>같은 기능을 가지는 메소드인데 Hibernate 에서는 냥냥고고( ), TopLink 에서는 멍멍고고( )로 정의되어 있다면,<br>사용하는 개발자가 ORM 프레임워크를 변경해야 할 때 난감할 것이다.<br>그래서 JPA API 가 이 기능은 통일해서 냥이최고( ) 로 구현하라고 강제하는 것이다(인터페이스의 중요 기능).<br> <br>ORM 프레임워크를 사용하면 개발자가 객체를 데이터베이스에 저장할 때 SQL을 직접 작성할 필요 없이,<br>자바 컬렉션에 저장하는 것처럼 ORM 프레임워크에 저장하면 된다.<br>객체를 받은 ORM 프레임워크는 저장된 자바 객체를 분석해서 적절한 SQL을 생성하고 데이터베이스에 저장시킨다.  <br> <br> 지연 로딩과 즉시 로딩</p>
+<ol>
+<li>지연 로딩 : 객체가 실제 사용될 때 로딩</li>
+<li>즉시 로딩 : JOIN SQL로 한번에 연관된 객체까지 미리 조회</li>
+</ol>
+<ol start="2">
+<li>영속성(Persistence)</li>
+</ol>
+<p>(1) Entity Class<br>엔티티 클래스는 자바 클래스에 @Entity 어노테이션을 붙여, 테이블과 매핑한다고 JPA 에게 알려주는 클래스다.<br>그리고 엔티티 클래스에서 만들어진 객체를 엔티티라고 한다.</p>
+<p>(2) 영속성 컨텍스트(Persistence Context)<br>영속성 컨텍스트는 엔티티 클래스에서 만들어지는 엔티티를 영구 저장하고 관리하는 환경이다.</p>
+<p>영속성 컨텍스트 와 관련한 엔티티의 4가지 상태<br> ① 비영속(new/transient) - 엔티티 객체가 만들어져서 아직 저장되지 않은 상태로, 영속성 컨텍스트와 전혀 관계가 없는 상태<br> ② 영속(managed) - 엔티티가 영속성 컨텍스트에 저장되어, 영속성 컨텍스트가 관리할 수 있는 상태<br> ③ 준영속(detached) - 엔티티가 영속성 컨텍스트에 저장되어 있다가 분리된 상태로, 영속성 컨텍스트가 더 이상 관리하지 않는 상태<br> ④ 삭제(removed) - 엔티티를 영속성 컨텍스트와 데이터베이스에서 삭제</p>
+<p>영속성 컨텍스트의 특징<br> ① 영속성 컨텍스트는 엔티티를 식별자 값(@Id로 테이블의 기본키와 매핑한 필드 값)으로 구분한다. <br>     그렇기 때문에 영속 상태는 식별자 값이 반드시 있어야 한다.<br> ② 영속성 컨텍스트에 엔티티를 저장하면 바로 데이터베이스에 저장되는 것이 아니라, 1차 캐시에 엔티티를 생성하고,<br>     쓰기 지연 SQL 저장소에 쿼리문을 생성해서 저장한다. 이렇게 쌓인 쿼리문은 flush( )가 실행될 때 데이터베이스에 반영된다.</p>
+<p>(3) 엔티티 생성</p>
+<ol>
+<li>자바 어플리케이션에서 어떤 엔티티가 만들어져서 JPA에게 데이터베이스 저장을 부탁하면,</li>
+<li>만들어진 엔티티는 1차적으로 영속성 컨텍스트에 저장된다. 1차 캐시 정도라고 생각하면 된다.<br>   그리고, 저장한 엔티티를 데이터베이스에 저장하기 위한 쿼리문을 생성시켜 쓰기 지연 SQL 저장소에  저장한다.<br>   계속해서 엔티티를 넘기면 엔티티들과 쿼리문들은 차곡차곡 영속성 컨텍스트에 저장된다.</li>
+<li>그러다가 자바 어플리케이션에서 커밋 명령이 내려지면 영속 컨텍스트에는 자동으로 flush( )가 호출되고,</li>
+<li>영속성 컨텍스트의 변경내용을 데이터베이스와 동기(flush)화 한다(SQL 저장소의 쿼리를 실행시킨다).</li>
+<li>마지막으로 데이터베이스에게 commit 쿼리문을 명령한다.<br>￼
+ </li>
+</ol>
+<p>(4) 엔티티 조회 </p>
+<ol>
+<li>자바 어플리케이션에서 JPA에게 데이터베이스 조회를 부탁하면,<br>   1차적으로 영속성 컨텍스트에서 엔티티를 찾는다. </li>
+<li>있으면 자바 어플리케이션에 엔티티를 넘긴다.</li>
+<li>영속성 컨텍스트에 없는 엔티티 조회를 부탁하면</li>
+<li>쿼리문을 사용해 데이터베이스에서 찾아와 </li>
+<li>영속성 컨텍스트에 엔티티로 저장하고</li>
+<li>자바 어플리케이션에 그 엔티티를 넘긴다.<br>￼
+ </li>
+</ol>
+<p>(5) 엔티티 변경<br>JPA는 엔티티를 영속성 컨텍스트에 보관할 때, 최초의 상태를 복사해서 저장해 두는데,<br>이것을 스냅샷이라 한다.</p>
+<ol>
+<li>자바 어플리케이션에서 커밋 명령이 들어오면, 영속 컨텍스트에는 자동으로 flush( )가 호출되고,</li>
+<li>엔티티와 스냅샷을 비교해서 변경된 엔티티를 찾는다.</li>
+<li>변경된 엔티티가 있으면 데이터베이스에 변경사항을 저장하기 위해 쿼리를 생성하고,</li>
+<li>영속성 컨텍스트의 변경내용을 데이터베이스와 동기(flush)화 한다(SQL 저장소의 쿼리를 실행시킨다).</li>
+<li>마지막으로 데이터베이스에게 commit 쿼리문을 명령한다.<br>￼<br>이렇게 엔티티의 변경사항을 데이터베이스에 자동으로 반영하는 기능을 변경감지(Dirty Checking)이라 한다.<br> <br> <br>(6) 엔티티 삭제<br>앞의 과정과 마찬가지로, 자바 어플리케이션에서 엔티티 삭제 명령이 들어오면,<br>엔티티를 찾고 쓰기 지연 SQL 저장소에 delete 쿼리를 생성한다.<br>그리고 자바 어플리케이션에서 커밋 명령이 들어오면, 자동으로 flush( )가 호출되고,<br>영속성 컨텍스트의 변경내용을 데이터베이스와 동기(flush)화 한다(SQL 저장소의 쿼리를 실행시킨다).<br>마지막으로 데이터베이스에게 commit 쿼리문을 명령한다. 
+ </li>
+<li>JPA 메소드<br>(1) flush( )<br>영속성 컨텍스트의 변경 내용을 데이터베이스에 반영한다.</li>
+</ol>
+<p>실행되었을 때 일어나는 일<br>  ① 변경 감지가 동작해서 영속성 컨텍스트에 있는 모든 엔티티를 스냅샵과 비교해서 수정된 엔티티를 찾고,<br>      수정된 엔티티를 데이터베이스에 반영하기 위해 수정 쿼리를 생성하여 지연 SQL 저장소에 등록<br>  ② 쓰기 지연 SQL 저장소의 쿼리를 데이터 베이스에 전송(등록, 수정, 삭제 쿼리)<br>  <br>보통 직접 사용하지 않고, 자바 어플리케이션에서 커밋 명령이 들어왔을 때, 자동으로 실행된다.<br> <br>(2) detach( ) <br>특정 엔티티를 준영속 상태로 만든다. <br>준영속 상태가 된 엔티티는 더이상 영속 컨텍스트의 관리를 받지 않으며,<br>영속 컨텍스트가 지원하는 어떤 기능도 동작하지 않게 된다.<br>영속 상태가 영속성 컨텍스트로에게 관리(managed)되는 상태라고 하면,<br>준영속 상태는 영속성 컨텍스트로부터 분리(detached)된 상태이다.<br> <br>(3) clear( )<br>영속성 컨텍스트를 초기화 한다.<br>영속성 컨텍스트의 모든 엔티티를 준영속 상태로 만든다.<br> <br>(4) close( )<br>영속성 컨텍스트를 종료한다.<br>영속성 컨텍스트가 관리하던 영속 상태의 엔티티가 모둔 준영속 상태가 된다.<br> <br>영속 상태의 엔티티는 주로 영속성 컨텍스트가 종료되면서 준영속 상태가 된다.<br>개발자가 직접 준영속 상태로 만드는 일은 거의 없다.<br> <br>(5) merge( )<br>준영속 상태의 엔티티의 특징<br> ① 거의 비영속 상태에 가깝다. 영속성 컨텍스트가 관리하지 않으므로 영속성 컨텍스트가 제공하는 어떠한 기능도 동작하지 않는다.<br> ② 식별자 값을 가지고 있다. 비영속 상태의 엔티티는 식별자(엔티티를 구분하기 위한 유일한 값, ID)를 가지지 않고 있을 수도 있지만,<br>     준영속 상태는 이미 한 번 영속 상태였기 때문에, 식별자 값을 가지고 있다.<br> <br>merge( )는 준영속 상태의 엔티티를 이용해서 새로운 영속 상태의 엔티티를 반환한다.<br> <br>실행되었을 때 일어나는 일<br> ① 파라미터로 넘어온 준영속 엔티티의 식별자 값으로 1차 캐시에서 엔티티를 조회<br>     (1차 캐시에 엔티티가 없으면 데이터베이스에서 엔티티를 조회하고 1차 캐시에 저장)<br> ② 조회한 영속 엔티티에 준영속 엔티티의 값을 채워 넣는다.<br> ③ 생성된 새로운 영속 엔티티를 반환한다.<br>새롭게 생성된 영속 상태의 엔티티를 가지고 이제 영속성 컨텍스트가 지원하는 기능을 사용할 수 있다.<br> <br>준영속 상태의 엔티티를 영속 상태로 변경하는 것이 아니라, 새로운 영속 상태의 엔티티를 만들어서,<br>준영속 상태의 엔티티 값을 영속 상태의 엔티티에 채워 넣어서 반환하는 점에 주의해야 한다.<br>그리고, 준영속 뿐만 아니라, 비영속 상태의 엔티티도 병합하여 새로운 영속 상태의 엔티티를 만들어 반환한다.<br> <br>자세한 내용은 위의 엔티티 변경 참조.<br> <br>(6) find( )<br>식별자 값을 가지고 엔티티를 찾아서 반환한다.<br>자세한 내용은 위의 엔티티 조회 참조<br> <br>(7) persist( )<br>자바 어플리케이션에서 생성된 엔티티를 영속성 컨텍스트와 데이터베이스에 저장한다.<br>자세한 내용은 위의 엔티티 생성 참조<br> <br>(8) remove( )<br>식별자 값을 가지고 엔티티를 찾아서 삭제한다.<br>자세한 내용은 위의 엔티티 삭제 참조</p>
+<p>Query <br> 플랫폼 독립적인 객체지향 쿼리 언어를 사용하며, Query 인터페이스는 관계형 데이터베이스의 엔티티에 대한 쿼리를 만든다.</p>
+<ul>
+<li>특징<ul>
+<li>JPQL : SQL문과 비슷하지만 데이터베이스의 테이블에 직접 연결되는 것이 아니라 JPA 엔티티에 대해 동작하게 된다.<ul>
+<li>JPQL 쿼리의 칼럼은 엔티티의 필드 이름을 사용한다.</li>
+</ul>
+</li>
+<li>Query Creation 매카니즘 : JPA에서의 쿼리 생성 매카니즘. 일반적으로 쿼리 메소드(Query method) 방식을 가장 많이 사용한다.<ul>
+<li>JPA reference :  <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-data/jpa/docs/1.10.1.RELEASE/reference/html/#jpa.sample-app.finders.strategies">https://docs.spring.io/spring-data/jpa/docs/1.10.1.RELEASE/reference/html/#jpa.sample-app.finders.strategies</a></li>
+</ul>
+</li>
+<li>메타정보에 정의된 관계 정보를 이용하면 복잡한 Join 설정 등이 필요하지 않기 떄문에 훨씬 간결하다.</li>
+</ul>
+</li>
+</ul>
+<p>이 메소드 시그니처는 다음의 설정을 사용하여 스프링 MVC가 요청 파라미터로부터 Pageable 인스턴스를 만들어내게 시도합니다.<br>표 1. Pageable 인스턴스를 위해 평가된 요청파라미터 Request parameters evaluated for Pageable instances<br>page<br>얻기 원하는 페이지, 0 indexed and 기본은 0.<br>size<br>얻기 원하는 페이지 크기, 기본 20.<br>sort<br>다음의 형식으로 정렬될 형식 property,property(,ASC|DESC). 기본 정렬 방향은 오름차순(asc). 만약 방향을 바꾸고 싶은 여러개의sort 파라미터가 있다면 다음과 같이.., e.g. ?sort=firstname&amp;sort=lastname,asc.<br>이러한 행동을 커스터마이징 하고 싶다면 @Enable-어노테이션을 사용하는 대신에 SpringDataWebConfiguration를 상속하거나 HATEOAS-활성화 같은 것을 하거나, pageableResolver()나sortResolver()메소드를 오버라이드하고 당신의 커스터마이징된 설정파일을 임포트하세요.</p>
+<p>이러한 경우 당신은 여러개의 테이블을 위해서, 요청으로부터 여러개의 Pageable 나 Sort 인스턴스가 resolved되기를 필요로 할지도 모릅니다. 예를 들자면 당신은 스프링의 @Qualifier어노테이션을 사용하여 다른 것들끼리 구별을 할 수도 있습니다. 요청파라미터는 그러면 ${qualifier}_로 prefixed됩니다. 그래서 메소드 시그니처가 다음과 같이 됩니다</p>
+<p>JPA 함수 규칙</p>
+<p>KeywordSampleJPQL snippet</p>
+<p>And<br>findByLastnameAndFirstname<br>… where x.lastname = ?1 and x.firstname = ?2</p>
+<p>Or<br>findByLastnameOrFirstname<br>… where x.lastname = ?1 or x.firstname = ?2</p>
+<p>Is,Equals<br>findByFirstname,findByFirstnameIs,findByFirstnameEquals<br>… where x.firstname = ?1</p>
+<p>Between<br>findByStartDateBetween<br>… where x.startDate between ?1 and ?2</p>
+<p>LessThan<br>findByAgeLessThan<br>… where x.age &lt; ?1</p>
+<p>LessThanEqual<br>findByAgeLessThanEqual<br>… where x.age &lt;= ?1</p>
+<p>GreaterThan<br>findByAgeGreaterThan<br>… where x.age &gt; ?1</p>
+<p>GreaterThanEqual<br>findByAgeGreaterThanEqual<br>… where x.age &gt;= ?1</p>
+<p>After<br>findByStartDateAfter<br>… where x.startDate &gt; ?1</p>
+<p>Before<br>findByStartDateBefore<br>… where x.startDate &lt; ?1</p>
+<p>IsNull<br>findByAgeIsNull<br>… where x.age is null</p>
+<p>IsNotNull,NotNull<br>findByAge(Is)NotNull<br>… where x.age not null</p>
+<p>Like<br>findByFirstnameLike<br>… where x.firstname like ?1</p>
+<p>NotLike<br>findByFirstnameNotLike<br>… where x.firstname not like ?1</p>
+<p>StartingWith<br>findByFirstnameStartingWith<br>… where x.firstname like ?1 (parameter bound with appended %)</p>
+<p>EndingWith<br>findByFirstnameEndingWith<br>… where x.firstname like ?1 (parameter bound with prepended %)</p>
+<p>Containing<br>findByFirstnameContaining<br>… where x.firstname like ?1 (parameter bound wrapped in %)</p>
+<p>OrderBy<br>findByAgeOrderByLastnameDesc<br>… where x.age = ?1 order by x.lastname desc</p>
+<p>Not<br>findByLastnameNot<br>… where x.lastname &lt;&gt; ?1</p>
+<p>In<br>findByAgeIn(Collection<Age> ages)<br>… where x.age in ?1</p>
+<p>NotIn<br>findByAgeNotIn(Collection<Age> ages)<br>… where x.age not in ?1</p>
+<p>True<br>findByActiveTrue()<br>… where x.active = true</p>
+<p>False<br>findByActiveFalse()<br>… where x.active = false</p>
+<p>IgnoreCase<br>findByFirstnameIgnoreCase<br>… where UPPER(x.firstame) = UPPER(?1)</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/16/JPA/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/09/%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0/"
+                            aria-label=": 생명주기"
+                        >
+                            생명주기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-09T12:52:26-08:00">
+	
+		    Jan 09, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="리액트-내부-동작-순서-정리-life-cycle"><a href="#리액트-내부-동작-순서-정리-life-cycle" class="headerlink" title="리액트 내부 동작 순서 정리 (life cycle)"></a>리액트 내부 동작 순서 정리 (life cycle)</h1><p>컴포넌트가 생성 되었을 때 리액트가 동작하는 방식입니다.</p>
+<ol>
+<li>컴포넌트를 초기화 합니다. (constructor를 통해 state를 초기화, 기본 프롭스값)</li>
+<li>componentWillMount API 가 실행 됩니다.<br>이  API 는 컴포넌트가 DOM 위에 만들어 지기 전에 실행되는 API 입니다.</li>
+</ol>
+<ul>
+<li>이 단계에서 DOM 처리는 불가능 합니다.</li>
+</ul>
+<ol start="3">
+<li>렌더링을 진행합니다.</li>
+<li>componentDidMount 는 렌더링이 완료되고 실행되는 API 입니다.</li>
+</ol>
+<ul>
+<li>이 단계에서 다른 자바스크립트 프레임워크와 연동 및 setTimeout, setInteval, AJAX 등을 사용합니다.</li>
+<li>DOM 처리가 가능합니다.</li>
+</ul>
+<p>두 번째 그래프는 프롭스가 변경되었을 때(전달 받을 때) 리액트가 동작하는 방식입니다.</p>
+<ol>
+<li>componentWillReceiveProps 는 상위 컴포넌트로 부터 props 를 받을 때 실행 됩니다.<br>이 단계는 props 에 따라 state 를 업데이트하는 경우에 사용하면 유용합니다.</li>
+</ol>
+<ul>
+<li>이 단계에서 setState 를 해도 괜찮습니다.</li>
+<li>componentWillReceiveProps API의 인자로 nextProps 가 들어옵니다. (바뀔 프롭스)</li>
+</ul>
+<ol start="2">
+<li>shouldComponentUpdate 는 props 나 state 가 변경 되었을 때 다시 렌더링을 할지 말지 결정하는 API 입니다. <br>리턴값은 true 이거나 false 입니다.<br>만약 리턴값이 true 라면 다음 단계인 렌더링을 진행하지만, false 일 경우에는 Component Lifecycle 이 shouldComponentUpdate 단계에서 멈춥니다.</li>
+</ol>
+<ul>
+<li>shouldComponentUpdate 의 인자로 nextProps 와 nextState 가 들어옵니다. (바뀔 프롭스와 스테이트)</li>
+</ul>
+<ol start="3">
+<li>shouldComponentUpdate 리턴 값이 true 이면 다시 렌더링 합니다.</li>
+<li>componentWillUpdate 는 컴포넌트가 업데이트 되기 전에 실행되는 API 입니다.</li>
+</ol>
+<ul>
+<li>이 단계에서는 스테이트를 변경하면 안 됩니다. (setState 사용금지, state 가 변경되면 리렌더링 해야함, 무한루프발생)</li>
+</ul>
+<ol start="5">
+<li>componentDidUpdate 는 렌더링과 모든 업데이트가 완료된 후에 실행되는 API 입니다.</li>
+</ol>
+<ul>
+<li>이 단계에서는 스테이트를 변경하면 안 됩니다. (setState 사용금지, state 가 변경되면 리렌더링 해야함, 무한루프발생)</li>
+<li>componentDidUpdate 의 인자로 prevProps 와 prevState 가 들어옵니다. (변경되기 이전의 프롭스, 스테이트)</li>
+</ul>
+<p>세 번째 그래프는 스테이트가 변경되었을 때 리액트가 작동하는 방식으로, <br>shouldComponentUpdate -&gt; render -&gt; componentWillUpdate  -&gt; componentDidUpdate 순으로 동작합니다.</p>
+<p>네 번째 그래프는 컴포넌트가 삭제 될 때의 API로, 컴포넌트가 DOM 에서 사라진 후 실행됩니다.</p>
+<p>Component Lifecycle 을 이용하면 각 단계마다 다른 인터페이스를 보여주거나 로딩 중 일때 로딩 아이콘을 보여주거나 하는 작업을 쉽게 할 수 있습니다.</p>
+<p>다음 포스팅에서는 지금까지 공부한 개념들을 바탕으로 간단한 어플리케이션을 만들어 보도록 하겠습니다.<br>감사합니다.</p>
+<p>Jwt </p>
+<ul>
+<li>JWT(Json Web Token)는 웹표준 (RFC 7519)으로 JSON 포맷을 이용해 정보를 가볍고 안전하게 전송하기 위한 Claim 기반의 Web Token이다.</li>
+<li>서버만 알고 있는 Secret Key로 디지털 서명화되어있기 때문에 신뢰할 수 있다</li>
+<li>보통 Authorization (로그인, SSO) 또는 안전한 정보 교환을 위해 사용된다.</li>
+<li>JWT에서는 토큰 자체에 유저 정보를 담아서 HTTP 헤더에 전달하기에 유저 세션을 유지할 필요가 없다.</li>
+</ul>
+<p>JWT의 필요성</p>
+<ul>
+<li>Session의 한계<ul>
+<li>Cookie는 정보를 클라이언트 측에 저장하고 Session은 정보를 서버측에 저장한다.</li>
+<li>따라서 유저의 수가 너무 많으면 서버 과부하</li>
+</ul>
+</li>
+<li>Scale Out의 한계<ul>
+<li>서버 확장(scale out)시 세션 정보 동기화 문제</li>
+</ul>
+</li>
+<li>REST API는 Stateless를 지향<ul>
+<li>사용자의 상태 정보를 저장하지 않는 형태 ex) 세션, 쿠키</li>
+</ul>
+</li>
+</ul>
+<p>동작 과정</p>
+<ol>
+<li>클라이언트 로그인 요청 POST(id, pw)</li>
+<li>서버는 (id, pw)가 맞는지 확인 후 맞다면 JWT를 Secret Key로 생성 후 전달</li>
+<li>클라이언트는 Token을 로컬 쿠키에 저장</li>
+<li>클라이언트는 서버에 요청할 때 항상 헤더에 Token을 포함시킴</li>
+<li>서버는 요청을 받을 때마다 Secret Kye를 사용해Token이 유효한지 검증<ul>
+<li>서버만이 Secret Key를 가지고 있기 때문에 검증 가능</li>
+<li>Token이 검증되면 따로 username, pw를 검사하지 않아도 user identification 가능</li>
+</ul>
+</li>
+<li>서버의 Response</li>
+</ol>
+<p>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</p>
+<p>레스트 호출 로직</p>
+<p>1.[Axios란]<br>axios는 HTTP 클라이언트 라이브러리로써, 비동기 방식으로 HTTP 데이터 요청을 실행합니다.내부적으로 AXIOS는 직접적으로 XMLHttpRequest 를 다루지 않고 “AJAX 호출”을 할 수 있습니다.<br>promise를 객체로 리턴한다!</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/09/%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/09/%EB%B0%94%EC%9D%B8%EB%94%A9/"
+                            aria-label=": 바인딩"
+                        >
+                            바인딩
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-09T12:49:08-08:00">
+	
+		    Jan 09, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>바인딩</p>
+<p>자바스크립트에서 바인딩 (Javascript Binding)</p>
+<p>자바스크립트에서 “this”에 대한 이해가 완벽히 되어있어야 한다.</p>
+<p>자바스크립트에서 객체안의 메서드에서 this는 그 메서드가 포함된 object를 가리키게 된다.  </p>
+<p>Var reference = obj.sayHello;<br>reference();</p>
+<p>obj의 sayHello()를 다르게 출력해보면 undefined가 출력되는 것을 확인할 수 있다.<br>이 이유는 변수 reference에 담길 때 obj와의 관계가 상실되게 때문이다.<br>이럴 때 필요한 것이 “바.인.딩” 이다.</p>
+<p>Var reference = obj.sayHello.bind(obj);<br>reference();</p>
+<p>obj.sayHello()를 전달할 때 obj까지 바인딩시켜서 보내면 된다.<br>리액트에서도 마찬가지로 자바스크립트의 this가 사용되기때문에 바인딩이 필요하다.</p>
+<p>리액트에서 바인딩 (React Binding)<br>React에서 컴포넌트에 이벤트메서드를 연결하는 방법 (=바인딩(binding))<br>다양한 방법이 있지만 리액트에서 주로 사용하는 방법은 컴포넌트의 생성자에서 바인딩 하기다.</p>
+<p>class App extends React.Component {<br>    constructor() {<br>        super();<br>        this.state = {<br>              hidden: false,<br>        };<br>        this.update = this.update.bind(this);<br>    }<br>    update() {<br>        this.setState({<br>            hidden: true<br>        });<br>    }<br> <br>    render() {<br>        return &lt;div<br>            onClick={ this.update }<br>        /&gt;;<br>    }<br> <br>}</p>
+<p>constructor() 에서 this.update = this.update.bind(this); 문장을 집어넣어서 바인딩시키면 render()에서 onClick={this.update}를 할 때 this가 App컴포넌트의 this라는 것을 알게 되는 것이다.</p>
+<p>바인딩하는 방법중에 ‘autobind-decorator’를 사용해서 바인딩할 수 도 있다.<br>import autobind from ‘autobind-decorator’</p>
+<p>mport React, { Component, PropTypes } from ‘react’;<br> <br>export default class Basic extends Component {<br>    state = {<br>           hidden: false,<br>      };<br> <br>      onClickButton = () =&gt; {<br>        this.setState(() =&gt; ({ hidden: true }));<br>      }<br>    <br>    render() {<br>        return (<br>              <div><br>                <button onClick={this.onClickButton}>숨기기</button><br>              </div><br>        );<br>    }<br>}</p>
+<p>onClickButton 메서드를 “() =&gt;” arrow function으로 만들었다. (auto binding)<br>ES2015문법을 사용하는게 장기적으로 이득이니 적응하는게 좋을 듯 하다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/09/%EB%B0%94%EC%9D%B8%EB%94%A9/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/09/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
+                            aria-label=": 컴포넌트"
+                        >
+                            컴포넌트
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-09T12:47:49-08:00">
+	
+		    Jan 09, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="컴포넌트"><a href="#컴포넌트" class="headerlink" title="컴포넌트"></a>컴포넌트</h1><p> 컴포넌트란?</p>
+<ul>
+<li>컴포넌트 <br>처음 컴포넌트라는 이름을 들었을때 직관적으로 이해가 잘 안됬지만, 자바의 클래스와 객체로 분리하는 개념처럼 리액트에서는 컴포넌트로 분리한다고 생각하면 됩니다. 레이아웃을 컴포넌트라는 작은 단위로 나누어 코딩합니다. 이로인해 재사용성이 뛰어나고 이들을 모아 View형태로 코드를 짜기 때문에 코드도 이해하기 쉽고 협업에도 좋습니다.<br>React 컴포넌트는 상태 값을 이용해 UI를 표현합니다. 그리고, 컴포넌트 상태는 객체의 인스턴스 속성(Properties)을 이용해 관리하며 컴포넌트간에 단방향으로 데이터를 주고받는 props와 컴포넌트 내부에서 사용하는 state가 있습니다.</li>
+</ul>
+<p> - 기능을 단위별로 캡슐화하는 리액트의 기본 단컴포넌트란?<br> - 기능을 단위별로 캡슐화하는 리액트의 기본 단위다. <br> - 사용자가 보는 뷰는 이 컴포넌트들을 조합하여 만든다.<br> - 자바스크립트 함수 혹은 클래스이며 속성들을 이력받아들이며 내부적으로 각자의 상태를 관리한다.</p>
+<p>리액트 컴포넌트는 요소를 그룹화하는 방법이다. <br>컴포넌트는 기능, 마크업, 스타일 그리고 기타 UI에 필요한 다른 요소들을 하나로 묶어 그룹화한다. <br>컴포넌트는 독립적이면서도 재사용이 가능하기 때문에 필요한 기능을 독자적으로 구성할 수 있다. </p>
+<p>Data Flow</p>
+<ul>
+<li>단방향 데이터 흐름</li>
+<li>데이터흐름 : 부모컴포넌트 =&gt; 자식컴포넌트</li>
+<li>자식컴포넌트에서 직접적으로 부모컴포넌트에 전달하는 것은 불가능하다 - 간접적으로는 가능</li>
+</ul>
+<p>props<br>상위 컴포넌트가 하위 컴포넌트에게 내려주는 데이터 하위컴포넌트는 props를,</p>
+<ul>
+<li>단순히 사용만 할 수 있다</li>
+<li>변경할 수 없다</li>
+</ul>
+<p>&lt;props 주는법&gt;</p>
+<p>const App = () =&gt; (<br>  <div><br>    <h2>To Do List !</h2><br>    &lt;TodoList todos={[“eat pizza”, “eat rice”]} /&gt;<br>  </div><br>);</p>
+<p>const TodoList = props =&gt; (<br>  <ul><br>    <li>{props.todos[0]}</li><br>    <li>{props.todos[1]}</li><br>  </ul><br>);</p>
+<p>State<br>컴포넌트가 갖는 상태, 객체의 형태로 컴포넌트 내에서 보관하고 관리한다.</p>
+<ul>
+<li>class 컴포넌트로 작성되어야 한다</li>
+<li>값을 변경할 땐 반드시 setState 메서드를 사용해야 한다</li>
+<li>state 값이 변경되면 render() 함수가 실행된다.</li>
+</ul>
+<p>functional component vs class component</p>
+<p>함수형 컴포넌트</p>
+<ul>
+<li>순수 자바스크립트 함수를 이용하여 컴포넌트를 정의한 것</li>
+<li>선언하기가 편리하다</li>
+<li>단순히 데이터를 받아들여 어떤 형태로 표시하기 때문에 ‘stateless’ 컴포넌트라고도 한다</li>
+<li>주로 UI 렌더링을 담당한다 (예시 : Button 구성 요소)</li>
+<li>state를 사용할 필요가 없는 경우 함수형 컴포넌트를 사용한다<ul>
+<li>클래스형 컴포넌트보다 메모리 자원을 덜 사용한다</li>
+</ul>
+</li>
+<li>state와 life cycle 기능을 사용할 수 없다 - v16.8 업데이트 이후 리액트 훅(Hooks)이라는 기능이 도입되어 사용이 가능하다고 한다..!!</li>
+</ul>
+<p>렌더링된 값들을 고정시킨다.</p>
+<p>결과,</p>
+<ul>
+<li>함수형 컴포넌트 : Follow 버튼을 누르고 체크박스 옵션을 바꾸면 알림창에 Follow 버튼을 누르기전 옵션값이 알림창에 잘 들어가있다.</li>
+<li>클래스형 컴포넌트 : Fllow 버튼을 누른 후 바꾼 옵션값이 알림창에 들어가있다<br>이 예제에서는 함수형 컴포넌트가 보여주는 패턴이 올바른 케이스이다. 내가 어떤 사람을 팔로우하고 다른 사람의 프로필로 이동했다 하더라도 컴포넌트가 이를 헷갈려서는 안된다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/09/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/01/09/%EB%B9%84%EB%8F%99%EA%B8%B0/"
+                            aria-label=": 동기 비동기"
+                        >
+                            동기 비동기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-01-09T12:43:31-08:00">
+	
+		    Jan 09, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="리액트-Async-Await"><a href="#리액트-Async-Await" class="headerlink" title="리액트 Async, Await"></a>리액트 Async, Await</h1><p>콜백함수 :</p>
+<p>우리가 요청한 함수가 실행이 끝났을 때 우리에게 알려주는 함수</p>
+<p>setTimeout 같은 함수는 콜백함수가 내장되어 있다!</p>
+<p>Synchronous callback (print)</p>
+<ul>
+<li>받자마자 바로 콜백함수를 출력해주는 동기 콜백함수</li>
+</ul>
+<p>Asynchronous callback (print, timeout). -&gt; setTimeout 내장되어있음</p>
+<ul>
+<li>받고 일정 시간이 지나고 출력해주는 비동기 콜백함수</li>
+</ul>
+<p>이러한 콜백을 연결해서 코딩하게되면 콜백 지옥에 빠지게 된다.</p>
+<ol>
+<li>가독성이 떨어진다 어떻게 어디서 연결되어 있는지 알 수가 없다, 비즈니스 로직에 맞지않다.</li>
+<li>디버깅 시 유지보수 하기가 어렵다</li>
+</ol>
+<p>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</p>
+<p>Promise</p>
+<p>프로미스의 3가지 상태(states)<br>프로미스를 사용할 때 알아야 하는 가장 기본적인 개념이 바로 프로미스의 상태(states)입니다. 여기서 말하는 상태란 프로미스의 처리 과정을 의미합니다. new Promise()로 프로미스를 생성하고 종료될 때까지 3가지 상태를 갖습니다.</p>
+<ul>
+<li><p>Pending(대기) : 비동기 처리 로직이 아직 완료되지 않은 상태</p>
+<p>먼저 아래와 같이 new Promise() 메서드를 호출하면 대기(Pending) 상태가 됩니다.<br>new Promise() 메서드를 호출할 때 콜백 함수를 선언할 수 있고, 콜백 함수의 인자는 resolve, reject입니다.</p>
+</li>
+</ul>
+<ul>
+<li>Fulfilled(이행) : 비동기 처리가 완료되어 프로미스가 결과 값을 반환해준 상태</li>
+</ul>
+<p>여기서 콜백 함수의 인자 resolve를 아래와 같이 실행하면 이행(Fulfilled) 상태가 됩니다.<br>그리고 이행 상태가 되면 아래와 같이 then()을 이용하여 처리 결과 값을 받을 수 있습니다.</p>
+<ul>
+<li>Rejected(실패) : 비동기 처리가 실패하거나 오류가 발생한 상태</li>
+</ul>
+<p>new Promise()로 프로미스 객체를 생성하면 콜백 함수 인자로 resolve와 reject를 사용할 수 있다고 했습니다. 여기서 reject를 아래와 같이 호출하면 실패(Rejected) 상태가 됩니다.<br>그리고, 실패 상태가 되면 실패한 이유(실패 처리의 결과 값)를 catch()로 받을 수 있습니다.</p>
+<p>비동기 방식으로 동작하지만 호출이 성공하면 그떄 바로 성공했다고 콜백해주는 것!</p>
+<ol>
+<li><p>State : Pending -&gt; fulfilled or rejected</p>
+</li>
+<li><p>Producer vs Consumer</p>
+</li>
+</ol>
+<p>1)producer</p>
+<p>Const promise = new  promise(( resolve , reject ) =&gt; {<br>    doing some heavy work (network, read files)<br>console.log(‘doing something…’);<br>resolve(‘Ellie’);<br>reject(new Error(’no network’));<br>});</p>
+<p>—&gt; promise 를 만드는 순간 네트워크 통신을 하게 된다!<br>—&gt; 새로운 promise를 만드는 순간 executor가 자동으로 실행된다</p>
+<p>Resolve : 통신이 성공 했을 때 호출하는 콜백함수<br>Reject : 통신에 실패 했을 때 호출하는 콜백함수</p>
+<p>2)Consumers : then, catch, finally</p>
+<p>1] then은 성공 했을 때 !<br>Promise.then( value =&gt; {<br>Console.log(value);<br>});</p>
+<p>2] catch는 실패 했을 때!<br>.catch(error =&gt; {<br>console.log(error);<br>}</p>
+<p>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</p>
+<p>Async &amp; await</p>
+<ol>
+<li>Async</li>
+</ol>
+<p>Async 를 앞에쓰면 promise가 자동으로 붙게된다 !<br>비동기로 처리 할 것을 명시한다!</p>
+<ol start="2">
+<li>Await</li>
+</ol>
+<p>비동기 처리가 일어날 때 await가 걸린 함수는 해당 함수의 호출이 끝날 때 까지 기다려준다!</p>
+<p>Async await 병렬처리</p>
+<p>Promise.all( [getApple(), getBanana()] )<br>  —&gt; 해당 함수에 모두 promise를 걸고 모든 함수를 병렬처리 한다! </p>
+<p>promis.race( [getApple(), getBanana()] )<br> —&gt; 딱 하나만 제일 먼저 수행되는 애를 출력한다 !</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/01/09/%EB%B9%84%EB%8F%99%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/01/09/%EA%B8%B0%EC%B4%88/"
                             aria-label=": 리액트 기초"
                         >
@@ -537,895 +1334,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/10/30/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98/"
-                            aria-label=": 트랜잭션"
-                        >
-                            트랜잭션
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-10-30T07:34:08-07:00">
-	
-		    Oct 30, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="트랜잭션이란"><a href="#트랜잭션이란" class="headerlink" title="트랜잭션이란 ?"></a>트랜잭션이란 ?</h1><p>DB의 상태를 변화시키기 위한 쪼개질 수 없는 하나의 단위 작업</p>
-<p>특징</p>
-<ol>
-<li>원자성 : 하나의 트랜잭션 단위의 처리결과는 동일해야 한다</li>
-<li>일관성 : 트랜잭션 성공 시 DB의 모든 데이터는 일관서을 유지한다</li>
-<li>격리성 : 트랜잭션 도중 외부 간섭이 없어야 한다</li>
-<li>영속성 : 트랜잭션 성공 시 결과는 DB에 영속적을 보관한다</li>
-</ol>
-<BR>
-
-<h1 id="트랜잭션의-사용"><a href="#트랜잭션의-사용" class="headerlink" title="트랜잭션의 사용"></a>트랜잭션의 사용</h1><p>게시판 구현 시, 한 게시물의 댓글의 수를 표시하는 기능을 추가한다고 할 때, 게시판의 테이블과 댓글의 테이블이 정규화가 완료되었을 때에는 트랜잭션이 필요가 없지만 그렇지 않을 경우에는 트랜잭션이 필요하다!</p>
-<BR>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/97773044-df4db700-1b09-11eb-8b86-1d8d398ec354.png" width="600px"> </p>
-
-<BR>
-
-<p>게시물에 댓글을 달았을 때 동시에 댓글의 수를 업데이트(+1) 하기위해서 기존의 게시판 코드에 댓글갯수를 나타내는 코드를 추가한다. (Table, VO 인스턴스, Mapper, xml 등)</p>
-<BR>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/97773042-dd83f380-1b09-11eb-9cd9-bf5f5e4733fa.png" width="600px"> </p>
-
-
-<p>그 후 클래스에 @Transactional을 선언함으로써 이 클래스는 두 가지 행동을 모두 성공해야만 결과값을 반영하도록 만들어 준다</p>
-<p>트랜잭션에 실패할 경우에는 데이터 일관성을 위해 하나의 @Transational으로 묶인 모든 작업을 rollback한다!</p>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/97773043-deb52080-1b09-11eb-8f97-f28e0fb16e27.png" width="600px"> </p>
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/10/30/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/10/30/AOP/"
-                            aria-label=": AOP"
-                        >
-                            AOP
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-10-30T07:08:31-07:00">
-	
-		    Oct 30, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><p>목차</p>
-<ol>
-<li>AOP의 도입배경 &amp; 사용하는 이유</li>
-<li>AOP의 구성요소</li>
-<li>Spring에서의 AOP</li>
-</ol>
-<br>
-
-<h3 id="1-AOP의-도입배경-amp-사용하는-이유"><a href="#1-AOP의-도입배경-amp-사용하는-이유" class="headerlink" title="1. AOP의 도입배경 &amp; 사용하는 이유"></a>1. AOP의 도입배경 &amp; 사용하는 이유</h3><br>
-
-<p>어떻게 하면 더 간편하고 효율적으로 기능 구현에 충실할 수 있을까?</p>
-<p>기존의 OOP (Object Oriented Programming)를 대체하는 개념이 아닌 보완하는 역할의 AOP(Aspect Oriented Programming) 등장 !</p>
-<br>
-
-
-
-<h3 id="2-AOP의-구성요소"><a href="#2-AOP의-구성요소" class="headerlink" title="2. AOP의 구성요소"></a>2. AOP의 구성요소</h3><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/97772870-318dd880-1b08-11eb-873c-f059646db3f5.png" width="600px"> </p>
-
-
-<p>기존의 방식에서는 핵심 관심(Core)을 설계 할 때 필수적으로 기능 해야하는 기능들을 하나하나 클래스 안에 객체를 만들어서 사용하였음!</p>
-<p>이렇게 설계하게 되면 같은 기능을 가진 코드를 여러번 써야하기 때문에 불편함을 겪는 경우가 많았다.</p>
-<p>AOP의 등장으로 필수적인 코드들을 미리 만들어두고 이것들을 필요한 클래스가 외부에서 호출하여 (Weaving) 사용하는 식으로 만들어졌고, 훨신 코드의 양을 줄일 수가 있었음!</p>
-<br>
-
-
-<p>AOP 용어정리</p>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/97772873-32bf0580-1b08-11eb-8d2f-360697ea459e.png" width="600px"> </p>
-
-<br>
-
-<p><strong>우리는 Spirng 내에서 Aspect을 여러개 만들어서 사용함!</strong></p>
-<br>
-
-<h3 id="3-Spring에서의-AOP"><a href="#3-Spring에서의-AOP" class="headerlink" title="3. Spring에서의 AOP"></a>3. Spring에서의 AOP</h3><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/97772874-33579c00-1b08-11eb-8410-4b2326e9611c.png" width="600px"> </p>
-
-<p>클래스 위에 @Aspect를 선언 함으로써 Aspect를 구현함을 표시하고 @Before를 선언 함으로써 타켓의 메서드보다 전에 먼저 실행되게 할 코드임을 표시한다 마지막으로 execution은 Pointcut을 위한 표현식이며 Advice의 대상으로 지정한다!</p>
-<p>|분류| 어노테이션 |<br>|—|:—:|—:|<br>|@Before | JointPoint 호출 전 실행 될 코드 |<br>|@After | 정상 실행 or 예외 발생 상관없이 동작 할 코드|<br>|@Around | 메서드를 직접 호출 가능한 강력한 코드 |<br>|@AfterReturning | 모든 메서드 정상 실행 이후 동작하는 코드|<br>|@AfterThrowing | 예외 발생 이후 동작하는 코드 |</p>
-<br>
-
-<p>|분류| Pointcut 설정 기준 |<br>|—|:—:|—:|<br>|execution | 메서드를 기준 |<br>|within | 특정한 타입(클래스)을 기준|<br>|this | 주어진 인터페이스 구현 객체를 대상 |<br>|args | 특정 파라미터 가진 대상 기준|<br>|@annotation | 특정 어노테이션이 적용 대상 기준 |</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/10/30/AOP/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/10/17/Chart-js/"
-                            aria-label=": Chart.js"
-                        >
-                            Chart.js
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-10-17T06:59:47-07:00">
-	
-		    Oct 17, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="Chart-js-란"><a href="#Chart-js-란" class="headerlink" title="Chart.js 란?"></a>Chart.js 란?</h2><p><strong>JavaScript를 이용하여 그래프를 그릴 수 있게 도와주는 플러그인 (Chart.js는 canvas로 그리는 형식)</strong></p>
-<hr>
-
-<h2 id="Chart-js-사용방법"><a href="#Chart-js-사용방법" class="headerlink" title="Chart.js 사용방법"></a>Chart.js 사용방법</h2><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96148830-9f040b80-0f43-11eb-96a0-6f11fc3384e1.png" width="600px"> </p>
-
-<br>
-
-<p><strong>위와 같이 body 태그 영역안에 chart를 선언 해줌으로써 그래프를 나타나게 한다!</strong></p>
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96148835-a0353880-0f43-11eb-91f1-28e5f4ac2ae7.png" width="600px"> </p>
-
-<br>
-
-<p><strong>chart.js의 기본 옵션으로 만드려고 하는 그래프의 여러 설정값을 지정 할 수 있음</strong> <br></p>
-<p><strong>type에서 line 형의 그래프 말고도 수 많은 다른 형태의 그래프를 그릴 수 있음!</strong></p>
-<br>
-<hr>
-
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96148833-a0353880-0f43-11eb-965f-2b69b362c91c.png" width="600px"> </p>
-
-<br>
-
-<p><strong>한번에 그려지는 그래프가 아닌, 시간에 따라 변화하는 그래프를 그리고 싶다면 setTimeOut 메서드를 이용해서 조절 할 수가 있음</strong></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/10/17/Chart-js/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/10/17/%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0/"
-                            aria-label=": 공공데이터 가져오기"
-                        >
-                            공공데이터 가져오기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-10-17T06:57:05-07:00">
-	
-		    Oct 17, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Java/">Java</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="태그-안의-값-및-태그-내부의-값-가져오기"><a href="#태그-안의-값-및-태그-내부의-값-가져오기" class="headerlink" title="태그 안의 값 및 태그 내부의 값 가져오기"></a>태그 안의 값 및 태그 내부의 값 가져오기</h2><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097411-deaf0100-0f0b-11eb-9ac5-b9f710c463b7.png" width="600px"> </p>
-
-<br>
-
-<p><strong>다음과 같은 tag안의 값을 가져오는 방법과 tag 내부에 있는 값을 가져오는걸 배워보겠습니다!</strong></p>
-<br>
-<hr>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097413-df479780-0f0b-11eb-87ea-8386354c8c7f.png" width="600px"> </p>
-
-<br>
-
-<p><strong>DocumentURL 변수에 데이터를 가져올 주소를 넣어주고 태그에 접근하기 위한 xpath를 생성하고 특정 태그의 값을 담을 변수를 선언해줍니다!</strong></p>
-<br>
-<hr>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097398-dc4ca700-0f0b-11eb-8fc0-7d7f80f12888.png" width="600px"> </p>
-
-<br>
-
-<p><strong>URL 변수에 원하는 데이터만 가져오기 위해 파라미터를 추가한 URL 값을 넣습니다</strong> <br><br></p>
-<p><strong>그 후 앞서 사용한 Document 변수안에 현재 페이지의 데이터를 담습니다.</strong> <br></p>
-<p><strong>evaluate 매서드에 원하는 태그까지 접근함으로써 원하는 데이터를 nodeList안에 리스트 형태로 저장합니다</strong></p>
-<br>
-<hr>
-
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097402-dd7dd400-0f0b-11eb-8c35-c5556446e8f9.png" width="600px"> </p>
-
-<br>
-
-<p><strong>가져온 데이터 중에서 SECTION 태그의 갯수를 파악하여 그 수만큼 반복문을 돌리고 가져온 값은 result 변수에 추가시킵니다.</strong></p>
-<br>
-
-<hr>
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097405-dd7dd400-0f0b-11eb-9743-9ed850c3ab77.png" width="600px"> </p>
-
-<br>
-
-<p><strong>가져온 데이터 중에서 ARTICLE 태그의 갯수를 파악하여 그 수만큼 반복문을 돌리고 가져온 값은 result 변수에 추가시킵니다.</strong></p>
-<hr>
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097408-de166a80-0f0b-11eb-9c5b-22780425fed7.png" width="600px"> </p>
-
-<br>
-
-<p><strong>가져온 데이터 중에서 PARAGRAPH 태그의 갯수를 파악하여 그 수만큼 반복문을 돌리고 가져온 값은 result 변수에 추가시킵니다.</strong></p>
-<hr>
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097409-deaf0100-0f0b-11eb-9008-3a32920d6576.png" width="600px"> </p>
-
-<br>
-
-<p><strong>모든 데이터를 가지고있는 result값을 DB에 저장하여 데이터를 사용합니다!</strong></p>
-<h2 id="태그-안-Value-값-가져오기"><a href="#태그-안-Value-값-가져오기" class="headerlink" title="태그 안 Value 값 가져오기"></a>태그 안 Value 값 가져오기</h2><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095045-0fda0200-0f09-11eb-9912-2c9dc29a6f37.png" width="600px"> </p>
-
-<br>
-
-<p><strong>다음과 같은 tag안의 데이터들 중에서 가지고오고 싶은 데이터만 파싱하는 방법을 알아보겠습니다.</strong><br><br></p>
-<hr>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095046-0fda0200-0f09-11eb-8fab-e67a9ff173f8.png" width="600px"> </p>
-
-<br>
-
-<p><strong>url 변수에 데이터를 가져올 주소와 파라미터 값을 넣어주고 DocumentBuilderFactory , DocumentBuilder, Document 를 이용하여 전체 페이지를 파싱한 데이터를 담는다.</strong></p>
-<br>
-<hr>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095049-10729880-0f09-11eb-9387-f552486d3434.png" width="600px"> </p>
-
-<br>
-
-<p><strong>root 태그로 접근한 다음, 파싱을 시작 할 시작태그의 변수를 넣어 가져올 데이터의 범위를 좁혀준다!</strong> <br><br></p>
-<p><strong>좁혀진 데이터들을 Nodelist 변수에 list 형태로 담은 후, Nodelist가 가지고 있는 모든 데이터를 for 반복문과 item 메서드를 이용하여 list 안의 각각의 데이터를 Node 변수에 모두 담아준다.</strong> <br><br></p>
-<p><strong>getNodeType() 메서드에 가지고 오고 싶은 태그이름을 매개변수에 넣음으로써 해당 태그안의 데이터를 가지고 올 수 있음!</strong></p>
-<br>
-
-
-<p align="center"> <img src="(https://user-images.githubusercontent.com/62025746/96095042-0ea8d500-0f09-11eb-8ffa-2b806c2085bd.png" width="600px"> </p>
-
-<br>
-<hr>
-
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095054-110b2f00-0f09-11eb-9a66-dd7877e58155.png" width="600px"> </p>
-
-<br>
-
-<p><strong>getNodeType으로 가져온 데이터를 List 변수에 저장함.</strong></p>
-<br>
-
-<hr>
-
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095057-110b2f00-0f09-11eb-90c6-42998052f599.png" width="600px"> </p>
-
-<br>
-
-<p><strong>List안에 들어있는 데이터를 DB안에 저장해서 사용함 !</strong></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/10/17/%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/10/14/%EC%A3%BC%EC%9E%85-DI/"
-                            aria-label=": 의존성 주입(DI)"
-                        >
-                            의존성 주입(DI)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-10-14T03:25:24-07:00">
-	
-		    Oct 14, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="의존성-주입-DI"><a href="#의존성-주입-DI" class="headerlink" title="의존성 주입 (DI)"></a>의존성 주입 (DI)</h1><p><br><br></p>
-<h2 id="Dependency-Injection-이란"><a href="#Dependency-Injection-이란" class="headerlink" title="Dependency Injection 이란?"></a>Dependency Injection 이란?</h2><p><strong>객체 자체가 아니라 Framework에 의해 객체의 의존성이 주입되는 설계 패턴</strong></p>
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95982681-5bce6d80-0e5b-11eb-8aaa-1c304af96423.png" width="600px"> </p>
-
-<p><br><br></p>
-<h2 id="의존성-주입-방법"><a href="#의존성-주입-방법" class="headerlink" title="의존성 주입 방법"></a>의존성 주입 방법</h2><ul>
-<li>Contructor Injection<ul>
-<li>생성자를 통한 전달</li>
-<li><code>&lt;constructor-arg ref=&quot;cat&quot;&gt;&lt;/constructor-arg&gt;</code></li>
-</ul>
-</li>
-<li>Method(Setter) Injection<ul>
-<li>setter()을 통한 전달</li>
-<li><code>&lt;property name=&quot;myName&quot; value=&quot;poodle&quot;&gt;&lt;/property&gt;</code></li>
-</ul>
-</li>
-<li>Field Injection<ul>
-<li>멤버 변수를 통한 전달</li>
-</ul>
-</li>
-</ul>
-<p><br><br></p>
-<h2 id="의존성-주입의-장점"><a href="#의존성-주입의-장점" class="headerlink" title="의존성 주입의 장점"></a>의존성 주입의 장점</h2><ul>
-<li>재사용성을 높여줍니다. <br> </li>
-<li>테스트에 용이합니다. <br></li>
-<li>코드도 단순화 시켜줍니다. <br></li>
-<li>종속적이던 코드의 수도 줄여줍니다. <br></li>
-<li>왜 사용하는 지 파악하기가 수월합니다. 코드를 읽기 쉬워지는 점이 있습니다. <br> </li>
-<li>종속성이 감소합니다. 구성 요소의 종속성이 감소하면, 변경에 민감하지 않습니다. <br></li>
-<li>결합도(coupling)는 낮추면서 유연성과 확장성은 향상시킬 수 있습니다. <br> </li>
-<li>객체간의 의존관계를 설정할 수 있습니다. <br></li>
-<li>객체간의 의존관계를 없애거나 줄일 수 있습니다. <br></li>
-</ul>
-<p><br><br></p>
-<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95982506-26c21b00-0e5b-11eb-894f-b5a31d5db2b4.png" width="600px"> </p>
-
-<br>
-
-<ol>
-<li>AnimalType에 대한 구체적인 Class를 생성한다. <br><ul>
-<li>Dog Class, Cat Class <br><br></li>
-</ul>
-</li>
-<li>PetOwner 객체에 AnimalType 객체를 전달한다. <br><ul>
-<li>Contructor Injection <br><br></li>
-</ul>
-</li>
-<li>생성자를 통한 전달 <br><ul>
-<li><code>&lt;constructor-arg ref=&quot;cat&quot;&gt;&lt;/constructor-arg&gt;</code> <br><br></li>
-</ul>
-</li>
-<li>Method(Setter) Injection <br><ul>
-<li>setter()을 통한 전달 <br></li>
-<li><code>&lt;property name=&quot;myName&quot; value=&quot;poodle&quot;&gt;&lt;/property&gt; </code><br><br></li>
-</ul>
-</li>
-<li>Field Injection <br><ul>
-<li>멤버 변수를 통한 전달 <br></li>
-</ul>
-</li>
-</ol>
-<p>개발자가 할 일은 주입할 것에 대한 Class를 작성(Dog, Cat 등)하는 것 ! <br></p>
-<p>출처 : <a target="_blank" rel="noopener" href="https://gmlwjd9405.github.io/2018/11/09/dependency-injection.html">https://gmlwjd9405.github.io/2018/11/09/dependency-injection.html</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/10/14/%EC%A3%BC%EC%9E%85-DI/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/10/14/Ajax/"
-                            aria-label=": Ajax"
-                        >
-                            Ajax
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-10-14T03:24:31-07:00">
-	
-		    Oct 14, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h1><br>
-
-<p><strong><code>A</code>synchronous 비동기</strong> <br><br><br><strong><code>J</code>avaScript</strong> <br><br><br><strong><code>A</code>nd</strong> <br><br><br><strong><code>X</code>ml</strong></p>
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="초창기-웹"><a href="#초창기-웹" class="headerlink" title="초창기 웹?"></a>초창기 웹?</h2><br>
-
-<p>하나의 수정된 정보를 보여주기 위해서 모든 <code>HTML 코드</code>들을 다시 호출해서 보여줌</p>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96861263-b5650800-1418-11eb-940b-30b6f12b3201.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="Ajax의-장점-1"><a href="#Ajax의-장점-1" class="headerlink" title="Ajax의 장점 - 1"></a>Ajax의 장점 - 1</h2><br>
-
-<p>필요한 부분만 별도로 요청하고, 응답받아 처리 할 수 있음 <br><br>모든 데이터를 전부 업로드 할 필요가 없어져서 속도 개선 및 비용 절감에 좋음!</p>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96861268-b6963500-1418-11eb-8225-5fbdc89b3665.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-
-<h2 id="Ajax의-장점-2"><a href="#Ajax의-장점-2" class="headerlink" title="Ajax의 장점 - 2"></a>Ajax의 장점 - 2</h2><p><strong>비동기 방식으로 페이지를 새로고침 하지 않고도 필요한 데이터를 받아와서 내용을 업데이트 하기 때문에 클라이언트의 대기시간을 줄일 수 있다.</strong></p>
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95962130-f1103880-0e40-11eb-92d4-4293d0195a00.png" width="600px"> </p>
-
-<p><br><br></p>
-<h3 id="동기-비동기-방식의-차이점"><a href="#동기-비동기-방식의-차이점" class="headerlink" title="동기/비동기 방식의 차이점"></a>동기/비동기 방식의 차이점</h3><br>
-
-<ul>
-<li><p>동기(synchronous : 동시에 일어나는)</p>
-<ul>
-<li>동기는 말 그대로 동시에 일어난다는 뜻입니다. 요청과 그 결과가 동시에 일어난다는 약속인데요. 바로 요청을 하면 시간이 얼마가 걸리던지 요청한 자리에서 결과가 주어져야 합니다. <br><br></li>
-<li>요청과 결과가 한 자리에서 동시에 일어남 <br><br></li>
-<li>A노드와 B노드 사이의 작업 처리 단위(transaction)를 동시에 맞추겠다.</li>
-</ul>
-</li>
-<li><p>비동기(Asynchronous : 동시에 일어나지 않는)</p>
-<ul>
-<li>비동기는 동시에 일어나지 않는다를 의미합니다. 요청과 결과가 동시에 일어나지 않을거라는 약속입니다. <br><br></li>
-<li>요청한 그 자리에서 결과가 주어지지 않음 <br><br></li>
-<li>노드 사이의 작업 처리 단위를 동시에 맞추지 않아도 된다. </li>
-</ul>
-<p><br><br></p>
-</li>
-</ul>
-<h3 id="동기-비동기-방식의-장단점"><a href="#동기-비동기-방식의-장단점" class="headerlink" title="동기/비동기 방식의 장단점"></a>동기/비동기 방식의 장단점</h3><br>
-
-<p> <strong>동기와 비동기는 상황에 따라서 각각의 장단점이 있습니다.</strong>  <br><br></p>
-<p> <strong>동기방식은 설계가 매우 간단하고 직관적이지만 결과가 주어질 때까지 아무것도 못하고 대기해야 하는 단점이 있고,</strong>  <br><br></p>
-<p> <strong>비동기방식은 동기보다 복잡하지만 결과가 주어지는데 시간이 걸리더라도 그 시간 동안 다른 작업을 할 수 있으므로 자원을 효율적으로 사용할 수 있는 장점이 있습니다.</strong></p>
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="비동기-방식의-종류"><a href="#비동기-방식의-종류" class="headerlink" title="비동기 방식의 종류"></a>비동기 방식의 종류</h2><ul>
-<li><p><strong>$(“ “).load( )</strong></p>
-</li>
-<li><p><strong>$.get( ),$.post( )</strong></p>
-</li>
-<li><p><strong>$.getJSON( )</strong></p>
-</li>
-<li><p><strong>$.ajax( )</strong></p>
-<br>
-
-<hr>
-
-</li>
-</ul>
-<h3 id="비동기-방식의-종류-“-“-load"><a href="#비동기-방식의-종류-“-“-load" class="headerlink" title="비동기 방식의 종류 - $(“ “).load( )"></a>비동기 방식의 종류 - $(“ “).load( )</h3><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95962119-ef467500-0e40-11eb-8305-f1fb54d35871.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h3 id="비동기-방식의-종류-get-post"><a href="#비동기-방식의-종류-get-post" class="headerlink" title="비동기 방식의 종류 - $.get( ),$.post( )"></a>비동기 방식의 종류 - $.get( ),$.post( )</h3><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95962111-ece41b00-0e40-11eb-9905-5fa594ad517a.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h3 id="비동기-방식의-종류-getJSON"><a href="#비동기-방식의-종류-getJSON" class="headerlink" title="비동기 방식의 종류 - $.getJSON( )"></a>비동기 방식의 종류 - $.getJSON( )</h3><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95962114-eeadde80-0e40-11eb-9cd2-26a7cc660dd6.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h3 id="비동기-방식의-종류-ajax"><a href="#비동기-방식의-종류-ajax" class="headerlink" title="비동기 방식의 종류 - $.ajax( )"></a>비동기 방식의 종류 - $.ajax( )</h3><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95962116-eeadde80-0e40-11eb-9e40-fe92eeee4c07.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/10/14/Ajax/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/10/14/REST/"
-                            aria-label=": REST"
-                        >
-                            REST
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-10-14T03:23:15-07:00">
-	
-		    Oct 14, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EA%B8%B0%EB%B3%B8/">기본</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h1><br>
-
-<p><strong><code>RE</code>presentational 표현</strong> <br><br><br><strong><code>S</code>tate 상태</strong> <br><br><br><strong><code>T</code>ransfer 전달</strong></p>
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="초창기-웹"><a href="#초창기-웹" class="headerlink" title="초창기 웹?"></a>초창기 웹?</h2><p>사용자가 원하는 정보를 Request에 담아 전달하면 <br></p>
-<p>서버에서 <code>HTTP 문서</code> 형태로 반환함</p>
-<br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96861271-b72ecb80-1418-11eb-98e0-85ed586b7c81.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="REST-API란-1"><a href="#REST-API란-1" class="headerlink" title="REST API란 - 1"></a>REST API란 - 1</h2><br>
-
-<p>HTTP Protocol을 <code>더 유연하게 사용</code>하기 위한 목적. <br><br>서버의 자원을 추가, 수정, 삭제, 업데이트 할 수 있도록 하는 것</p>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96861273-b7c76200-1418-11eb-9698-f52412365c12.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="REST-API란-2"><a href="#REST-API란-2" class="headerlink" title="REST API란 - 2"></a>REST API란 - 2</h2><br>
-
-<p>URL로 내가 하고자 하는 작업을 서버에 요청함. <br><br>서버는 이에 맞는 동작을 수행하고 그 결과를 <code>JSON/XML</code> 형태로 반환함.</p>
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96861275-b7c76200-1418-11eb-85bb-1d3c3f41f372.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="다양한-API-명령어들"><a href="#다양한-API-명령어들" class="headerlink" title="다양한 API 명령어들"></a>다양한 API 명령어들</h2><br>
-
-<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96861278-b85ff880-1418-11eb-85c9-6a1eae486298.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="왜-REST-API를-쓰는가"><a href="#왜-REST-API를-쓰는가" class="headerlink" title="왜 REST API를 쓰는가 ?"></a>왜 REST API를 쓰는가 ?</h2><ul>
-<li>분산 시스템을 찾기 위해서<ul>
-<li>모듈, 기능별로 분리하기 쉬워졌다. <br></li>
-<li>어떤 다른 모듈 또는 애플리케이션들이라도 RESTful API 를 통해 상호간에 통신을 할 수 있기 때문</li>
-</ul>
-</li>
-<li>WEB 브라우저 외의 클라이언트를 위해서 (멀티 플랫폼)<ul>
-<li>데이터만 주고받기 때문에 여러 클라이언트가 자유롭고 부담없이 데이터를 이용 할 수있다.</li>
-</ul>
-</li>
-</ul>
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="RESTful-이란"><a href="#RESTful-이란" class="headerlink" title="RESTful 이란 ?"></a>RESTful 이란 ?</h2><p><strong>REST의 제약조건을 모두 만족하는 구조를 가진 시스템을 Restful 이라고 함</strong></p>
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="RESTful의-제약조건"><a href="#RESTful의-제약조건" class="headerlink" title="RESTful의 제약조건 ?"></a>RESTful의 제약조건 ?</h2><p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95960292-8b22b180-0e3e-11eb-8378-566482f7084d.png" width="600px"> </p>
-
-<br>
-
-<hr>
-
-<br>
-
-<h2 id="Richardson-Maturity-Model"><a href="#Richardson-Maturity-Model" class="headerlink" title="Richardson Maturity Model ?"></a>Richardson Maturity Model ?</h2><p align="center"> <img src="https://user-images.githubusercontent.com/62025746/95960618-e81e6780-0e3e-11eb-9e67-f14579dff511.png" width="600px"> </p>
-
-<p><br><br></p>
-<p><strong>레너드 리처드슨(Leonard Richardson)은 REST가 얼마나 성숙했는지 알 수 있는 아주 유용한 모델을 제시했습니다. 이 모델에 따르면 REST의 성숙도는 다음 4단계로 구분됩니다.</strong><br><br></p>
-<ul>
-<li>레벨 0: 클라이언트는 서비스별로 유일한 URL 끝점에 HTTP POST 요청을 하여 서비스를 호출합니다. 요청을 할 때마다 어떤 액션을 수행할지, 그 대상(예: 비즈니스 객체)은 무엇인지 지정합니다. 필요한 매개변수도 함께 전달합니다. <br><br></li>
-<li>레벨 1: 서비스는 리소스 개념을 지원합니다. 클라이언트는 수행할 액션과 매개변수가 지정된 POST 요청을 합니다. <br><br></li>
-<li>레벨 2: 서비스는 HTTP 동사를 이용해서 액션을 수행하고(예: GET은 조회, POST는 생성, PUT은 수정), 요청 쿼리 매개변수 및 본문, 필요 시 매개변수를 지정합니다. 덕분에 서비스는 GET 요청을 캐싱하는 등 웹 인프라를 활용할 수 있습니다.<br><br></li>
-<li>레벨 3: 서비스를 HATEOAS(Hypertext As The Engine Of Application State, 애플리케이션 상태 엔진으로서의 하이퍼미디어) 원칙에 기반하여 설계합니다. HATEOAS는 GET 요청으로 반환된 리소스 표현형에 그 리소스에 대한 액션의 링크도 함께 태워 보내자는 생각입니다. 가령 클라이언트는 GET 요청으로 주문 데이터를 조회하고 이때 반환된 표현형 내부 링크를 이용해서 해당 주문을 취소할 수도 있습니다. HATEOAS를 사용하면 하드 코딩한 URL을 클라이언트 코드에 욱여넣지 않아도 됩니다</li>
-</ul>
-<hr>
-
-<br>
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/10/14/REST/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1441,7 +1349,18 @@
           </li>
         
         
-        <li class="pagination-number">page 4 of 4</li>
+          <li class="pagination-next">
+            <a
+                class="btn btn--default btn--small"
+                href="/archives/page/5/"
+                aria-label="OLDER POSTS"
+            >
+              <span>OLDER POSTS</span>
+              <i class="fa fa-angle-right text-base icon-ml"></i>
+            </a>
+          </li>
+        
+        <li class="pagination-number">page 4 of 5</li>
     </ul>
 </div>
 

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="이상권의 개발노트">
-    <title>Category: 이론노트 - 이상권의 개발노트</title>
+    <title>Archives - 이상권의 개발노트</title>
     <meta name="author" content="이상권">
     
     
@@ -14,7 +14,7 @@
     <script type="application/ld+json">{}</script>
     <meta property="og:type" content="blog">
 <meta property="og:title" content="이상권의 개발노트">
-<meta property="og:url" content="https://earth-kor.github.io/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/page/4/index.html">
+<meta property="og:url" content="https://earth-kor.github.io/archives/page/5/index.html">
 <meta property="og:site_name" content="이상권의 개발노트">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="이상권">
@@ -244,182 +244,6 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2020/11/03/%EB%AC%B8%EC%A0%9C/"
-                            aria-label=": Linked list (2)"
-                        >
-                            Linked list (2)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-11-03T04:39:36-08:00">
-	
-		    Nov 03, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/">자료구조</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="단방향-LinkedList의-끝에서-k번째-노드를-찾는-알고리즘을-구현하시오"><a href="#단방향-LinkedList의-끝에서-k번째-노드를-찾는-알고리즘을-구현하시오" class="headerlink" title="단방향 LinkedList의 끝에서 k번째 노드를 찾는 알고리즘을 구현하시오."></a>단방향 LinkedList의 끝에서 k번째 노드를 찾는 알고리즘을 구현하시오.</h1><h2 id="2-gt-3-gt-1-gt-4"><a href="#2-gt-3-gt-1-gt-4" class="headerlink" title="2 -&gt; 3 -&gt; 1 -&gt; 4"></a>2 -&gt; 3 -&gt; 1 -&gt; 4</h2><br>
-
-<p><strong>방법1</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">int k &#x3D; 2;</span><br><span class="line">Node kth &#x3D; kthToLast(first, k) ;</span><br><span class="line">Node kthToLast(Node first, int k) &#123;</span><br><span class="line"></span><br><span class="line"> Node n &#x3D; first ;</span><br><span class="line"> int total &#x3D; 1 ;</span><br><span class="line"></span><br><span class="line"> while (n.next !&#x3D; null) &#123;</span><br><span class="line"></span><br><span class="line"> total ++ ;</span><br><span class="line"> n &#x3D; n.next ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"> n &#x3D; first;</span><br><span class="line"> for ( int i &#x3D; 0 ; i &lt; total - k + 1 ; i ++ ) &#123;</span><br><span class="line"></span><br><span class="line"> n &#x3D; n.next ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">return n;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p><strong>방법 2 재귀호출</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">int k &#x3D; 1;</span><br><span class="line">KthToLast( ll.getFirst(), k ) ;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Reference &#123;</span><br><span class="line"> public int count</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">private static void KthToLast(Node n, int k, Reference r) &#123;</span><br><span class="line">if ( in &#x3D;&#x3D; null ) &#123;</span><br><span class="line">return null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int k &#x3D;2;</span><br><span class="line">Reference r &#x3D; new Reference();</span><br><span class="line"></span><br><span class="line">Node found &#x3D; KthToLas(n.next, k, r) ;</span><br><span class="line">r.count ++ ;</span><br><span class="line">if ( r.count &#x3D;&#x3D; k) &#123;</span><br><span class="line">return n;</span><br><span class="line">&#125;</span><br><span class="line">return found;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><strong>방법 3 포인터</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">private static Node KthToLast( Node first, int k) &#123;</span><br><span class="line">Node p1 &#x3D; first;</span><br><span class="line">Node p2 &#x3D; first;</span><br><span class="line"></span><br><span class="line">for ( int i &#x3D; 0 ; i &lt; k ; i++ ) &#123;</span><br><span class="line">if ( p1 &#x3D;&#x3D; null;) return null;</span><br><span class="line">p1 &#x3D; p1.next;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">while ( p1 !&#x3D; null) &#123;</span><br><span class="line">p1 &#x3D; p1.next;</span><br><span class="line">p2 &#x3D; p2.next;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">return p2</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><br><br></p>
-<h3 id="단방향-Linked-List에서-중간에-있는-노드를-삭제하시오-단-당신은-첫번째-노드가-어딨는지-모르고-오직-삭제-할-노드만-가지고-있다"><a href="#단방향-Linked-List에서-중간에-있는-노드를-삭제하시오-단-당신은-첫번째-노드가-어딨는지-모르고-오직-삭제-할-노드만-가지고-있다" class="headerlink" title="단방향 Linked List에서 중간에 있는 노드를 삭제하시오 (단, 당신은 첫번째 노드가 어딨는지 모르고, 오직 삭제 할 노드만 가지고 있다)"></a>단방향 Linked List에서 중간에 있는 노드를 삭제하시오 (단, 당신은 첫번째 노드가 어딨는지 모르고, 오직 삭제 할 노드만 가지고 있다)</h3><p><br><br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deleteNode ( ll.get(2));</span><br><span class="line">ll.retrieve();</span><br><span class="line"></span><br><span class="line">private static boolean deleteNode(Node n) &#123;</span><br><span class="line"> if ( n &#x3D;&#x3D; null || n.next &#x3D;&#x3D; null) &#123;</span><br><span class="line"></span><br><span class="line"> return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Node next &#x3D; n.next</span><br><span class="line">n.data &#x3D; next.data;</span><br><span class="line">n.next &#x3D; next.next;</span><br><span class="line">return true;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/11/03/%EB%AC%B8%EC%A0%9C/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/11/01/list/"
-                            aria-label=": Linked list (1)"
-                        >
-                            Linked list (1)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-11-01T06:06:29-08:00">
-	
-		    Nov 01, 2020
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/">자료구조</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Linked-list"><a href="#Linked-list" class="headerlink" title="Linked list"></a>Linked list</h1><ul>
-<li>컴퓨터의 자료를 저장하는 여러 구조 중 하나<br>일렬로 연결된 데이터를 저장 할 때 사용한다<br>한 데이터의 마지막에 다음 데이터의 주소를 가지고 있음</li>
-</ul>
-<ul>
-<li><p>배열은 방이 정해져있기 때문에 갯수가 제한적임<br>but 이거는 주소를 넣고 빼고를 통해서 조절을 할 수 있음</p>
-</li>
-<li><p>링크를 끊게되면 자바제외 이 데이터가 남기 때문에 저장공간을 쓸데없이차지함!<br>(그래서 이걸 인위적으로 지워줘야함!)</p>
-</li>
-<li><p>이거는 주소를 하나하나 찾아 다니기 때문에 속도가 느릴수가 있음. 그래서 데이터가 정해지지않는 데이터를 넣을 때 유용함!</p>
-</li>
-</ul>
-<p><br><br></p>
-<h1 id="Linked-list-단방향-양방향"><a href="#Linked-list-단방향-양방향" class="headerlink" title="Linked list 단방향 양방향"></a>Linked list 단방향 양방향</h1><p>단방향 : 주소를 타고 한 방향으로만 이동 가능 <br><br>양방향 : 내 앞에 애가 어디있는지 알 수 있도록 앞의 주소를 가지고있음!</p>
-<p><br><br></p>
-<h1 id="Linked-list-단방향-Java-구현"><a href="#Linked-list-단방향-Java-구현" class="headerlink" title="Linked list 단방향 Java 구현"></a>Linked list 단방향 Java 구현</h1><p><strong>Node class 생성</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class node &#123; </span><br><span class="line"> int data;</span><br><span class="line"> Node next &#x3D; null ; </span><br><span class="line"> Node ( int d ) &#123;</span><br><span class="line"> this.data &#x3D; d</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Node추가 하는 메서드</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void append(int d) &#123;</span><br><span class="line">  Node end &#x3D; new Node (d)</span><br><span class="line">  node n &#x3D; this ;</span><br><span class="line">while ( n.next !&#x3D; null ) &#123;</span><br><span class="line">	n &#x3D; n.next</span><br><span class="line">&#125;</span><br><span class="line"> 	n.next &#x3D; end ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Node 삭제하는 메서드</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">void delete(int d) &#123;</span><br><span class="line"> Node n &#x3D; this ;</span><br><span class="line"> while ( n.next !&#x3D; null) &#123;</span><br><span class="line">    if ( n.next.data &#x3D;&#x3D; d) &#123;</span><br><span class="line">     n.next &#x3D; n.next.next;	    	</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    n &#x3D; n.next ;</span><br><span class="line">&#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-
-<p><strong>Node속 데이터 호출하는 코드</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void retrieve() &#123;</span><br><span class="line"></span><br><span class="line">Node n &#x3D; this;</span><br><span class="line">while ( n.next !&#x3D; null ) &#123;</span><br><span class="line">system.out.println(n.data + &quot;-&gt;&quot;);</span><br><span class="line">n &#x3D; n.next ;</span><br><span class="line">&#125;</span><br><span class="line">system.put.println(n.data);</span><br></pre></td></tr></table></figure>
-<p><br><br></p>
-<h1 id="LinkedList-활용"><a href="#LinkedList-활용" class="headerlink" title="LinkedList 활용"></a>LinkedList 활용</h1><p>앞서 작성한 단방향 코드작성은 취약점이 있다.<br>첫 번쨰로 시작한 header 노드가 삭제되거나 실행이 불가능하게 된다면 전체의 노드에 영향을 주기 때문이다.</p>
-<p>이를 보완하는 방법이 존재한다. Node Class를 Linked List라는 class로 감싸서 Linked List의 header를 데이터가 아닌 시작을 알리는 용도로만 사용하도록 만든다!</p>
-<p>그리고 그 안에 node class를 만든다!</p>
-<br>
-
-<p><strong>LinkedList 활용</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class LinkedList &#123;</span><br><span class="line">Node header ;</span><br><span class="line"></span><br><span class="line">static calss Node &#123;</span><br><span class="line">int data;</span><br><span class="line">Node next &#x3D; null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LinkdList() &#123;</span><br><span class="line">header &#x3D; new Node() ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Linked-List-중복값-삭제"><a href="#Linked-List-중복값-삭제" class="headerlink" title="Linked List 중복값 삭제"></a>Linked List 중복값 삭제</h2><p>정렬되지 않는 LinkedList 노드중 중복값을 제거하시오.<br>(단 , 버퍼는 사용하지 않고!)</p>
-<p>3 -&gt; 2 -&gt; 1 -&gt; 2 -&gt; 4</p>
-<ol>
-<li>버퍼를 사용할 때</li>
-</ol>
-<p>HashSet에 하나의 방에 넣고, 해당 방에 이미 노드가 존재하면 삭제한다.<br>( space : O(N) )<br>( Time : O(N) )</p>
-<ol start="2">
-<li>버퍼를 사용하지 않을 때</li>
-</ol>
-<p>Pointer와 Node를 생성해서 사용한다!</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void removeDups() &#123;</span><br><span class="line"> Node n &#x3D; header;</span><br><span class="line">while ( n !&#x3D; null &amp;&amp; n.next !&#x3D; null ) &#123;</span><br><span class="line"> Node r &#x3D; n ;</span><br><span class="line">while ( r.next !&#x3D; null ) &#123;</span><br><span class="line"> if (n.data &#x3D;&#x3D; r.next.data) &#123;</span><br><span class="line"> r.next &#x3D; r.next.next;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">	r &#x3D; r.next;</span><br><span class="line">&#125;</span><br><span class="line">   &#125;</span><br><span class="line">	n &#x3D; n.next;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>( space : O(1) )<br>( Time : O(N^2) )</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/11/01/list/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2020/10/30/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98/"
                             aria-label=": 트랜잭션"
                         >
@@ -579,6 +403,259 @@
                         <p>
                             <a
                                 href="/2020/10/30/AOP/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2020/10/17/Chart-js/"
+                            aria-label=": Chart.js"
+                        >
+                            Chart.js
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2020-10-17T06:59:47-07:00">
+	
+		    Oct 17, 2020
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="Chart-js-란"><a href="#Chart-js-란" class="headerlink" title="Chart.js 란?"></a>Chart.js 란?</h2><p><strong>JavaScript를 이용하여 그래프를 그릴 수 있게 도와주는 플러그인 (Chart.js는 canvas로 그리는 형식)</strong></p>
+<hr>
+
+<h2 id="Chart-js-사용방법"><a href="#Chart-js-사용방법" class="headerlink" title="Chart.js 사용방법"></a>Chart.js 사용방법</h2><br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96148830-9f040b80-0f43-11eb-96a0-6f11fc3384e1.png" width="600px"> </p>
+
+<br>
+
+<p><strong>위와 같이 body 태그 영역안에 chart를 선언 해줌으로써 그래프를 나타나게 한다!</strong></p>
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96148835-a0353880-0f43-11eb-91f1-28e5f4ac2ae7.png" width="600px"> </p>
+
+<br>
+
+<p><strong>chart.js의 기본 옵션으로 만드려고 하는 그래프의 여러 설정값을 지정 할 수 있음</strong> <br></p>
+<p><strong>type에서 line 형의 그래프 말고도 수 많은 다른 형태의 그래프를 그릴 수 있음!</strong></p>
+<br>
+<hr>
+
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96148833-a0353880-0f43-11eb-965f-2b69b362c91c.png" width="600px"> </p>
+
+<br>
+
+<p><strong>한번에 그려지는 그래프가 아닌, 시간에 따라 변화하는 그래프를 그리고 싶다면 setTimeOut 메서드를 이용해서 조절 할 수가 있음</strong></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2020/10/17/Chart-js/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2020/10/17/%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0/"
+                            aria-label=": 공공데이터 가져오기"
+                        >
+                            공공데이터 가져오기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2020-10-17T06:57:05-07:00">
+	
+		    Oct 17, 2020
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Java/">Java</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="태그-안의-값-및-태그-내부의-값-가져오기"><a href="#태그-안의-값-및-태그-내부의-값-가져오기" class="headerlink" title="태그 안의 값 및 태그 내부의 값 가져오기"></a>태그 안의 값 및 태그 내부의 값 가져오기</h2><br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097411-deaf0100-0f0b-11eb-9ac5-b9f710c463b7.png" width="600px"> </p>
+
+<br>
+
+<p><strong>다음과 같은 tag안의 값을 가져오는 방법과 tag 내부에 있는 값을 가져오는걸 배워보겠습니다!</strong></p>
+<br>
+<hr>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097413-df479780-0f0b-11eb-87ea-8386354c8c7f.png" width="600px"> </p>
+
+<br>
+
+<p><strong>DocumentURL 변수에 데이터를 가져올 주소를 넣어주고 태그에 접근하기 위한 xpath를 생성하고 특정 태그의 값을 담을 변수를 선언해줍니다!</strong></p>
+<br>
+<hr>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097398-dc4ca700-0f0b-11eb-8fc0-7d7f80f12888.png" width="600px"> </p>
+
+<br>
+
+<p><strong>URL 변수에 원하는 데이터만 가져오기 위해 파라미터를 추가한 URL 값을 넣습니다</strong> <br><br></p>
+<p><strong>그 후 앞서 사용한 Document 변수안에 현재 페이지의 데이터를 담습니다.</strong> <br></p>
+<p><strong>evaluate 매서드에 원하는 태그까지 접근함으로써 원하는 데이터를 nodeList안에 리스트 형태로 저장합니다</strong></p>
+<br>
+<hr>
+
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097402-dd7dd400-0f0b-11eb-8c35-c5556446e8f9.png" width="600px"> </p>
+
+<br>
+
+<p><strong>가져온 데이터 중에서 SECTION 태그의 갯수를 파악하여 그 수만큼 반복문을 돌리고 가져온 값은 result 변수에 추가시킵니다.</strong></p>
+<br>
+
+<hr>
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097405-dd7dd400-0f0b-11eb-9743-9ed850c3ab77.png" width="600px"> </p>
+
+<br>
+
+<p><strong>가져온 데이터 중에서 ARTICLE 태그의 갯수를 파악하여 그 수만큼 반복문을 돌리고 가져온 값은 result 변수에 추가시킵니다.</strong></p>
+<hr>
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097408-de166a80-0f0b-11eb-9c5b-22780425fed7.png" width="600px"> </p>
+
+<br>
+
+<p><strong>가져온 데이터 중에서 PARAGRAPH 태그의 갯수를 파악하여 그 수만큼 반복문을 돌리고 가져온 값은 result 변수에 추가시킵니다.</strong></p>
+<hr>
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96097409-deaf0100-0f0b-11eb-9008-3a32920d6576.png" width="600px"> </p>
+
+<br>
+
+<p><strong>모든 데이터를 가지고있는 result값을 DB에 저장하여 데이터를 사용합니다!</strong></p>
+<h2 id="태그-안-Value-값-가져오기"><a href="#태그-안-Value-값-가져오기" class="headerlink" title="태그 안 Value 값 가져오기"></a>태그 안 Value 값 가져오기</h2><br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095045-0fda0200-0f09-11eb-9912-2c9dc29a6f37.png" width="600px"> </p>
+
+<br>
+
+<p><strong>다음과 같은 tag안의 데이터들 중에서 가지고오고 싶은 데이터만 파싱하는 방법을 알아보겠습니다.</strong><br><br></p>
+<hr>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095046-0fda0200-0f09-11eb-8fab-e67a9ff173f8.png" width="600px"> </p>
+
+<br>
+
+<p><strong>url 변수에 데이터를 가져올 주소와 파라미터 값을 넣어주고 DocumentBuilderFactory , DocumentBuilder, Document 를 이용하여 전체 페이지를 파싱한 데이터를 담는다.</strong></p>
+<br>
+<hr>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095049-10729880-0f09-11eb-9387-f552486d3434.png" width="600px"> </p>
+
+<br>
+
+<p><strong>root 태그로 접근한 다음, 파싱을 시작 할 시작태그의 변수를 넣어 가져올 데이터의 범위를 좁혀준다!</strong> <br><br></p>
+<p><strong>좁혀진 데이터들을 Nodelist 변수에 list 형태로 담은 후, Nodelist가 가지고 있는 모든 데이터를 for 반복문과 item 메서드를 이용하여 list 안의 각각의 데이터를 Node 변수에 모두 담아준다.</strong> <br><br></p>
+<p><strong>getNodeType() 메서드에 가지고 오고 싶은 태그이름을 매개변수에 넣음으로써 해당 태그안의 데이터를 가지고 올 수 있음!</strong></p>
+<br>
+
+
+<p align="center"> <img src="(https://user-images.githubusercontent.com/62025746/96095042-0ea8d500-0f09-11eb-8ffa-2b806c2085bd.png" width="600px"> </p>
+
+<br>
+<hr>
+
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095054-110b2f00-0f09-11eb-9a66-dd7877e58155.png" width="600px"> </p>
+
+<br>
+
+<p><strong>getNodeType으로 가져온 데이터를 List 변수에 저장함.</strong></p>
+<br>
+
+<hr>
+
+<br>
+
+<p align="center"> <img src="https://user-images.githubusercontent.com/62025746/96095057-110b2f00-0f09-11eb-90c6-42998052f599.png" width="600px"> </p>
+
+<br>
+
+<p><strong>List안에 들어있는 데이터를 DB안에 저장해서 사용함 !</strong></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2020/10/17/%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -1053,7 +1130,7 @@
           <li class="pagination-prev">
             <a
                 class="btn btn--default btn--small"
-                href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/page/3/"
+                href="/archives/page/4/"
                 aria-label="NEWER POSTS"
             >
               <i class="fa fa-angle-left text-base icon-mr"></i>
@@ -1062,7 +1139,7 @@
           </li>
         
         
-        <li class="pagination-number">page 4 of 4</li>
+        <li class="pagination-number">page 5 of 5</li>
     </ul>
 </div>
 

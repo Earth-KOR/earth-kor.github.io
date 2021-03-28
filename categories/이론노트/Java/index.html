@@ -244,6 +244,79 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
+                            aria-label=": 예외처리"
+                        >
+                            예외처리
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-27T11:44:09-07:00">
+	
+		    Mar 27, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Java/">Java</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="예외처리"><a href="#예외처리" class="headerlink" title="예외처리"></a>예외처리</h1><ol>
+<li>예외란?</li>
+</ol>
+<p>오류란 개발자가 미리 예측하여 처리 할 수 없다 이와 같은 문제는 심각한 문제가 될 수 있는 문제지만 이것은 에러는 개발자가 신경을 쓰지 않아도 되는 부분이다. ( 즉 시스템에 변화를 주어 문제를 처리해야 하는 경우가 일반적이다 )</p>
+<p> 하지만 예외는 개발자가 처리 할 수 있기 때문에 예외를 구분하고 그에 따른 처리 방법을 명확히 알고 적용하는 것이 중요하다.</p>
+<p>Exception은 수 많은 자식 클래스를 가지고 있다. 그 중 RuntimeException을 주목해야 한다. </p>
+<h2 id="RuntimeException"><a href="#RuntimeException" class="headerlink" title="RuntimeException"></a>RuntimeException</h2><p>RuntimeException은 CheckedException과 UncheckedException을 구분하는 기준이다. Exception의 자식 클래스 중 RuntimeException을 제외한 모든 클래스는 CheckedException이며 RuntimeException과 그의 자식 클래스 들을 Unchecked Exception이라 부른다. </p>
+<h2 id="CheckedException"><a href="#CheckedException" class="headerlink" title="CheckedException"></a>CheckedException</h2><p>컴파일 단계에서 명확하게 Exception 체크가 가능한 것을 Checked Exception이라 하며, 실행 과정 중 어떠한 특정 논리에 의해 발견되는 Exception을 Uncheck Exception이라 한다. </p>
+<h2 id="에러의-roll-back-여부"><a href="#에러의-roll-back-여부" class="headerlink" title="에러의 roll-back 여부"></a>에러의 roll-back 여부</h2><p>또한 트랜잭션의 roll-back 여부이다. 기본적응로 Checked Exception은 예외가 발생하면 트랜잭션을 roll-back하지 않고 예외를 던져준다. 하지만 Unchecked Exception은 예외 발생 시 트랜잭션을 roll-back 한다는 점에서 차이가 있다. 트랜잰션의 전파방식 즉 어떻게 묶어 놓느냐에 따라서 Check, Uncheck 영향도가 크디ㅏ. Roll-back이 되는 범위가 달라지기 때문에 개발자가 이를 인지하지 못하면 실행결과가 맞지 않거나 예상치 못한 예외가 발생 할 수 있다. 그러므로 이를 인지하고 트랜잭션을 적용 시킬 때 전파방식과 롤백규칙을 적절하게 사용해야한다..</p>
+<h2 id="예외-처리-방법"><a href="#예외-처리-방법" class="headerlink" title="예외 처리 방법"></a>예외 처리 방법</h2><ol>
+<li>다른 작업 흐름으로 유도하는 예외 복구</li>
+<li>처리하지 않고 호출한 쪽으로 throw 던져주는 예외 회피</li>
+<li>명확한 의미의 예외로 전환 후 throw 던져주는 예외 전환</li>
+</ol>
+<h2 id="Throws-vs-throw"><a href="#Throws-vs-throw" class="headerlink" title="Throws vs throw"></a>Throws vs throw</h2><p>Throws는 현재 메서드에서 자신을 호출한 상위 메서드로 Exception을 발생시킴<br>throw는 억지로 에러를 발생시키고자 할 때 사용한다 ( 현재 메서드, 혹은 상위 메서드로 )</p>
+<p>즉, throws는 예외를 메인까지 전달해주는 매개체이고 , throw는 내가 인위적으로 특정 예외를 발생 할 때 new로 만들어서 쓰인다!</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/03/06/bulier-pattern/"
                             aria-label=": bulier-pattern"
                         >

@@ -244,6 +244,318 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/03/27/Data%20formatting/"
+                            aria-label=": Data formatting"
+                        >
+                            Data formatting
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-27T11:44:09-07:00">
+	
+		    Mar 27, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="데이터를-formatting-하는-방법"><a href="#데이터를-formatting-하는-방법" class="headerlink" title="데이터를 formatting 하는 방법"></a>데이터를 formatting 하는 방법</h1><p>기본적으로 프론트에 reture 하는 값은 Entity 자체를 그대로 리턴하면 안된다.<br>따라서 필요한 데이터만 return 해주기 위해서 새로운 reture DTO를 만들고 보내줘야하는데<br>모든 값들을 해당 DTO로 하나씩 손으로 넣어 주려면 시간이 많이 걸린다.<br>이런 문제를 대비해서 깔끔하게 만들 수 있는 방법은 다음과 같다.</p>
+<ol>
+<li>Convert</li>
+</ol>
+<p>1)) 처음에는 @Mapper 가 등록된 하나의 interface를 만들어야 한다.</p>
+<p>@Mapper(componentModel = “spring”, unmappedTargetPolicy = ReportingPolicy.IGNORE, imports = {CarManualCarCode.class, Collectors.class})<br>public interface CarManualMapper<br>{<br>}</p>
+<p>2)) 들어오는 객체와 바꿀 객체를 정하고 메서드를 만들어 준다.</p>
+<p>CarInstallManual convert(CarRequestManualDTO source);</p>
+<p>3)) 이렇게만 선언하면 모든 걸 다 바꾸기 때문에 무시할건 무시하고 이름이 맞지 않는건 우리가 커스터마이징이 가능하다.</p>
+<p>@Mapping(source = “locationOfFuseBoxType”, target = “locationOfFuseBox”)</p>
+<ul>
+<li>컬럼명이 다를때</li>
+</ul>
+<p>@Mapping(target = “carManualCarCodes”, ignore = true)</p>
+<ul>
+<li>변경하지않을 컬럼을 지정할때</li>
+</ul>
+<p>@Mapping(expression = “java(source.getCarManualCarCodes().stream().map(CarManualCarCode::getModelCode).collect(Collectors.toList()))”, target = “modelCodes”)</p>
+<ul>
+<li>Spring이 만든 코드를 쓰지않고 내가 직접 만들고싶을때</li>
+</ul>
+<p>4)) 이대로 bulid를 하면 자동으로 SetGet코드를 만들어 준다.</p>
+<ol start="2">
+<li>생성자</li>
+</ol>
+<p>1)) 하나의 DTO를 만들고 바꾸고 싶은것만 지정해서 생성자를 만들어준다</p>
+<p>@AllArgsConstructor<br>@NoArgsConstructor<br>@Data<br>public class CarManualListDTO implements Serializable<br>{</p>
+<pre><code>private Long id;
+private String pathOfDiagramImage;
+private ManualImage manualImage1;
+private ManualImage manualImage2;
+private String modelSubName;
+private String releasedYear;
+private FuseType fuseType;
+private String manufacturer;
+private String note;
+private LocationOfFuseBoxType locationOfFuseBoxType;
+private NumberOfFuseBoxType numberOfFuseBoxType;
+private Boolean isDeleted;
+private LocalDateTime lastDeletedDateTime;
+private LocalDateTime createdAt;
+private List&lt;CarManualCarCode&gt; ModelCodes;
+private String pathOfNoteImage;
+
+public CarManualListDTO(CarInstallManual carInstallManual)
+&#123;
+    this.id = carInstallManual.getId();
+    this.pathOfDiagramImage = carInstallManual.getPathOfDiagramImage();
+    this.manualImage1 = carInstallManual.getManualImage_1();
+    this.manualImage2 = carInstallManual.getManualImage_2();
+    this.modelSubName = carInstallManual.getModelSubName();
+    this.releasedYear = carInstallManual.getReleasedYear();
+    this.fuseType = carInstallManual.getFuseType();
+    this.manufacturer = carInstallManual.getManufacturer();
+    this.note = carInstallManual.getNote();
+    this.locationOfFuseBoxType = carInstallManual.getLocationOfFuseBox();
+    this.numberOfFuseBoxType = carInstallManual.getNumberOfFuseBox();
+    this.isDeleted = carInstallManual.getIsDeleted();
+    this.lastDeletedDateTime = carInstallManual.getLastDeletedDateTime();
+    this.createdAt = carInstallManual.getCreatedAt();
+    this.pathOfNoteImage = carInstallManual.getPathOfNoteImage();
+    this.ModelCodes = checkIsDeletedCarCode(carInstallManual.getCarManualCarCodes());
+&#125;</code></pre>
+<p>2)) 생성자를 넣을 때 조건문을 넣고 싶다면 하나의 새로운 메서드를 생성하고 거기다가 조건을 적어주면 된다!</p>
+<p>private List<CarManualCarCode> checkIsDeletedCarCode(List<CarManualCarCode> carCodes)<br>{<br>    return carCodes.stream().filter((i) -&gt; i.getIsDeleted() == false).collect(Collectors.toList());<br>}<br>}</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/27/Data%20formatting/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/03/27/%EC%98%81%EC%86%8D%EC%84%B1%20%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/"
+                            aria-label=": 영속성 컨텍스트"
+                        >
+                            영속성 컨텍스트
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-27T11:44:09-07:00">
+	
+		    Mar 27, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="영속성-컨텍스트"><a href="#영속성-컨텍스트" class="headerlink" title="영속성 컨텍스트"></a>영속성 컨텍스트</h1><p>엔티티 매니저를 통해 엔티티를 저장하거나 조회하면 엔티티 매니저는 영속성 컨텍스트에 엔티티를 보관하고 관리한다. </p>
+<p>entityManager.persist ( [entityName] )</p>
+<ul>
+<li>엔티티 매니저를 사용해 회원 엔티티를 영속성 컨텍스트에 저장 한다는 의미</li>
+</ul>
+<h2 id="영속성-컨텍스트의-특징"><a href="#영속성-컨텍스트의-특징" class="headerlink" title="영속성 컨텍스트의 특징"></a>영속성 컨텍스트의 특징</h2><ol>
+<li>엔티티 매니저를 생성 할 때 하나 만들어진다.</li>
+<li>엔티티 매니저를 통해서 영속성 컨텍스트에 접근하고 관리 할 수 있다.</li>
+</ol>
+<h2 id="엔티티의-생명주기"><a href="#엔티티의-생명주기" class="headerlink" title="엔티티의 생명주기"></a>엔티티의 생명주기</h2><ol>
+<li>비영속 : 영속성 컨텍스트와 전혀 관계가 없는 상태</li>
+<li>영속. : 영속성 컨텍스트에 저장된 상태</li>
+<li>준영속 : 영속성 컨텍스트에 저장되었다고 분리된 상태</li>
+<li>삭제 : 삭제된 상태</li>
+</ol>
+<h2 id="영속성-컨텍스트의-특징-1"><a href="#영속성-컨텍스트의-특징-1" class="headerlink" title="영속성 컨텍스트의 특징"></a>영속성 컨텍스트의 특징</h2><ol>
+<li>영속성 컨텍스트의 식별자 값</li>
+</ol>
+<ul>
+<li>영속성 컨텍스트는 엔티티를 식별자 값으로 구분한다. 따라서 영속 상태는 식별자 값이 반드시 있어야 한다.</li>
+</ul>
+<ol start="2">
+<li>영속성 컨텍스트와 데이터베이스 저장</li>
+</ol>
+<ul>
+<li>JPA는 보통 트랜잭션을 커밋하는 순간 영속성 컨텍스트에 새로 저장된 엔티티를 데이터 베이스에 반영하는데 이를 flush 라고 한다.</li>
+</ul>
+<h2 id="영속성-컨텍스트가-엔티티를-관리하는-다음과-같은-장점이-있다"><a href="#영속성-컨텍스트가-엔티티를-관리하는-다음과-같은-장점이-있다" class="headerlink" title="영속성 컨텍스트가 엔티티를 관리하는 다음과 같은 장점이 있다."></a>영속성 컨텍스트가 엔티티를 관리하는 다음과 같은 장점이 있다.</h2><ol>
+<li>1차 캐시</li>
+</ol>
+<ul>
+<li>영속성 컨텍스트  내부에는 캐시가 있는데 이를 1차 캐시라고 한다. 영속 상태의 엔티티를 이곳에 저장한다. 1차 캐시의 키는 식별자 값이고 값은 엔티티 인스터스이다.</li>
+</ul>
+<ol start="2">
+<li>동일성 보장</li>
+</ol>
+<ul>
+<li>영속성 컨텍스트는 엔티티의 동일성을 보장한다.</li>
+</ul>
+<p>Member a = em.find(Member.class, “member1”);<br>Member b = em.find(Member.class, “member1”);<br>System.out.print(a==b) // true</p>
+<p>실제 인스턴스는 다를 수 있지만 인스턴스가 가지고 있는 값은 같다.</p>
+<ol start="3">
+<li>트랙잭션을 지원하는 쓰기 지연</li>
+</ol>
+<p>엔티티 매니저는 트랜잭션을 커밋하기 직전까지 내부 쿼리 저장소에 INSERT SQL을 모아둔다. 그리고 트랜잭션을 커밋할 때 모아둔 쿼리를 DB에 보낸다. 이것을 트랜잭션을 지원하는 쓰기 지연이라 한다.</p>
+<h2 id="변경감지"><a href="#변경감지" class="headerlink" title="변경감지"></a>변경감지</h2><ol>
+<li><p>트랙잭션을 커밋하면 엔티티 매니저 내부에서 먼저 플러시가 호출된다.</p>
+</li>
+<li><p>엔티티와 스냅샷을 비교하여 변경된 엔티티를 찾는다.</p>
+</li>
+<li><p>변경된 엔티티가 있으면 수정 쿼리를 생성해서 쓰기 지연 SQL 저장소에 저장한다.</p>
+</li>
+<li><p>쓰기 지연 저장소의 SQL을 플러시한다.</p>
+</li>
+<li><p>데이터베이스 트랜잭션을 커밋한다.</p>
+</li>
+</ol>
+<h2 id="플러시"><a href="#플러시" class="headerlink" title="플러시"></a>플러시</h2><p>플러시는 영속성 컨텍스트의 변경 내용을 데이터베이스에 반영한다. 영속성 컨텍스트의 엔티티를 지우는게 아니라 변경 내용을 데이터베이스에 동기화하는 것이다.</p>
+<p>플러시의 흐름</p>
+<ol>
+<li>변경 감지가 동작해서 스냅샷과 비교해서 수정된 엔티티를 찾는다.</li>
+<li>수정된 엔티티에 대해서 수정 쿼리를 만들거 SQL 저장소에 등록한다.</li>
+<li>쓰기 지연 SQL 저장소의 쿼리를 데이터베이스에 전송한다.</li>
+</ol>
+<p>플러시하는 방법<br>1. em.flush()2. 트랙잭션 커밋시 자동 호출3. JPQL 쿼리 실행시 자동 호출</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/27/%EC%98%81%EC%86%8D%EC%84%B1%20%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/03/27/%EC%88%9C%ED%99%98%EC%B0%B8%EC%A1%B0/"
+                            aria-label=": 순환참조"
+                        >
+                            순환참조
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-03-27T11:44:09-07:00">
+	
+		    Mar 27, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="순환참조"><a href="#순환참조" class="headerlink" title="순환참조"></a>순환참조</h1><p>여러 Entity를 만들고 양방향 맵핑을 해준다. 이럴 경우 하나의 Row만을 원해서 쿼리문을 날리면 서로가 서로를 맵핑하며 호출하게 되고 똑같은 데이터가 반복적으로 출력되는 상황이 발생한다!<br>(@ManyToOne , @OneToMany 선어 시)</p>
+<p>JPA는 디폴트로 맵핑된 데이터에 대해 FetchType.LAZY를 사용한다.<br>LAZY는 데이터를 한번에 가져오는게 아니라 나중에 가져오는거기 때문에<br>나중에 자식 엔티티를 들여다 보게 되고 이것이 반복되면서 순환참조가 일어난다!</p>
+<h2 id="해결방법"><a href="#해결방법" class="headerlink" title="해결방법"></a>해결방법</h2><ol>
+<li><p>@JsonIgnore :  이 어노테이션을 붙이면 json 데이터에 해당 프로퍼티는 null로 들어가게 된다. 즉, 데이터에 아예 포함이 안되게 된다.</p>
+</li>
+<li><p>@JsonManagerdReferernce, @JsonBackRefernce : 부모 클래스에  @JsonManagerdReferernce 자식 클래스에 @JsonBackRefernce를 선언해주면 양방향 맵핑을 예방 할 수 있다.</p>
+</li>
+<li><p>DTO 사용 : 위와 같은 상황이 발생하게 되면 주 원인은 양방향 맵핑이기도 하지만 더 정확 하게는 entity 자체를 resposnse로 리턴한데에 있다. Entity 자체를 return 하지 말고, dto객체를 만들어 필요한 데이터만 옮겨 담아 client로 리턴하면 순환참조와 관련된 문제를 방어 할 수 있다.</p>
+</li>
+</ol>
+<p> 정리를 하자면 json serialize 과정에서 null로 세팅하고자 하면 @JsonIgnore 사용하면 되고, 순환참조에 대한 문제를 해결하고자 한다면 부모 클래스측에 @JsonManagedReference를, 자식측에 @JsonBackReference를 Annotation에 추가해주면 된다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/03/27/%EC%88%9C%ED%99%98%EC%B0%B8%EC%A1%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/03/20/HTTP%20&%20HTTPS%20copy/"
                             aria-label=": Embeddable &amp;  @Embedded"
                         >
