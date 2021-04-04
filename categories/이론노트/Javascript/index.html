@@ -244,6 +244,95 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/04/04/javascript%20%EB%B0%B0%EC%97%B4%EC%97%90%20%EB%8C%80%ED%95%9C%20%EB%8B%A4%EC%96%91%ED%95%9C%20%EB%A9%94%EC%84%9C%EB%93%9C%20%EC%A0%95%EB%A6%AC/"
+                            aria-label=": javascript 배열에 대한 다양한 메서드 정리"
+                        >
+                            javascript 배열에 대한 다양한 메서드 정리
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-04-04T11:17:48-07:00">
+	
+		    Apr 04, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="javascript-배열에-대한-다양한-메서드-정리"><a href="#javascript-배열에-대한-다양한-메서드-정리" class="headerlink" title="javascript 배열에 대한 다양한 메서드 정리"></a>javascript 배열에 대한 다양한 메서드 정리</h1><h2 id="1-forEach"><a href="#1-forEach" class="headerlink" title="1. forEach"></a>1. forEach</h2><p>arr.forEach( function (n) { if ( n % 2 == 0 ) { console.log(n); } );</p>
+<p>( Vs for반복문 )</p>
+<p>스코프를 더럽히지 않는다.</p>
+<ul>
+<li>for 구문은 배열의 인덱스를 저장하기 위한 임시 변수 i를 할당했습니다. 사실 이 프로그램은 아주 작아서 임시 변수 할당하는 것은 큰 문제가 안됩니다. 그러나 시스템이 커지고 유지보수를 해야 한다면 언제 사용한지 모르는 i 때문에 가독성이 떨어지게 됩니다.<br>요소 접근 방법 arr[i] vs n</li>
+<li>forEach의 콜백 함수의 첫 번째 인자로 각 요소의 값이 들어옵니다. 덕분에 우리는 깔끔한 방법으로 각 요소의 값을 얻을 수 있습니다.</li>
+</ul>
+<h2 id="2-map"><a href="#2-map" class="headerlink" title="2. map"></a>2. map</h2><p>arr.map(function (str) { return str.length; });</p>
+<p>( Vs forEach 반복문 )</p>
+<p>map은 부모 스코프 영역을 건드리지 않고 콜백 함수만으로 목적을 달성합니다. 다른 코드는 신경쓰지 않아도 됩니다.<br>소개 할 메소드는 함수형 프로그래밍 패러다임에서 아이디어를 착안합니다. 함수형 프로그래밍 패러다임은 순수 함수의 연결로부터 도메인을 해결하는 방법입니다. 순수 함수는 사이드 이펙트를 가지지않는 함수를 말합니다. Input과 Output이 중요할 뿐이지 내부 로직은 다른 영역에 간섭하지 않기 때문에 추적하기 쉽고 간결한 구조가 자연스럽게 형성됩니다.<br>for, forEach 또는 다른 메소드로도 서로의 도메인을 해결할 수 있겠지만, 각 목적에 따라서 사용함으로써 직관적이고 가독성있는 코드를 작성하는데 도움 줄 것입니다.</p>
+<h2 id="3-filter"><a href="#3-filter" class="headerlink" title="3. .filter"></a>3. .filter</h2><p>Javascript - filter 패턴 1</p>
+<p>Let result = data.filter( x =&gt; { return x.age &gt;= 20 }</p>
+<p>Javascript - filter 패턴 2</p>
+<p>Let result = data.filter( (x, idx, array) =&gt; { return idx ===0 &amp;&amp; x.age &gt;= 20 });</p>
+<p>해당하는 값이 없을 시 빈배열 반환함!</p>
+<h2 id="4-find"><a href="#4-find" class="headerlink" title="4. .find"></a>4. .find</h2><p>arr.find( function (n) { return n % 5 == 0 ; ) );</p>
+<p>filter는 찾지 못하면 빈 배열을 반환했습니다. 그런데 find는 undefined라고요? 그러면 함수를 연결하여 사용할 수 없는 거 아닌가요? 조금만 생각해보면 find는 빈 배열을 반환할 필요가 없음을 알 수 있습니다. 정상적으로 반환하더라도 이미 배열이 아니기 떄문입니다. 따라서 find의 반환은 항상 배열이 아니기 때문에 어차피 다른 Array 메소드와 연결하여 사용할 일이 없습니다.</p>
+<ol start="5">
+<li>Reduce</li>
+</ol>
+<p>reduce 메소드는 위에서 나온 메소드를 모두 대체할 수 있는 아주 유연한 메소드입니다. map, filter, find로 구현할 수 있는 문제라면 reduce로도 구현할 수 있습니다. 하지만 상황에 따라 적절한 메소드를 사용하는 것이 가독성 측면에서 더 유리하겠죠?<br>먼저 reduce의 사용 방법을 봅시다. 조금 특이합니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;&#x2F; 배열 요소의 합 계산하기</span><br><span class="line">var arr &#x3D; [9, 2, 8, 5, 7];</span><br><span class="line">var sum &#x3D; arr.reduce(function (pre, value) &#123;</span><br><span class="line">   count++;</span><br><span class="line">    return pre + value;</span><br><span class="line">&#125;);</span><br><span class="line">console.log(count); &#x2F;&#x2F; 4</span><br><span class="line">console.log(sum); &#x2F;&#x2F; 31</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 배열 요소의 합 계산하기</span><br><span class="line">var arr &#x3D; [9, 2, 8, 5, 7];</span><br><span class="line">var count &#x3D; 0;</span><br><span class="line">var sum &#x3D; arr.reduce(function (pre, value) &#123;</span><br><span class="line">    count++;</span><br><span class="line">    return pre + value;</span><br><span class="line">&#125;, 0); &#x2F;&#x2F; initialValue가 주어졌다!</span><br><span class="line">console.log(sum); &#x2F;&#x2F; 31</span><br><span class="line">console.log(count); &#x2F;&#x2F; 5</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-indexOf-lastIndexOf"><a href="#6-indexOf-lastIndexOf" class="headerlink" title="6. indexOf() , lastIndexOf()"></a>6. indexOf() , lastIndexOf()</h2><p> indexOf() 함수는 <br>배열 안에서 찾으려는 값(searchElement)과 정확하게 일치(===)하는’첫번째’ element의 index를 리턴합니다. <br>  lastIndexOf() 함수는 <br>배열 안에서 찾으려는 값(searchElement)과 정확하게 일치(===)하는 ‘마지막’ element의 index 를 리턴합니다.<br> <br>두 함수 모두 찾으려는 값이 배열에 없으면 -1을 리턴합니다.</p>
+<h2 id="7-Includes"><a href="#7-Includes" class="headerlink" title="7. Includes"></a>7. Includes</h2><p>arr.includes(1); // true<br>arr[0]의 값이 1이므로 true를 리턴합니다.<br> arr.includes(3); // false<br>arr에는 3이라는 값이 없으므로 false를 리턴합니다.<br> arr.includes(1, 1); // false<br>arr[1] 이후에는 1이라는 값이 없으므로 false를 리턴합니다.<br> arr.includes(1, 2); // false<br>두 번째 파라미터인 fromIndex에 배열의 길이보다 크거나 같은 값이 들어가면 무조건 false를 리턴합니다.<br>여기서 배열의 길이는 2인데, fromIndex 자리에 2가 들어갔으므로 false가 리턴되었습니다.<br> arr.includes(2, -1); // true<br>fromIndex 자리에 음수가 들어가면, 실제 시작 index는 ‘배열의 길이 + fromIndex’로 계산됩니다.<br>배열의 길이는 2이고, fromIndex는 -1이므로, <br>실제 검색을 시작하는 index는 1이 됩니다.  (2 + (-1))<br>arr[1]에 2가 있으므로, true가 리턴 되었습니다.</p>
+<p>includes() 함수는 내부적으로 값을 비교할 때 ‘===’ 연산자를 사용하기 때문입니다.<br>‘===’ 연산자는 primitive type이 아닌 object를 비교할 때,<br>object의 값이 같은지 비교하는 것이 아니라, 같은 객체를 가리키고 있는지를 비교합니다.</p>
+<h2 id="8-Some"><a href="#8-Some" class="headerlink" title="8. Some"></a>8. Some</h2><p>배열에서 값을 찾는 조건을 callback 함수로 전달하고,<br>배열에 조건에 맞는 값이 있는지 여부(boolean)를 리턴하는 하는 함수입니다.<br>조건에 맞는 값이 있으면 true, 조건에 맞는 값이 없으면 false를 리턴합니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">const arr1 &#x3D; [1, 2, 3, 2];</span><br><span class="line">const arr2 &#x3D; [1, 3, 4, 5];</span><br><span class="line"></span><br><span class="line">function findNumberTwo(element) &#123;</span><br><span class="line">  if(element &#x3D;&#x3D;&#x3D; 2) &#123;</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">document.writeln(arr1.some(findNumberTwo)); &#x2F;&#x2F; true</span><br><span class="line">document.writeln(arr2.some(findNumberTwo)); &#x2F;&#x2F;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>object의 값을 체크할 때는 some() 함수를 사용합니다.</p>
+<p>includes() 함수는 primitive type을 체크하는 적절하고,<br>some() 함수는 primitive type 외의 타입을 체크하는데 적절하고,<br>체크 로직을 다양하게 적용할 수 있는 장점이 있습니다.</p>
+<p>출처: <a target="_blank" rel="noopener" href="https://hianna.tistory.com/403">https://hianna.tistory.com/403</a> [어제 오늘 내일]</p>
+<p>출처 : <a target="_blank" rel="noopener" href="https://bblog.tistory.com/300">https://bblog.tistory.com/300</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/04/04/javascript%20%EB%B0%B0%EC%97%B4%EC%97%90%20%EB%8C%80%ED%95%9C%20%EB%8B%A4%EC%96%91%ED%95%9C%20%EB%A9%94%EC%84%9C%EB%93%9C%20%EC%A0%95%EB%A6%AC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/03/06/captruring/"
                             aria-label=": Javascript bubbling captruring"
                         >

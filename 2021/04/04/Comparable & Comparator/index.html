@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="이상권의 개발노트">
+    <title>Comparable &amp; Comparator - 이상권의 개발노트</title>
+    <meta name="author" content="이상권">
+    
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"Comparable &amp; ComparatorComparable단순 데이터가 아닌 객체를 정렬하고 싶을 때에는 해당 class에 Comparable 인터페이스를 구현하도록 한다. 그리고 compareTo 메서드를 오버라이딩 하여 재정의 한다\n12345678910111213141516    class Friend implements Comparable&lt;Friend&gt;&#123;        private String name;        private int age;                public Friend(String name, int age) &#123;            super();            this.name &#x3D; name;            this.age &#x3D; age;        &#125;                @Override        public int compareTo(Friend o) &#123;            return this.age - o.age;        &#125;        &#125;\n\n이 메서드가 바로 정렬 규칙을 정하는 메서드입니다.compareTo() 메서드는 그것이 구현된 객체와 매개변수로 넘어 온 타겟 객체를 비교하며, 원하는 정렬에 따른 int 값을 반환해야 합니다.기준을 정한 후, 이 객체가 매개변수의 객체보다 작으면 음수, 같으면 0, 크면 양수를 반환하면 됩니다.\nFriend 객체목록을 List로 다루는 경우에는 어떻게 정렬할 수 있을까요?List의 경우에는 Arrays클래스가 아닌 Collections클래스의 sort() 메서드를 사용하여 정렬하며, 방법은 같습니다.\n1234567891011121314151617181920212223 @Test    public void test_SortListWithComparable() throws Exception &#123;        Friend kim &#x3D; new Friend(&quot;Kim&quot;, 36);        Friend park &#x3D; new Friend(&quot;Park&quot;, 20);        Friend lee &#x3D; new Friend(&quot;Lee&quot;, 28);        Friend yong &#x3D; new Friend(&quot;Yong&quot;, 18);                List&lt;Friend&gt; friends &#x3D; new ArrayList&lt;&gt;();        friends.add(kim);        friends.add(park);        friends.add(lee);        friends.add(yong);                Collections.sort(friends);                assertEquals(yong, friends.get(0));        assertEquals(park, friends.get(1));        assertEquals(lee, friends.get(2));        assertEquals(kim, friends.get(3));    &#125;\n\n\n# Comparator그렇다면 그 기본규칙 외에 다른 규칙으로 정렬하고 싶다면 어떻게 할 수 있을까요?여기서 등장하는 인터페이스가 바로 Comparator 인터페이스 입니다.Friend 목록을 기본규칙인 ‘나이(age)’ 순 정렬이 아닌, ‘이름(name)’ 순서로 정렬하고자 합니다.먼저, 별도의 규칙을 가진 클래스를 생성합니다.\n12345678910class SortFriendByNameInAsc implements Comparator&lt;Friend&gt;&#123;        @Override        public int compare(Friend o1, Friend o2) &#123;            return o2.name.compareTo(o1.name);        &#125;            &#125;\n\nComparator 인터페이스를 구현하는 경우 compare() 메서드를 구현해서 규칙을 정해야 합니다.Comparable의 compareTo() 메서드와 다르게 매개변수를 두 개 받습니다.Comparator는 비교대상 객체 외부에 생성하므로 비교할 대상 두 개에 대한 정보를 모두 매개변수로 받는 것입니다.Collections.sort() 메서드에 정렬대상이 되는 List와 Comparator를 구현한 규칙 객체를 매개변수로 보내 사용하면 됩니다.\n12345678910111213141516171819202122  @Test    public void test_SortListWithComparator() throws Exception &#123;        Friend kim &#x3D; new Friend(&quot;Kim&quot;, 36);        Friend park &#x3D; new Friend(&quot;Park&quot;, 20);        Friend lee &#x3D; new Friend(&quot;Lee&quot;, 28);        Friend yong &#x3D; new Friend(&quot;Yong&quot;, 18);                List&lt;Friend&gt; friends &#x3D; new ArrayList&lt;&gt;();        friends.add(kim);        friends.add(park);        friends.add(lee);        friends.add(yong);                Collections.sort(friends, new SortFriendByNameInAsc());                assertEquals(kim, friends.get(0));        assertEquals(lee, friends.get(1));        assertEquals(park, friends.get(2));        assertEquals(yong, friends.get(3));    &#125;\n\nComparable - 이 인터페이스를 구현한 객체 스스로에게 부여하는 한 가지 기본 정렬 규칙을 설정하는 목적으로 사용한다.Comparator - 이 인터페이스를 구현한 클래스는 정렬 규칙 그 자체를 의미하며, 기본 정렬 규칙과 다르게 원하는대로 정렬순서를 지정하고 싶을 때 사용한다.\n출처: https://dev-daddy.tistory.com/23 [대한민국 개발자 아빠]\n자바8 람다를 이용한 정렬 ( Comparator.comparing)// 무게 오름차순 정렬\n    inventory.sort(Comparator.comparing(Apple::getWeight));\n\n    // 무게 내림차순 정렬\n    inventory.sort(Comparator.comparing(Apple::getWeight).reversed());\n\n    // 무게 오름차순 정렬 (무게가 같으면 색 오름차순 정렬)\n    inventory.sort(Comparator.comparing(Apple::getWeight).thenComparing(Apple::getColor));\n\n    // 무게 오름차순 정렬 (무게가 같으면 색 내림차순 정렬)\n    Comparator&lt;Apple&gt; reversedColorComparator = Comparator.comparing(Apple::getColor).reversed();\n    inventory.sort(Comparator.comparing(Apple::getWeight).thenComparing(reversedColorComparator));\n출처: https://broduck.tistory.com/6 [개발로 하는 개발]\n","dateCreated":"2021-04-04T11:26:58-07:00","dateModified":"2021-04-04T07:01:31-07:00","datePublished":"2021-04-04T11:26:58-07:00","description":"","headline":"Comparable & Comparator","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/04/04/Comparable%20&%20Comparator/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/04/04/Comparable%20&%20Comparator/","keywords":"Java, 이론노트"}</script>
+    <meta name="description" content="Comparable &amp; ComparatorComparable단순 데이터가 아닌 객체를 정렬하고 싶을 때에는 해당 class에 Comparable 인터페이스를 구현하도록 한다. 그리고 compareTo 메서드를 오버라이딩 하여 재정의 한다 12345678910111213141516    class Friend implements Comparable&amp;l">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Comparable &amp; Comparator">
+<meta property="og:url" content="https://earth-kor.github.io/2021/04/04/Comparable%20&%20Comparator/index.html">
+<meta property="og:site_name" content="이상권의 개발노트">
+<meta property="og:description" content="Comparable &amp; ComparatorComparable단순 데이터가 아닌 객체를 정렬하고 싶을 때에는 해당 class에 Comparable 인터페이스를 구현하도록 한다. 그리고 compareTo 메서드를 오버라이딩 하여 재정의 한다 12345678910111213141516    class Friend implements Comparable&amp;l">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-04T18:26:58.000Z">
+<meta property="article:modified_time" content="2021-04-04T14:01:31.326Z">
+<meta property="article:author" content="이상권">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="이론노트">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://earth-kor.github.io/assets/images/profile.jpg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="5">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            이상권의 개발노트
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="5">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">이상권</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>미래의 백엔드 개발자</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/index"
+                            
+                            rel="noopener"
+                            title="홈"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">홈</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-code" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tag" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="기록"
+                        >
+                        <i class="sidebar-button-icon fa fa-running" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">기록</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/Earth-KOR"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.instagram.com/kwon_27_/?hl=ko"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="instagram"
+                        >
+                        <i class="sidebar-button-icon fab fa-instagram" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">instagram</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="mailto:lsk941017@naver.com"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="5"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Comparable &amp; Comparator
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2021-04-04T11:26:58-07:00">
+	
+		    Apr 04, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Java/">Java</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="Comparable-amp-Comparator"><a href="#Comparable-amp-Comparator" class="headerlink" title="Comparable &amp; Comparator"></a>Comparable &amp; Comparator</h1><h2 id="Comparable"><a href="#Comparable" class="headerlink" title="Comparable"></a>Comparable</h2><p>단순 데이터가 아닌 객체를 정렬하고 싶을 때에는 해당 class에 Comparable 인터페이스를 구현하도록 한다. 그리고 compareTo 메서드를 오버라이딩 하여 재정의 한다</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    class Friend implements Comparable&lt;Friend&gt;&#123;</span><br><span class="line">        private String name;</span><br><span class="line">        private int age;</span><br><span class="line">        </span><br><span class="line">        public Friend(String name, int age) &#123;</span><br><span class="line">            super();</span><br><span class="line">            this.name &#x3D; name;</span><br><span class="line">            this.age &#x3D; age;</span><br><span class="line">        &#125;        </span><br><span class="line">        @Override</span><br><span class="line">        public int compareTo(Friend o) &#123;</span><br><span class="line">            return this.age - o.age;</span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>이 메서드가 바로 정렬 규칙을 정하는 메서드입니다.<br>compareTo() 메서드는 그것이 구현된 객체와 매개변수로 넘어 온 타겟 객체를 비교하며, 원하는 정렬에 따른 int 값을 반환해야 합니다.<br>기준을 정한 후, 이 객체가 매개변수의 객체보다 작으면 음수, 같으면 0, 크면 양수를 반환하면 됩니다.</p>
+<p>Friend 객체목록을 List로 다루는 경우에는 어떻게 정렬할 수 있을까요?<br>List의 경우에는 Arrays클래스가 아닌 Collections클래스의 sort() 메서드를 사용하여 정렬하며, 방법은 같습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> @Test</span><br><span class="line">    public void test_SortListWithComparable() throws Exception &#123;</span><br><span class="line">        Friend kim &#x3D; new Friend(&quot;Kim&quot;, 36);</span><br><span class="line">        Friend park &#x3D; new Friend(&quot;Park&quot;, 20);</span><br><span class="line">        Friend lee &#x3D; new Friend(&quot;Lee&quot;, 28);</span><br><span class="line">        Friend yong &#x3D; new Friend(&quot;Yong&quot;, 18);</span><br><span class="line">        </span><br><span class="line">        List&lt;Friend&gt; friends &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line">        friends.add(kim);</span><br><span class="line">        friends.add(park);</span><br><span class="line">        friends.add(lee);</span><br><span class="line">        friends.add(yong);</span><br><span class="line">        </span><br><span class="line">        Collections.sort(friends);</span><br><span class="line">        </span><br><span class="line">        assertEquals(yong, friends.get(0));</span><br><span class="line">        assertEquals(park, friends.get(1));</span><br><span class="line">        assertEquals(lee, friends.get(2));</span><br><span class="line">        assertEquals(kim, friends.get(3));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Comparator"><a href="#Comparator" class="headerlink" title="# Comparator"></a># Comparator</h1><p>그렇다면 그 기본규칙 외에 다른 규칙으로 정렬하고 싶다면 어떻게 할 수 있을까요?<br>여기서 등장하는 인터페이스가 바로 Comparator 인터페이스 입니다.<br>Friend 목록을 기본규칙인 ‘나이(age)’ 순 정렬이 아닌, ‘이름(name)’ 순서로 정렬하고자 합니다.<br>먼저, 별도의 규칙을 가진 클래스를 생성합니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class SortFriendByNameInAsc implements Comparator&lt;Friend&gt;&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public int compare(Friend o1, Friend o2) &#123;</span><br><span class="line">            return o2.name.compareTo(o1.name);</span><br><span class="line">        &#125;        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Comparator 인터페이스를 구현하는 경우 compare() 메서드를 구현해서 규칙을 정해야 합니다.<br>Comparable의 compareTo() 메서드와 다르게 매개변수를 두 개 받습니다.<br>Comparator는 비교대상 객체 외부에 생성하므로 비교할 대상 두 개에 대한 정보를 모두 매개변수로 받는 것입니다.<br>Collections.sort() 메서드에 정렬대상이 되는 List와 Comparator를 구현한 규칙 객체를 매개변수로 보내 사용하면 됩니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  @Test</span><br><span class="line">    public void test_SortListWithComparator() throws Exception &#123;</span><br><span class="line">        Friend kim &#x3D; new Friend(&quot;Kim&quot;, 36);</span><br><span class="line">        Friend park &#x3D; new Friend(&quot;Park&quot;, 20);</span><br><span class="line">        Friend lee &#x3D; new Friend(&quot;Lee&quot;, 28);</span><br><span class="line">        Friend yong &#x3D; new Friend(&quot;Yong&quot;, 18);</span><br><span class="line">        </span><br><span class="line">        List&lt;Friend&gt; friends &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line">        friends.add(kim);</span><br><span class="line">        friends.add(park);</span><br><span class="line">        friends.add(lee);</span><br><span class="line">        friends.add(yong);</span><br><span class="line">        </span><br><span class="line">        Collections.sort(friends, new SortFriendByNameInAsc());</span><br><span class="line">        </span><br><span class="line">        assertEquals(kim, friends.get(0));</span><br><span class="line">        assertEquals(lee, friends.get(1));</span><br><span class="line">        assertEquals(park, friends.get(2));</span><br><span class="line">        assertEquals(yong, friends.get(3));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Comparable - 이 인터페이스를 구현한 객체 스스로에게 부여하는 한 가지 기본 정렬 규칙을 설정하는 목적으로 사용한다.<br>Comparator - 이 인터페이스를 구현한 클래스는 정렬 규칙 그 자체를 의미하며, 기본 정렬 규칙과 다르게 원하는대로 정렬순서를 지정하고 싶을 때 사용한다.</p>
+<p>출처: <a target="_blank" rel="noopener" href="https://dev-daddy.tistory.com/23">https://dev-daddy.tistory.com/23</a> [대한민국 개발자 아빠]</p>
+<h2 id="자바8-람다를-이용한-정렬-Comparator-comparing"><a href="#자바8-람다를-이용한-정렬-Comparator-comparing" class="headerlink" title="자바8 람다를 이용한 정렬 ( Comparator.comparing)"></a>자바8 람다를 이용한 정렬 ( Comparator.comparing)</h2><pre><code>// 무게 오름차순 정렬
+    inventory.sort(Comparator.comparing(Apple::getWeight));
+
+    // 무게 내림차순 정렬
+    inventory.sort(Comparator.comparing(Apple::getWeight).reversed());
+
+    // 무게 오름차순 정렬 (무게가 같으면 색 오름차순 정렬)
+    inventory.sort(Comparator.comparing(Apple::getWeight).thenComparing(Apple::getColor));
+
+    // 무게 오름차순 정렬 (무게가 같으면 색 내림차순 정렬)
+    Comparator&lt;Apple&gt; reversedColorComparator = Comparator.comparing(Apple::getColor).reversed();
+    inventory.sort(Comparator.comparing(Apple::getWeight).thenComparing(reversedColorComparator));</code></pre>
+<p>출처: <a target="_blank" rel="noopener" href="https://broduck.tistory.com/6">https://broduck.tistory.com/6</a> [개발로 하는 개발]</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/Java/" rel="tag">Java</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2021/04/04/String%20vs%20string/"
+                    data-tooltip="Comparable &amp; Comparator"
+                    aria-label="NEXT: Comparable &amp; Comparator"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2021 이상권. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2021/04/04/String%20vs%20string/"
+                    data-tooltip="Comparable &amp; Comparator"
+                    aria-label="NEXT: Comparable &amp; Comparator"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">이상권</h4>
+        
+            <div id="about-card-bio"><p>미래의 백엔드 개발자</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>개발자</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Busan
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover2.png');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

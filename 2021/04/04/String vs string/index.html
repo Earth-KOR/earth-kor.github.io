@@ -6,24 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="이상권의 개발노트">
-    <title>Data formatting - 이상권의 개발노트</title>
+    <title>Comparable &amp; Comparator - 이상권의 개발노트</title>
     <meta name="author" content="이상권">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"데이터를 formatting 하는 방법기본적으로 프론트에 reture 하는 값은 Entity 자체를 그대로 리턴하면 안된다.따라서 필요한 데이터만 return 해주기 위해서 새로운 reture DTO를 만들고 보내줘야하는데모든 값들을 해당 DTO로 하나씩 손으로 넣어 주려면 시간이 많이 걸린다.이런 문제를 대비해서 깔끔하게 만들 수 있는 방법은 다음과 같다.\n\nConvert\n\n1)) 처음에는 @Mapper 가 등록된 하나의 interface를 만들어야 한다.\n@Mapper(componentModel = “spring”, unmappedTargetPolicy = ReportingPolicy.IGNORE, imports = {CarManualCarCode.class, Collectors.class})public interface CarManualMapper{}\n2)) 들어오는 객체와 바꿀 객체를 정하고 메서드를 만들어 준다.\nCarInstallManual convert(CarRequestManualDTO source);\n3)) 이렇게만 선언하면 모든 걸 다 바꾸기 때문에 무시할건 무시하고 이름이 맞지 않는건 우리가 커스터마이징이 가능하다.\n@Mapping(source = “locationOfFuseBoxType”, target = “locationOfFuseBox”)\n\n컬럼명이 다를때\n\n@Mapping(target = “carManualCarCodes”, ignore = true)\n\n변경하지않을 컬럼을 지정할때\n\n@Mapping(expression = “java(source.getCarManualCarCodes().stream().map(CarManualCarCode::getModelCode).collect(Collectors.toList()))”, target = “modelCodes”)\n\nSpring이 만든 코드를 쓰지않고 내가 직접 만들고싶을때\n\n4)) 이대로 bulid를 하면 자동으로 SetGet코드를 만들어 준다.\n\n생성자\n\n1)) 하나의 DTO를 만들고 바꾸고 싶은것만 지정해서 생성자를 만들어준다\n@AllArgsConstructor@NoArgsConstructor@Datapublic class CarManualListDTO implements Serializable{\nprivate Long id;\nprivate String pathOfDiagramImage;\nprivate ManualImage manualImage1;\nprivate ManualImage manualImage2;\nprivate String modelSubName;\nprivate String releasedYear;\nprivate FuseType fuseType;\nprivate String manufacturer;\nprivate String note;\nprivate LocationOfFuseBoxType locationOfFuseBoxType;\nprivate NumberOfFuseBoxType numberOfFuseBoxType;\nprivate Boolean isDeleted;\nprivate LocalDateTime lastDeletedDateTime;\nprivate LocalDateTime createdAt;\nprivate List&lt;CarManualCarCode&gt; ModelCodes;\nprivate String pathOfNoteImage;\n\npublic CarManualListDTO(CarInstallManual carInstallManual)\n&#123;\n    this.id = carInstallManual.getId();\n    this.pathOfDiagramImage = carInstallManual.getPathOfDiagramImage();\n    this.manualImage1 = carInstallManual.getManualImage_1();\n    this.manualImage2 = carInstallManual.getManualImage_2();\n    this.modelSubName = carInstallManual.getModelSubName();\n    this.releasedYear = carInstallManual.getReleasedYear();\n    this.fuseType = carInstallManual.getFuseType();\n    this.manufacturer = carInstallManual.getManufacturer();\n    this.note = carInstallManual.getNote();\n    this.locationOfFuseBoxType = carInstallManual.getLocationOfFuseBox();\n    this.numberOfFuseBoxType = carInstallManual.getNumberOfFuseBox();\n    this.isDeleted = carInstallManual.getIsDeleted();\n    this.lastDeletedDateTime = carInstallManual.getLastDeletedDateTime();\n    this.createdAt = carInstallManual.getCreatedAt();\n    this.pathOfNoteImage = carInstallManual.getPathOfNoteImage();\n    this.ModelCodes = checkIsDeletedCarCode(carInstallManual.getCarManualCarCodes());\n&#125;\n2)) 생성자를 넣을 때 조건문을 넣고 싶다면 하나의 새로운 메서드를 생성하고 거기다가 조건을 적어주면 된다!\nprivate List checkIsDeletedCarCode(List carCodes){    return carCodes.stream().filter((i) -&gt; i.getIsDeleted() == false).collect(Collectors.toList());}}\n","dateCreated":"2021-03-27T11:44:09-07:00","dateModified":"2021-03-28T03:47:58-07:00","datePublished":"2021-03-27T11:44:09-07:00","description":"","headline":"Data formatting","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/03/27/Data%20formatting/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/03/27/Data%20formatting/","keywords":"Spring, 개발노트"}</script>
-    <meta name="description" content="데이터를 formatting 하는 방법기본적으로 프론트에 reture 하는 값은 Entity 자체를 그대로 리턴하면 안된다.따라서 필요한 데이터만 return 해주기 위해서 새로운 reture DTO를 만들고 보내줘야하는데모든 값들을 해당 DTO로 하나씩 손으로 넣어 주려면 시간이 많이 걸린다.이런 문제를 대비해서 깔끔하게 만들 수 있는 방법은 다음과 같다">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg"},"articleBody":"String vs string[원시 타입 vs 참조 타입]\n원시 타입과 참조 타입의 기능적 차이는 크게 2가지가 있습니다.\n1. Null을 담을 수 있는가?원시 타입은 null을 담을 수 없습니다. 반면에 참조 타입은 null을 입력값으로 받을 수 있습니다.\nint i = null;//불가능Integer integer = null; //가능\n2. 제네릭 타입에서 사용할 수 있는가?원시 타입은 제네릭 타입에서 사용할 수 없습니다. 반면에 참조 타입은 제네릭 타입에서 사용할 수 있습니다.\nList i;//불가능List integer;//가능\n \n그럼 원시 타입의 장점은 뭐지?원시 타입은 null을 다루지도 못하고, 제네릭에 담기지도 못합니다. 그러면 원시타입은 언제 사용해야 할까요? 원시 타입이 참조 타입과 비교해서 갖는 장점은 ‘성능’상의 이점이 있습니다.\n\n접근 속도원시 타입은 ‘스택’ 메모리에 값이 존재합니다. 반면에 참조 타입은 하나의 인스턴스이기 때문에 ‘스택’메모리에는 참조값만 있고, 실제 값은 힙 메모리에 존재하게 됩니다. 그리고 값을 필요로 할 때마다 언박싱 과정을 거쳐야 하니 원시 타입과 비교해서 접근 속도가 느려지게 됩니다. (예외적으로 엄청 큰 숫자를 복사해야 한다면, 참조값만 넘길 수 있는 참조 타입이 좋을 수 도 있습니다.)\n\n결론성능과 메모리에 장점이 있는 원시 타입을 먼저 고려해봅니다. 만약 Null을 다뤄야 하거나, 제네릭 타입에서 사용되어야 한다면 참조 타입을 사용합니다.\n","dateCreated":"2021-04-04T11:26:58-07:00","dateModified":"2021-04-04T07:02:13-07:00","datePublished":"2021-04-04T11:26:58-07:00","description":"","headline":"Comparable & Comparator","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://earth-kor.github.io/2021/04/04/String%20vs%20string/"},"publisher":{"@type":"Organization","name":"이상권","sameAs":["https://github.com/Earth-KOR","https://www.instagram.com/kwon_27_/?hl=ko","mailto:lsk941017@naver.com"],"image":"profile.jpg","logo":{"@type":"ImageObject","url":"profile.jpg"}},"url":"https://earth-kor.github.io/2021/04/04/String%20vs%20string/","keywords":"Java, 이론노트"}</script>
+    <meta name="description" content="String vs string[원시 타입 vs 참조 타입] 원시 타입과 참조 타입의 기능적 차이는 크게 2가지가 있습니다. 1. Null을 담을 수 있는가?원시 타입은 null을 담을 수 없습니다. 반면에 참조 타입은 null을 입력값으로 받을 수 있습니다. int i &#x3D; null;&#x2F;&#x2F;불가능Integer integer &#x3D; null; &#x2F;&#x2F;가능 2. 제네릭 타">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Data formatting">
-<meta property="og:url" content="https://earth-kor.github.io/2021/03/27/Data%20formatting/index.html">
+<meta property="og:title" content="Comparable &amp; Comparator">
+<meta property="og:url" content="https://earth-kor.github.io/2021/04/04/String%20vs%20string/index.html">
 <meta property="og:site_name" content="이상권의 개발노트">
-<meta property="og:description" content="데이터를 formatting 하는 방법기본적으로 프론트에 reture 하는 값은 Entity 자체를 그대로 리턴하면 안된다.따라서 필요한 데이터만 return 해주기 위해서 새로운 reture DTO를 만들고 보내줘야하는데모든 값들을 해당 DTO로 하나씩 손으로 넣어 주려면 시간이 많이 걸린다.이런 문제를 대비해서 깔끔하게 만들 수 있는 방법은 다음과 같다">
+<meta property="og:description" content="String vs string[원시 타입 vs 참조 타입] 원시 타입과 참조 타입의 기능적 차이는 크게 2가지가 있습니다. 1. Null을 담을 수 있는가?원시 타입은 null을 담을 수 없습니다. 반면에 참조 타입은 null을 입력값으로 받을 수 있습니다. int i &#x3D; null;&#x2F;&#x2F;불가능Integer integer &#x3D; null; &#x2F;&#x2F;가능 2. 제네릭 타">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-03-27T18:44:09.000Z">
-<meta property="article:modified_time" content="2021-03-28T10:47:58.328Z">
+<meta property="article:published_time" content="2021-04-04T18:26:58.000Z">
+<meta property="article:modified_time" content="2021-04-04T14:02:13.335Z">
 <meta property="article:author" content="이상권">
-<meta property="article:tag" content="Spring">
-<meta property="article:tag" content="개발노트">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="이론노트">
 <meta name="twitter:card" content="summary">
     
     
@@ -247,20 +247,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            Data formatting
+            Comparable &amp; Comparator
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2021-03-27T11:44:09-07:00">
+    <time datetime="2021-04-04T11:26:58-07:00">
 	
-		    Mar 27, 2021
+		    Apr 04, 2021
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/">개발노트</a>, <a class="category-link" href="/categories/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/Spring/">Spring</a>
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Java/">Java</a>
 
 
     
@@ -272,71 +272,18 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="데이터를-formatting-하는-방법"><a href="#데이터를-formatting-하는-방법" class="headerlink" title="데이터를 formatting 하는 방법"></a>데이터를 formatting 하는 방법</h1><p>기본적으로 프론트에 reture 하는 값은 Entity 자체를 그대로 리턴하면 안된다.<br>따라서 필요한 데이터만 return 해주기 위해서 새로운 reture DTO를 만들고 보내줘야하는데<br>모든 값들을 해당 DTO로 하나씩 손으로 넣어 주려면 시간이 많이 걸린다.<br>이런 문제를 대비해서 깔끔하게 만들 수 있는 방법은 다음과 같다.</p>
+            <h1 id="String-vs-string"><a href="#String-vs-string" class="headerlink" title="String vs string"></a>String vs string</h1><p>[원시 타입 vs 참조 타입]</p>
+<p>원시 타입과 참조 타입의 기능적 차이는 크게 2가지가 있습니다.</p>
+<h2 id="1-Null을-담을-수-있는가"><a href="#1-Null을-담을-수-있는가" class="headerlink" title="1. Null을 담을 수 있는가?"></a>1. Null을 담을 수 있는가?</h2><p>원시 타입은 null을 담을 수 없습니다. 반면에 참조 타입은 null을 입력값으로 받을 수 있습니다.</p>
+<p>int i = null;//불가능<br>Integer integer = null; //가능</p>
+<h2 id="2-제네릭-타입에서-사용할-수-있는가"><a href="#2-제네릭-타입에서-사용할-수-있는가" class="headerlink" title="2. 제네릭 타입에서 사용할 수 있는가?"></a>2. 제네릭 타입에서 사용할 수 있는가?</h2><p>원시 타입은 제네릭 타입에서 사용할 수 없습니다. 반면에 참조 타입은 제네릭 타입에서 사용할 수 있습니다.</p>
+<p>List<int> i;//불가능<br>List<Integer> integer;//가능
+ </p>
+<h2 id="그럼-원시-타입의-장점은-뭐지"><a href="#그럼-원시-타입의-장점은-뭐지" class="headerlink" title="그럼 원시 타입의 장점은 뭐지?"></a>그럼 원시 타입의 장점은 뭐지?</h2><p>원시 타입은 null을 다루지도 못하고, 제네릭에 담기지도 못합니다. 그러면 원시타입은 언제 사용해야 할까요? 원시 타입이 참조 타입과 비교해서 갖는 장점은 ‘성능’상의 이점이 있습니다.</p>
 <ol>
-<li>Convert</li>
+<li>접근 속도<br>원시 타입은 ‘스택’ 메모리에 값이 존재합니다. 반면에 참조 타입은 하나의 인스턴스이기 때문에 ‘스택’메모리에는 참조값만 있고, 실제 값은 힙 메모리에 존재하게 됩니다. 그리고 값을 필요로 할 때마다 언박싱 과정을 거쳐야 하니 원시 타입과 비교해서 접근 속도가 느려지게 됩니다. (예외적으로 엄청 큰 숫자를 복사해야 한다면, 참조값만 넘길 수 있는 참조 타입이 좋을 수 도 있습니다.)</li>
 </ol>
-<p>1)) 처음에는 @Mapper 가 등록된 하나의 interface를 만들어야 한다.</p>
-<p>@Mapper(componentModel = “spring”, unmappedTargetPolicy = ReportingPolicy.IGNORE, imports = {CarManualCarCode.class, Collectors.class})<br>public interface CarManualMapper<br>{<br>}</p>
-<p>2)) 들어오는 객체와 바꿀 객체를 정하고 메서드를 만들어 준다.</p>
-<p>CarInstallManual convert(CarRequestManualDTO source);</p>
-<p>3)) 이렇게만 선언하면 모든 걸 다 바꾸기 때문에 무시할건 무시하고 이름이 맞지 않는건 우리가 커스터마이징이 가능하다.</p>
-<p>@Mapping(source = “locationOfFuseBoxType”, target = “locationOfFuseBox”)</p>
-<ul>
-<li>컬럼명이 다를때</li>
-</ul>
-<p>@Mapping(target = “carManualCarCodes”, ignore = true)</p>
-<ul>
-<li>변경하지않을 컬럼을 지정할때</li>
-</ul>
-<p>@Mapping(expression = “java(source.getCarManualCarCodes().stream().map(CarManualCarCode::getModelCode).collect(Collectors.toList()))”, target = “modelCodes”)</p>
-<ul>
-<li>Spring이 만든 코드를 쓰지않고 내가 직접 만들고싶을때</li>
-</ul>
-<p>4)) 이대로 bulid를 하면 자동으로 SetGet코드를 만들어 준다.</p>
-<ol start="2">
-<li>생성자</li>
-</ol>
-<p>1)) 하나의 DTO를 만들고 바꾸고 싶은것만 지정해서 생성자를 만들어준다</p>
-<p>@AllArgsConstructor<br>@NoArgsConstructor<br>@Data<br>public class CarManualListDTO implements Serializable<br>{</p>
-<pre><code>private Long id;
-private String pathOfDiagramImage;
-private ManualImage manualImage1;
-private ManualImage manualImage2;
-private String modelSubName;
-private String releasedYear;
-private FuseType fuseType;
-private String manufacturer;
-private String note;
-private LocationOfFuseBoxType locationOfFuseBoxType;
-private NumberOfFuseBoxType numberOfFuseBoxType;
-private Boolean isDeleted;
-private LocalDateTime lastDeletedDateTime;
-private LocalDateTime createdAt;
-private List&lt;CarManualCarCode&gt; ModelCodes;
-private String pathOfNoteImage;
-
-public CarManualListDTO(CarInstallManual carInstallManual)
-&#123;
-    this.id = carInstallManual.getId();
-    this.pathOfDiagramImage = carInstallManual.getPathOfDiagramImage();
-    this.manualImage1 = carInstallManual.getManualImage_1();
-    this.manualImage2 = carInstallManual.getManualImage_2();
-    this.modelSubName = carInstallManual.getModelSubName();
-    this.releasedYear = carInstallManual.getReleasedYear();
-    this.fuseType = carInstallManual.getFuseType();
-    this.manufacturer = carInstallManual.getManufacturer();
-    this.note = carInstallManual.getNote();
-    this.locationOfFuseBoxType = carInstallManual.getLocationOfFuseBox();
-    this.numberOfFuseBoxType = carInstallManual.getNumberOfFuseBox();
-    this.isDeleted = carInstallManual.getIsDeleted();
-    this.lastDeletedDateTime = carInstallManual.getLastDeletedDateTime();
-    this.createdAt = carInstallManual.getCreatedAt();
-    this.pathOfNoteImage = carInstallManual.getPathOfNoteImage();
-    this.ModelCodes = checkIsDeletedCarCode(carInstallManual.getCarManualCarCodes());
-&#125;</code></pre>
-<p>2)) 생성자를 넣을 때 조건문을 넣고 싶다면 하나의 새로운 메서드를 생성하고 거기다가 조건을 적어주면 된다!</p>
-<p>private List<CarManualCarCode> checkIsDeletedCarCode(List<CarManualCarCode> carCodes)<br>{<br>    return carCodes.stream().filter((i) -&gt; i.getIsDeleted() == false).collect(Collectors.toList());<br>}<br>}</p>
+<h2 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h2><p>성능과 메모리에 장점이 있는 원시 타입을 먼저 고려해봅니다. 만약 Null을 다뤄야 하거나, 제네릭 타입에서 사용되어야 한다면 참조 타입을 사용합니다.</p>
 
             
 
@@ -348,7 +295,7 @@ public CarManualListDTO(CarInstallManual carInstallManual)
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/Spring/" rel="tag">Spring</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EA%B0%9C%EB%B0%9C%EB%85%B8%ED%8A%B8/" rel="tag">개발노트</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/Java/" rel="tag">Java</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/" rel="tag">이론노트</a>
 
             </div>
         
@@ -361,9 +308,9 @@ public CarManualListDTO(CarInstallManual carInstallManual)
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/04/04/javascript%20%EB%B0%B0%EC%97%B4%EC%97%90%20%EB%8C%80%ED%95%9C%20%EB%8B%A4%EC%96%91%ED%95%9C%20%EB%A9%94%EC%84%9C%EB%93%9C%20%EC%A0%95%EB%A6%AC/"
-                    data-tooltip="javascript 배열에 대한 다양한 메서드 정리"
-                    aria-label="PREVIOUS: javascript 배열에 대한 다양한 메서드 정리"
+                    href="/2021/04/04/Comparable%20&%20Comparator/"
+                    data-tooltip="Comparable &amp; Comparator"
+                    aria-label="PREVIOUS: Comparable &amp; Comparator"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -375,9 +322,9 @@ public CarManualListDTO(CarInstallManual carInstallManual)
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/Dirty%20checking/"
-                    data-tooltip="Dirty checking"
-                    aria-label="NEXT: Dirty checking"
+                    href="/2021/04/04/javascript%20%EB%B0%B0%EC%97%B4%EC%97%90%20%EB%8C%80%ED%95%9C%20%EB%8B%A4%EC%96%91%ED%95%9C%20%EB%A9%94%EC%84%9C%EB%93%9C%20%EC%A0%95%EB%A6%AC/"
+                    data-tooltip="javascript 배열에 대한 다양한 메서드 정리"
+                    aria-label="NEXT: javascript 배열에 대한 다양한 메서드 정리"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -437,9 +384,9 @@ public CarManualListDTO(CarInstallManual carInstallManual)
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/04/04/javascript%20%EB%B0%B0%EC%97%B4%EC%97%90%20%EB%8C%80%ED%95%9C%20%EB%8B%A4%EC%96%91%ED%95%9C%20%EB%A9%94%EC%84%9C%EB%93%9C%20%EC%A0%95%EB%A6%AC/"
-                    data-tooltip="javascript 배열에 대한 다양한 메서드 정리"
-                    aria-label="PREVIOUS: javascript 배열에 대한 다양한 메서드 정리"
+                    href="/2021/04/04/Comparable%20&%20Comparator/"
+                    data-tooltip="Comparable &amp; Comparator"
+                    aria-label="PREVIOUS: Comparable &amp; Comparator"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -451,9 +398,9 @@ public CarManualListDTO(CarInstallManual carInstallManual)
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2021/03/27/Dirty%20checking/"
-                    data-tooltip="Dirty checking"
-                    aria-label="NEXT: Dirty checking"
+                    href="/2021/04/04/javascript%20%EB%B0%B0%EC%97%B4%EC%97%90%20%EB%8C%80%ED%95%9C%20%EB%8B%A4%EC%96%91%ED%95%9C%20%EB%A9%94%EC%84%9C%EB%93%9C%20%EC%A0%95%EB%A6%AC/"
+                    data-tooltip="javascript 배열에 대한 다양한 메서드 정리"
+                    aria-label="NEXT: javascript 배열에 대한 다양한 메서드 정리"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

@@ -244,6 +244,161 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2021/04/04/Comparable%20&%20Comparator/"
+                            aria-label=": Comparable &amp; Comparator"
+                        >
+                            Comparable &amp; Comparator
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-04-04T11:26:58-07:00">
+	
+		    Apr 04, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Java/">Java</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Comparable-amp-Comparator"><a href="#Comparable-amp-Comparator" class="headerlink" title="Comparable &amp; Comparator"></a>Comparable &amp; Comparator</h1><h2 id="Comparable"><a href="#Comparable" class="headerlink" title="Comparable"></a>Comparable</h2><p>단순 데이터가 아닌 객체를 정렬하고 싶을 때에는 해당 class에 Comparable 인터페이스를 구현하도록 한다. 그리고 compareTo 메서드를 오버라이딩 하여 재정의 한다</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    class Friend implements Comparable&lt;Friend&gt;&#123;</span><br><span class="line">        private String name;</span><br><span class="line">        private int age;</span><br><span class="line">        </span><br><span class="line">        public Friend(String name, int age) &#123;</span><br><span class="line">            super();</span><br><span class="line">            this.name &#x3D; name;</span><br><span class="line">            this.age &#x3D; age;</span><br><span class="line">        &#125;        </span><br><span class="line">        @Override</span><br><span class="line">        public int compareTo(Friend o) &#123;</span><br><span class="line">            return this.age - o.age;</span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>이 메서드가 바로 정렬 규칙을 정하는 메서드입니다.<br>compareTo() 메서드는 그것이 구현된 객체와 매개변수로 넘어 온 타겟 객체를 비교하며, 원하는 정렬에 따른 int 값을 반환해야 합니다.<br>기준을 정한 후, 이 객체가 매개변수의 객체보다 작으면 음수, 같으면 0, 크면 양수를 반환하면 됩니다.</p>
+<p>Friend 객체목록을 List로 다루는 경우에는 어떻게 정렬할 수 있을까요?<br>List의 경우에는 Arrays클래스가 아닌 Collections클래스의 sort() 메서드를 사용하여 정렬하며, 방법은 같습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> @Test</span><br><span class="line">    public void test_SortListWithComparable() throws Exception &#123;</span><br><span class="line">        Friend kim &#x3D; new Friend(&quot;Kim&quot;, 36);</span><br><span class="line">        Friend park &#x3D; new Friend(&quot;Park&quot;, 20);</span><br><span class="line">        Friend lee &#x3D; new Friend(&quot;Lee&quot;, 28);</span><br><span class="line">        Friend yong &#x3D; new Friend(&quot;Yong&quot;, 18);</span><br><span class="line">        </span><br><span class="line">        List&lt;Friend&gt; friends &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line">        friends.add(kim);</span><br><span class="line">        friends.add(park);</span><br><span class="line">        friends.add(lee);</span><br><span class="line">        friends.add(yong);</span><br><span class="line">        </span><br><span class="line">        Collections.sort(friends);</span><br><span class="line">        </span><br><span class="line">        assertEquals(yong, friends.get(0));</span><br><span class="line">        assertEquals(park, friends.get(1));</span><br><span class="line">        assertEquals(lee, friends.get(2));</span><br><span class="line">        assertEquals(kim, friends.get(3));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Comparator"><a href="#Comparator" class="headerlink" title="# Comparator"></a># Comparator</h1><p>그렇다면 그 기본규칙 외에 다른 규칙으로 정렬하고 싶다면 어떻게 할 수 있을까요?<br>여기서 등장하는 인터페이스가 바로 Comparator 인터페이스 입니다.<br>Friend 목록을 기본규칙인 ‘나이(age)’ 순 정렬이 아닌, ‘이름(name)’ 순서로 정렬하고자 합니다.<br>먼저, 별도의 규칙을 가진 클래스를 생성합니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class SortFriendByNameInAsc implements Comparator&lt;Friend&gt;&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public int compare(Friend o1, Friend o2) &#123;</span><br><span class="line">            return o2.name.compareTo(o1.name);</span><br><span class="line">        &#125;        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Comparator 인터페이스를 구현하는 경우 compare() 메서드를 구현해서 규칙을 정해야 합니다.<br>Comparable의 compareTo() 메서드와 다르게 매개변수를 두 개 받습니다.<br>Comparator는 비교대상 객체 외부에 생성하므로 비교할 대상 두 개에 대한 정보를 모두 매개변수로 받는 것입니다.<br>Collections.sort() 메서드에 정렬대상이 되는 List와 Comparator를 구현한 규칙 객체를 매개변수로 보내 사용하면 됩니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  @Test</span><br><span class="line">    public void test_SortListWithComparator() throws Exception &#123;</span><br><span class="line">        Friend kim &#x3D; new Friend(&quot;Kim&quot;, 36);</span><br><span class="line">        Friend park &#x3D; new Friend(&quot;Park&quot;, 20);</span><br><span class="line">        Friend lee &#x3D; new Friend(&quot;Lee&quot;, 28);</span><br><span class="line">        Friend yong &#x3D; new Friend(&quot;Yong&quot;, 18);</span><br><span class="line">        </span><br><span class="line">        List&lt;Friend&gt; friends &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line">        friends.add(kim);</span><br><span class="line">        friends.add(park);</span><br><span class="line">        friends.add(lee);</span><br><span class="line">        friends.add(yong);</span><br><span class="line">        </span><br><span class="line">        Collections.sort(friends, new SortFriendByNameInAsc());</span><br><span class="line">        </span><br><span class="line">        assertEquals(kim, friends.get(0));</span><br><span class="line">        assertEquals(lee, friends.get(1));</span><br><span class="line">        assertEquals(park, friends.get(2));</span><br><span class="line">        assertEquals(yong, friends.get(3));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Comparable - 이 인터페이스를 구현한 객체 스스로에게 부여하는 한 가지 기본 정렬 규칙을 설정하는 목적으로 사용한다.<br>Comparator - 이 인터페이스를 구현한 클래스는 정렬 규칙 그 자체를 의미하며, 기본 정렬 규칙과 다르게 원하는대로 정렬순서를 지정하고 싶을 때 사용한다.</p>
+<p>출처: <a target="_blank" rel="noopener" href="https://dev-daddy.tistory.com/23">https://dev-daddy.tistory.com/23</a> [대한민국 개발자 아빠]</p>
+<h2 id="자바8-람다를-이용한-정렬-Comparator-comparing"><a href="#자바8-람다를-이용한-정렬-Comparator-comparing" class="headerlink" title="자바8 람다를 이용한 정렬 ( Comparator.comparing)"></a>자바8 람다를 이용한 정렬 ( Comparator.comparing)</h2><pre><code>// 무게 오름차순 정렬
+    inventory.sort(Comparator.comparing(Apple::getWeight));
+
+    // 무게 내림차순 정렬
+    inventory.sort(Comparator.comparing(Apple::getWeight).reversed());
+
+    // 무게 오름차순 정렬 (무게가 같으면 색 오름차순 정렬)
+    inventory.sort(Comparator.comparing(Apple::getWeight).thenComparing(Apple::getColor));
+
+    // 무게 오름차순 정렬 (무게가 같으면 색 내림차순 정렬)
+    Comparator&lt;Apple&gt; reversedColorComparator = Comparator.comparing(Apple::getColor).reversed();
+    inventory.sort(Comparator.comparing(Apple::getWeight).thenComparing(reversedColorComparator));</code></pre>
+<p>출처: <a target="_blank" rel="noopener" href="https://broduck.tistory.com/6">https://broduck.tistory.com/6</a> [개발로 하는 개발]</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/04/04/Comparable%20&%20Comparator/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2021/04/04/String%20vs%20string/"
+                            aria-label=": Comparable &amp; Comparator"
+                        >
+                            Comparable &amp; Comparator
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2021-04-04T11:26:58-07:00">
+	
+		    Apr 04, 2021
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/">이론노트</a>, <a class="category-link" href="/categories/%EC%9D%B4%EB%A1%A0%EB%85%B8%ED%8A%B8/Java/">Java</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="String-vs-string"><a href="#String-vs-string" class="headerlink" title="String vs string"></a>String vs string</h1><p>[원시 타입 vs 참조 타입]</p>
+<p>원시 타입과 참조 타입의 기능적 차이는 크게 2가지가 있습니다.</p>
+<h2 id="1-Null을-담을-수-있는가"><a href="#1-Null을-담을-수-있는가" class="headerlink" title="1. Null을 담을 수 있는가?"></a>1. Null을 담을 수 있는가?</h2><p>원시 타입은 null을 담을 수 없습니다. 반면에 참조 타입은 null을 입력값으로 받을 수 있습니다.</p>
+<p>int i = null;//불가능<br>Integer integer = null; //가능</p>
+<h2 id="2-제네릭-타입에서-사용할-수-있는가"><a href="#2-제네릭-타입에서-사용할-수-있는가" class="headerlink" title="2. 제네릭 타입에서 사용할 수 있는가?"></a>2. 제네릭 타입에서 사용할 수 있는가?</h2><p>원시 타입은 제네릭 타입에서 사용할 수 없습니다. 반면에 참조 타입은 제네릭 타입에서 사용할 수 있습니다.</p>
+<p>List<int> i;//불가능<br>List<Integer> integer;//가능
+ </p>
+<h2 id="그럼-원시-타입의-장점은-뭐지"><a href="#그럼-원시-타입의-장점은-뭐지" class="headerlink" title="그럼 원시 타입의 장점은 뭐지?"></a>그럼 원시 타입의 장점은 뭐지?</h2><p>원시 타입은 null을 다루지도 못하고, 제네릭에 담기지도 못합니다. 그러면 원시타입은 언제 사용해야 할까요? 원시 타입이 참조 타입과 비교해서 갖는 장점은 ‘성능’상의 이점이 있습니다.</p>
+<ol>
+<li>접근 속도<br>원시 타입은 ‘스택’ 메모리에 값이 존재합니다. 반면에 참조 타입은 하나의 인스턴스이기 때문에 ‘스택’메모리에는 참조값만 있고, 실제 값은 힙 메모리에 존재하게 됩니다. 그리고 값을 필요로 할 때마다 언박싱 과정을 거쳐야 하니 원시 타입과 비교해서 접근 속도가 느려지게 됩니다. (예외적으로 엄청 큰 숫자를 복사해야 한다면, 참조값만 넘길 수 있는 참조 타입이 좋을 수 도 있습니다.)</li>
+</ol>
+<h2 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h2><p>성능과 메모리에 장점이 있는 원시 타입을 먼저 고려해봅니다. 만약 Null을 다뤄야 하거나, 제네릭 타입에서 사용되어야 한다면 참조 타입을 사용합니다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2021/04/04/String%20vs%20string/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2021/03/27/%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC/"
                             aria-label=": 예외처리"
                         >
